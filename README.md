@@ -1,4 +1,4 @@
-Digiffice is an open-source Office Program. It is currently pre-release, (in fact, very early development) but I would like to build some traction. Here is why I am creating Digiffice.
+Digiffice is an open-source Office Program. It is currently pre-release, (in fact, very early development) but I would like to build some traction. Here is why I am creating Digiffice and why it should be usable.
 
 === 1 - No/Minimal bloat ===
 - Digiffice will have no bloatware, making it very undemanding and easy to use. I hope that the simplicity of the program will create a good user experience.
