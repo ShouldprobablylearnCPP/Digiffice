@@ -21,18 +21,21 @@ DISCLAIMERS:
 - The master branch is the branch where the current release of Digiffice is. Currently, Digiffice is pre-release so the master branch will not contain a release version yet
 
 === 4 - Licensing ===
-- While Digiffice is open-source, it is under the CC0 1.0 (Creative Commons 0) license.
+- Digiffice is under the CC0 1.0 (Creative Commons 0) license.
 
 WHAT TO EXPECT:
 
 === 1 - All in one application ===
-A single copy of Digiffice will have all applications available - the list and names of these will be revealed at a later date.
+- A single copy of Digiffice will have all applications available - the list and names of these will be revealed at a later date.
 
 === 2 - Ease of use ===
-One of the main advantages of Digiffice is that it will be very user friendly - the login process is simple, and the homepage will be easy to navigate - you can access your apps, settings and more from there.
+- One of the main advantages of Digiffice is that it will be very user friendly - the login process is simple, and the homepage will be easy to navigate - you can access your apps, settings and more from there.
 
 === 3 - Compatibility ===
-While the list of supported Operating systems is not available yet, it will be compatible with many, even some legacy ones. While it won't be compatible with everything, I am aiming for at least 90% of PCs to be able to run it.
+- While the list of supported Operating systems is not available yet, it will be compatible with many, even some legacy ones. While it won't be compatible with everything, I am aiming for at least 90% of PCs to be able to run it.
+
+=== 4 - UI ===
+- The Interface of Digiffice will be similar to that of other office software programs, however it may look slightly different. Despite this, it will still be easy to figure out and use.
 
 FAQs:
 
