@@ -17,8 +17,8 @@ DISCLAIMERS:
 === 2 - This is a long term project ===
 - I will be supporting this project for a very long time, hopefully many years. However, it may also take quite a while to develop, as I am a solo developer with other projects alongside it.
 
-=== 3 - The master branch is not the current release ===
-- The master branch is not the branch with the current release of Digiffice - it is more of a beta branch. Currently, Digiffice is not ready to be released so there is nowhere to download it.
+=== 3 - The master branch is/will be the current release ===
+- The master branch is the branch where the current release of Digiffice is. Currently, Digiffice is pre-release so the master branch will not contain a release version yet
 
 === 4 - Licensing ===
 - While Digiffice is open-source, it is under the CC0 1.0 (Creative Commons 0) license.
