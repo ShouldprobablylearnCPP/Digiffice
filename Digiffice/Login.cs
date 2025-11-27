@@ -35,7 +35,9 @@ namespace Digiffice
             if (dr.Read() == true)
             {
                 con.Close();
-                new Homepage().Show();
+                nonprotected_AccountData nonprotected_Account = new nonprotected_AccountData();
+                nonprotected_Account.ac_username = txtUsernamelogin.Text;
+                new Homepage(nonprotected_Account).Show();
                 this.Hide();
             }
             else

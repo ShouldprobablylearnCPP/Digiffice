@@ -9,6 +9,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses
 {
     public class nonprotected_AccountData
     {
-        public static string ac_username { get; set; }
+        public string ac_username;
     }
 }

@@ -77,7 +77,6 @@ namespace Digiffice
         private void labelBackToLogin_Click(object sender, EventArgs e)
         {
             con.Close();
-            nonprotected_AccountData.ac_username = txtUsername.Text;
             new Login().Show();
             this.Hide();
         }
