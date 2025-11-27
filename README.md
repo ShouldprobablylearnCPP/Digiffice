@@ -20,6 +20,9 @@ DISCLAIMERS:
 === 3 - The master branch is not the current release ===
 - The master branch is not the branch with the current release of Digiffice - it is more of a beta branch. Currently, Digiffice is not ready to be released so there is nowhere to download it.
 
+=== 4 - Licensing ===
+- While Digiffice is open-source, it is under the CC0 1.0 (Creative Commons 0) license.
+
 WHAT TO EXPECT:
 
 === 1 - All in one application ===
