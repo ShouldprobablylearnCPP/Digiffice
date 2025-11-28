@@ -93,9 +93,29 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Xbtn {
+        internal static System.Drawing.Bitmap Panel400x30 {
             get {
-                object obj = ResourceManager.GetObject("Xbtn", resourceCulture);
+                object obj = ResourceManager.GetObject("Panel400x30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap XbtnDefault {
+            get {
+                object obj = ResourceManager.GetObject("XbtnDefault", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap XbtnHover {
+            get {
+                object obj = ResourceManager.GetObject("XbtnHover", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

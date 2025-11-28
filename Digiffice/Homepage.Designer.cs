@@ -32,7 +32,10 @@
             Homepanel = new Panel();
             ExitButton = new Button();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            ProgramsPanel = new Panel();
+            ProgramsLabel = new Label();
             Homepanel.SuspendLayout();
+            ProgramsPanel.SuspendLayout();
             SuspendLayout();
             // 
             // Welcomemsg
@@ -68,7 +71,7 @@
             ExitButton.FlatStyle = FlatStyle.Flat;
             ExitButton.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ExitButton.ForeColor = SystemColors.ControlText;
-            ExitButton.Image = Properties.Resources.Xbtn;
+            ExitButton.Image = Properties.Resources.XbtnDefault;
             ExitButton.Location = new Point(1825, 0);
             ExitButton.Name = "ExitButton";
             ExitButton.Size = new Size(74, 24);
@@ -78,12 +81,36 @@
             ExitButton.MouseEnter += ExitButton_MouseEnter;
             ExitButton.MouseLeave += ExitButton_MouseLeave;
             // 
+            // ProgramsPanel
+            // 
+            ProgramsPanel.BackColor = SystemColors.ControlLight;
+            ProgramsPanel.BackgroundImage = Properties.Resources.Panel400x30;
+            ProgramsPanel.BackgroundImageLayout = ImageLayout.Stretch;
+            ProgramsPanel.Controls.Add(ProgramsLabel);
+            ProgramsPanel.Location = new Point(1450, 126);
+            ProgramsPanel.Name = "ProgramsPanel";
+            ProgramsPanel.Size = new Size(400, 30);
+            ProgramsPanel.TabIndex = 1;
+            // 
+            // ProgramsLabel
+            // 
+            ProgramsLabel.AutoSize = true;
+            ProgramsLabel.BackColor = Color.Transparent;
+            ProgramsLabel.Font = new Font("Roboto", 14.25F, FontStyle.Italic, GraphicsUnit.Point, 0);
+            ProgramsLabel.ForeColor = Color.FromArgb(0, 0, 64);
+            ProgramsLabel.Location = new Point(4, 4);
+            ProgramsLabel.Name = "ProgramsLabel";
+            ProgramsLabel.Size = new Size(93, 23);
+            ProgramsLabel.TabIndex = 0;
+            ProgramsLabel.Text = "Programs";
+            // 
             // Homepage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.HotTrack;
             ClientSize = new Size(1904, 1041);
+            Controls.Add(ProgramsPanel);
             Controls.Add(Homepanel);
             ForeColor = SystemColors.ControlText;
             FormBorderStyle = FormBorderStyle.None;
@@ -93,6 +120,8 @@
             WindowState = FormWindowState.Maximized;
             Homepanel.ResumeLayout(false);
             Homepanel.PerformLayout();
+            ProgramsPanel.ResumeLayout(false);
+            ProgramsPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -103,5 +132,7 @@
         private Panel Homepanel;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private Button ExitButton;
+        private Panel ProgramsPanel;
+        private Label ProgramsLabel;
     }
 }
