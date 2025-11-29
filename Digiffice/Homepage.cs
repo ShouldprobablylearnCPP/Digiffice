@@ -14,7 +14,8 @@ namespace Digiffice
         
         // Class Lists
         EventHandler[] ProgramClickEventHandlers = new EventHandler[1];
-        Icon[] ProgramIcons = new Icon[1];
+        Image[] ProgramIcons = new Image[1];
+        string[] programNames = new string[1];
 
         // Program Button Group
         Button programOpen_Button = new Button();
@@ -36,6 +37,10 @@ namespace Digiffice
             ProgramClickEventHandlers[0] = new EventHandler(DigifficeAllpad_Open);
 
             // Program Icons
+            ProgramIcons[0] = Properties.Resources.DigifficeAllpadIcon;
+
+            // Program Names
+            programNames[0] = "DigifficeAllpad";
         }
 
         // Exit Button Events
@@ -67,28 +72,39 @@ namespace Digiffice
         private void ProgramOpen_Button_PrepaintProperties(int idx)
         {
             programOpen_Button.Name = "ProgramOpen_Button_" + idx;
+            programOpen_Button.Tag = programNames[idx];
             programOpen_Button.Size = new Size(400, 70);
-            programOpen_Button.Text = "Open Program";
+            programOpen_Button.Text = "";
             programOpen_Button.FlatStyle = FlatStyle.Flat;
-            programOpen_Button.BackColor = Color.White;
             programOpen_Button.FlatAppearance.BorderSize = 0;
+            programOpen_Button.BackColor = Color.Transparent;
+            programOpen_Button.BackgroundImage = Properties.Resources.ControlButton;
+            programOpen_Button.BackgroundImageLayout = ImageLayout.Stretch;
             int yLocation = (ProgramsPanel.Location.Y + (ProgramsPanel.Height + 6)) + ((programOpen_Button.Size.Height + 6) * idx);
             programOpen_Button.Location = new Point(ProgramsPanel.Location.X, yLocation);
             programOpen_Button.Paint += ProgramOpenButton_Paint;
             programOpen_Button.Click += ProgramClickEventHandlers[idx];
-            Console.WriteLine(idx);
             this.Controls.Add(programOpen_Button);
             programOpen_Button = new Button();
         }
 
         private void ProgramOpen_Button_PaintProperties(string programToOpen)
         {
-
+            // icon panel
+            Panel iconPanel = new Panel();
+            iconPanel.Size = new Size(60, 60);
+            iconPanel.Location = new Point(5, 5);
+            iconPanel.BackgroundImage = ProgramIcons[Array.IndexOf(programNames, programToOpen)];
+            iconPanel.BackColor = Color.Transparent;
+            iconPanel.BackgroundImageLayout = ImageLayout.Stretch;
+            Controls.Add(iconPanel);
+            iconPanel.BringToFront();
         }
 
         private void ProgramOpenButton_Paint(object sender, EventArgs e)
         {
-            string program = "";
+            Button currentButton = (Button)sender;
+            string program = sender.GetType().GetProperty("Tag").GetValue(sender, null).ToString();
             ProgramOpen_Button_PaintProperties(program);
         }
 

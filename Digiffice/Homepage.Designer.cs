@@ -65,6 +65,7 @@
             // 
             // ExitButton
             // 
+            ExitButton.BackColor = Color.Transparent;
             ExitButton.BackgroundImageLayout = ImageLayout.Stretch;
             ExitButton.FlatAppearance.BorderSize = 0;
             ExitButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(0, 0, 0, 0);
@@ -76,7 +77,7 @@
             ExitButton.Name = "ExitButton";
             ExitButton.Size = new Size(74, 24);
             ExitButton.TabIndex = 1;
-            ExitButton.UseVisualStyleBackColor = true;
+            ExitButton.UseVisualStyleBackColor = false;
             ExitButton.Click += ExitButton_Click;
             ExitButton.MouseEnter += ExitButton_MouseEnter;
             ExitButton.MouseLeave += ExitButton_MouseLeave;

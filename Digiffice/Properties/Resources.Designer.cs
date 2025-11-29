@@ -73,6 +73,26 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ControlButton {
+            get {
+                object obj = ResourceManager.GetObject("ControlButton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DigifficeAllpadIcon {
+            get {
+                object obj = ResourceManager.GetObject("DigifficeAllpadIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap LoginBackground_PNG_resized {
             get {
                 object obj = ResourceManager.GetObject("LoginBackground_PNG_resized", resourceCulture);
