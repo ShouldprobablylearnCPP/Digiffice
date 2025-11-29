@@ -11,14 +11,16 @@ namespace Digiffice
         Image xBtnHover = Properties.Resources.XbtnHover;
         string username = "";
         int DigifficeProgramsNum = 1;
-        
+
         // Class Lists
         EventHandler[] ProgramClickEventHandlers = new EventHandler[1];
+        EventHandler[] ProgramMouseEnterEventHandlers = new EventHandler[1];
+        EventHandler[] ProgramMouseLeaveEventHandlers = new EventHandler[1];
         Image[] ProgramIcons = new Image[1];
         string[] programNames = new string[1];
 
         // Program Button Group
-        Button programOpen_Button = new Button();
+        Panel programOpen_Button = new Panel();
 
         public Homepage(nonprotected_AccountData nonprotected_AccData)
         {
@@ -35,6 +37,8 @@ namespace Digiffice
         {
             // Event Handlers
             ProgramClickEventHandlers[0] = new EventHandler(DigifficeAllpad_Open);
+            ProgramMouseEnterEventHandlers[0] = new EventHandler(DigifficeAllpad_MouseEnter);
+            ProgramMouseLeaveEventHandlers[0] = new EventHandler(DigifficeAllpad_MouseLeave);
 
             // Program Icons
             ProgramIcons[0] = Properties.Resources.DigifficeAllpadIcon;
@@ -75,27 +79,26 @@ namespace Digiffice
             programOpen_Button.Tag = programNames[idx];
             programOpen_Button.Size = new Size(400, 70);
             programOpen_Button.Text = "";
-            programOpen_Button.FlatStyle = FlatStyle.Flat;
-            programOpen_Button.FlatAppearance.BorderSize = 0;
-            programOpen_Button.BackColor = Color.Transparent;
-            programOpen_Button.BackgroundImage = Properties.Resources.ControlButton;
-            programOpen_Button.BackgroundImageLayout = ImageLayout.Stretch;
+            programOpen_Button.BackColor = Color.WhiteSmoke;
+            programOpen_Button.BorderStyle = BorderStyle.FixedSingle;
             int yLocation = (ProgramsPanel.Location.Y + (ProgramsPanel.Height + 6)) + ((programOpen_Button.Size.Height + 6) * idx);
             programOpen_Button.Location = new Point(ProgramsPanel.Location.X, yLocation);
             programOpen_Button.Paint += ProgramOpenButton_Paint;
             programOpen_Button.Click += ProgramClickEventHandlers[idx];
+            programOpen_Button.MouseEnter += ProgramMouseEnterEventHandlers[idx];
+            programOpen_Button.MouseLeave += ProgramMouseLeaveEventHandlers[idx];
             this.Controls.Add(programOpen_Button);
-            programOpen_Button = new Button();
+            programOpen_Button = new Panel();
         }
 
-        private void ProgramOpen_Button_PaintProperties(string programToOpen)
+        private void ProgramOpen_Button_PaintProperties(string programToOpen, Panel btn)
         {
             // icon panel
             Panel iconPanel = new Panel();
             iconPanel.Size = new Size(60, 60);
-            iconPanel.Location = new Point(5, 5);
+            iconPanel.Location = new Point(btn.Location.X + 5, btn.Location.Y + 5);
             iconPanel.BackgroundImage = ProgramIcons[Array.IndexOf(programNames, programToOpen)];
-            iconPanel.BackColor = Color.Transparent;
+            iconPanel.BackColor = Color.WhiteSmoke;
             iconPanel.BackgroundImageLayout = ImageLayout.Stretch;
             Controls.Add(iconPanel);
             iconPanel.BringToFront();
@@ -103,14 +106,26 @@ namespace Digiffice
 
         private void ProgramOpenButton_Paint(object sender, EventArgs e)
         {
-            Button currentButton = (Button)sender;
+            Panel currentButton = (Panel)sender;
             string program = sender.GetType().GetProperty("Tag").GetValue(sender, null).ToString();
-            ProgramOpen_Button_PaintProperties(program);
+            ProgramOpen_Button_PaintProperties(program, currentButton);
         }
 
         private void DigifficeAllpad_Open(object sender, EventArgs e)
         {
             MessageBox.Show("HEHEHEHA");
+        }
+
+        private void DigifficeAllpad_MouseEnter(object sender, EventArgs e)
+        {
+            Panel btn = (Panel)sender;
+            btn.BackColor = Color.LightGray;
+        }
+
+        private void DigifficeAllpad_MouseLeave(object sender, EventArgs e)
+        {
+            Panel btn = (Panel)sender;
+            btn.BackColor = Color.WhiteSmoke;
         }
     }
 }
