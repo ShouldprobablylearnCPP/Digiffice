@@ -25,6 +25,7 @@ namespace Digiffice
 
         public Homepage(nonprotected_AccountData nonprotected_AccData)
         {
+            nonprotected_AccountData transferrable_nonprotectedaccdata = nonprotected_AccData;
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             InitializeComponent();
             username = nonprotected_AccData.ac_username;
@@ -137,7 +138,11 @@ namespace Digiffice
 
         private void DigifficeAllpad_Open(object sender, EventArgs e)
         {
-
+            nonprotected_AccountData transfer_npac = new nonprotected_AccountData();
+            transfer_npac.ac_username = this.username;
+            string username = this.username;
+            DigifficeAllpad digifficeAllpad = new DigifficeAllpad(transfer_npac);
+            digifficeAllpad.Show();
         }
 
         private void DigifficeAllpad_MouseEnter(object sender, EventArgs e)
