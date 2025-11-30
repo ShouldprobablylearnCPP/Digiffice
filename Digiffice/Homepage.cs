@@ -11,14 +11,17 @@ namespace Digiffice
         Image xBtnHover = Properties.Resources.XbtnHover;
         string username = "";
         int DigifficeProgramsNum = 1;
-        
-        // Class Lists
+
+        // Program Open Button Lists
         EventHandler[] ProgramClickEventHandlers = new EventHandler[1];
+        EventHandler[] ProgramMouseEnterEventHandlers = new EventHandler[1];
+        EventHandler[] ProgramMouseLeaveEventHandlers = new EventHandler[1];
         Image[] ProgramIcons = new Image[1];
         string[] programNames = new string[1];
+        string[] programInfos = new string[1];
 
         // Program Button Group
-        Button programOpen_Button = new Button();
+        Panel programOpen_Button = new Panel();
 
         public Homepage(nonprotected_AccountData nonprotected_AccData)
         {
@@ -35,12 +38,17 @@ namespace Digiffice
         {
             // Event Handlers
             ProgramClickEventHandlers[0] = new EventHandler(DigifficeAllpad_Open);
+            ProgramMouseEnterEventHandlers[0] = new EventHandler(DigifficeAllpad_MouseEnter);
+            ProgramMouseLeaveEventHandlers[0] = new EventHandler(DigifficeAllpad_MouseLeave);
 
             // Program Icons
             ProgramIcons[0] = Properties.Resources.DigifficeAllpadIcon;
 
             // Program Names
             programNames[0] = "DigifficeAllpad";
+
+            // Program Infos
+            programInfos[0] = "Digiffice Allpad - A digital note-taking program for organising and editing all your notes.";
         }
 
         // Exit Button Events
@@ -75,42 +83,79 @@ namespace Digiffice
             programOpen_Button.Tag = programNames[idx];
             programOpen_Button.Size = new Size(400, 70);
             programOpen_Button.Text = "";
-            programOpen_Button.FlatStyle = FlatStyle.Flat;
-            programOpen_Button.FlatAppearance.BorderSize = 0;
-            programOpen_Button.BackColor = Color.Transparent;
-            programOpen_Button.BackgroundImage = Properties.Resources.ControlButton;
-            programOpen_Button.BackgroundImageLayout = ImageLayout.Stretch;
+            programOpen_Button.BackColor = Color.WhiteSmoke;
+            programOpen_Button.Cursor = Cursors.Hand;
+            programOpen_Button.BorderStyle = BorderStyle.FixedSingle;
             int yLocation = (ProgramsPanel.Location.Y + (ProgramsPanel.Height + 6)) + ((programOpen_Button.Size.Height + 6) * idx);
             programOpen_Button.Location = new Point(ProgramsPanel.Location.X, yLocation);
             programOpen_Button.Paint += ProgramOpenButton_Paint;
             programOpen_Button.Click += ProgramClickEventHandlers[idx];
+            programOpen_Button.MouseEnter += ProgramMouseEnterEventHandlers[idx];
+            programOpen_Button.MouseLeave += ProgramMouseLeaveEventHandlers[idx];
             this.Controls.Add(programOpen_Button);
-            programOpen_Button = new Button();
+            programOpen_Button = new Panel();
         }
 
-        private void ProgramOpen_Button_PaintProperties(string programToOpen)
+        private void ProgramOpen_Button_PaintProperties(string programToOpen, Panel btn)
         {
             // icon panel
             Panel iconPanel = new Panel();
+            iconPanel.Name = "IconPanel_" + programToOpen;
+            iconPanel.Tag = btn.Tag;
             iconPanel.Size = new Size(60, 60);
-            iconPanel.Location = new Point(5, 5);
+            iconPanel.Location = new Point(btn.Location.X + 5, btn.Location.Y + 5);
+            iconPanel.BackColor = btn.BackColor;
             iconPanel.BackgroundImage = ProgramIcons[Array.IndexOf(programNames, programToOpen)];
-            iconPanel.BackColor = Color.Transparent;
             iconPanel.BackgroundImageLayout = ImageLayout.Stretch;
             Controls.Add(iconPanel);
+            iconPanel.Enabled = false;
             iconPanel.BringToFront();
+
+            // program info label
+            Label programInfoLabel = new Label();
+            programInfoLabel.Name = "ProgramInfoLabel_" + programToOpen;
+            programInfoLabel.Tag = btn.Tag;
+            programInfoLabel.Size = new Size(300, 60);
+            programInfoLabel.Location = new Point(iconPanel.Location.X + iconPanel.Width + 10, btn.Location.Y + 5);
+            programInfoLabel.BackColor = btn.BackColor;
+            programInfoLabel.Text = programInfos[Array.IndexOf(programNames, programToOpen)];
+            programInfoLabel.Font = new Font("Roboto", 8, FontStyle.Bold);
+            programInfoLabel.TextAlign = ContentAlignment.MiddleLeft;
+            Controls.Add(programInfoLabel);
+            programInfoLabel.Enabled = false;
+            programInfoLabel.BringToFront();
         }
 
         private void ProgramOpenButton_Paint(object sender, EventArgs e)
         {
-            Button currentButton = (Button)sender;
+            Panel currentButton = (Panel)sender;
             string program = sender.GetType().GetProperty("Tag").GetValue(sender, null).ToString();
-            ProgramOpen_Button_PaintProperties(program);
+            ProgramOpen_Button_PaintProperties(program, currentButton);
         }
+
+        // Digiffice Allpad
 
         private void DigifficeAllpad_Open(object sender, EventArgs e)
         {
-            MessageBox.Show("HEHEHEHA");
+
+        }
+
+        private void DigifficeAllpad_MouseEnter(object sender, EventArgs e)
+        {
+            // sender
+            Panel btn = (Panel)sender;
+
+            // set back colour
+            btn.BackColor = Color.LightGray;
+        }
+
+        private void DigifficeAllpad_MouseLeave(object sender, EventArgs e)
+        {
+            // sender
+            Panel btn = (Panel)sender;
+
+            // set back colour
+            btn.BackColor = Color.WhiteSmoke;
         }
     }
 }
