@@ -63,6 +63,9 @@
             ExitButton.Size = new Size(74, 24);
             ExitButton.TabIndex = 1;
             ExitButton.UseVisualStyleBackColor = false;
+            ExitButton.Click += ExitButton_Click;
+            ExitButton.MouseEnter += ExitButton_MouseEnter;
+            ExitButton.MouseLeave += ExitButton_MouseLeave;
             // 
             // Windowmsg
             // 
@@ -79,6 +82,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
             Controls.Add(Homepanel);
             FormBorderStyle = FormBorderStyle.None;
