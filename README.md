@@ -38,7 +38,7 @@ WHAT TO EXPECT:
 - The Interface of Digiffice will be similar to that of other office software programs, however it may look slightly different. Despite this, it will still be easy to figure out and use.
 
 LIST OF APPS:
-- Note-taking software: Digiffice Allpad
+- Note-taking software: Digiffice Allnote
 
 FAQs:
 
