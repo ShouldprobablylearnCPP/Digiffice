@@ -83,9 +83,9 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DigifficeAllpadIcon {
+        internal static System.Drawing.Bitmap DigifficeAllnoteIcon {
             get {
-                object obj = ResourceManager.GetObject("DigifficeAllpadIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("DigifficeAllnoteIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

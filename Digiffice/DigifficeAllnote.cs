@@ -15,17 +15,24 @@ using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
 namespace Digiffice
 {
 
-    public partial class DigifficeAllpad : Form
+    public partial class DigifficeAllnote : Form
     {
         // Class Variables
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
 
-        public DigifficeAllpad(nonprotected_AccountData nonprotected_AccountData)
+        public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData)
         {
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             DigifficeAllpad_NewFile("NewNotebook");
             InitializeComponent();
+
+            // Hide form until fully loaded to prevent flickering
+            this.Opacity = 0;
+            this.Shown += (s, e) =>
+            {
+                this.Opacity = 1;
+            };
         }
 
         // Exit Button Events
@@ -48,24 +55,24 @@ namespace Digiffice
         private void DigifficeAllpad_NewFile(string fileName)
         {
             Vector2 defaultPageSize_Inches = new Vector2(8.27f, 11.69f);
-            DigifficeAllpadEditorFile editorFile = new DigifficeAllpadEditorFile();
+            DigifficeAllnoteEditorFile editorFile = new DigifficeAllnoteEditorFile();
             editorFile.fileName = fileName;
             DigifficeAllpad_NewChapter("New chapter", editorFile);
-            DigifficeAllpadEditorFile.Chapter? firstChapter = FindChapterByName(editorFile, "New chapter");
+            DigifficeAllnoteEditorFile.Chapter? firstChapter = FindChapterByName(editorFile, "New chapter");
             if (firstChapter == null)
             {
                 MessageBox.Show("Error creating new notebook: first chapter not found. Closing Digiffice Allpad...");
                 this.Close();
             }
 #pragma warning disable CS8629 // Nullable value type may be null.
-            DigifficeAllpad_NewPage("New page", defaultPageSize_Inches, editorFile, (DigifficeAllpadEditorFile.Chapter)firstChapter);
+            DigifficeAllpad_NewPage("New page", defaultPageSize_Inches, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
 #pragma warning restore CS8629 // Nullable value type may be null.
         }
 
         // File Element Events
-        private void DigifficeAllpad_NewPage(string pageName, Vector2 Size, DigifficeAllpadEditorFile parentNotebook, DigifficeAllpadEditorFile.Chapter parentChapter)
+        private void DigifficeAllpad_NewPage(string pageName, Vector2 Size, DigifficeAllnoteEditorFile parentNotebook, DigifficeAllnoteEditorFile.Chapter parentChapter)
         {
-            DigifficeAllpadEditorFile.Page newPage = new DigifficeAllpadEditorFile.Page();
+            DigifficeAllnoteEditorFile.Page newPage = new DigifficeAllnoteEditorFile.Page();
             newPage.pageSize = Size;
             newPage.pageTitle = pageName;
             newPage.CreatedDateTime = DateTime.Now;
@@ -75,9 +82,9 @@ namespace Digiffice
             parentChapter.chapterPages.Add(newPage);
         }
 
-        private void DigifficeAllpad_NewChapter(string chapterName, DigifficeAllpadEditorFile parentNotebook)
+        private void DigifficeAllpad_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
         {
-            DigifficeAllpadEditorFile.Chapter newChapter = new DigifficeAllpadEditorFile.Chapter();
+            DigifficeAllnoteEditorFile.Chapter newChapter = new DigifficeAllnoteEditorFile.Chapter();
             newChapter.chapterName = chapterName;
             newChapter.chapterNum = parentNotebook.chapters.Count + 1;
             parentNotebook.chapters.Add(newChapter);
@@ -85,9 +92,9 @@ namespace Digiffice
 
         // Other File Events
 
-        private DigifficeAllpadEditorFile.Chapter? FindChapterByName(DigifficeAllpadEditorFile file, string name)
+        private DigifficeAllnoteEditorFile.Chapter? FindChapterByName(DigifficeAllnoteEditorFile file, string name)
         {
-            foreach (DigifficeAllpadEditorFile.Chapter chapter in file.chapters)
+            foreach (DigifficeAllnoteEditorFile.Chapter chapter in file.chapters)
             {
                 if (chapter.chapterName == name)
                 {
@@ -96,6 +103,19 @@ namespace Digiffice
             }
             MessageBox.Show("Chapter " + name + " not found in file " + file.fileName);
             return null;
+        }
+
+        private void DigifficeButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        // Other Events
+        private void Center_WindowTitle()
+        {
+            int yLocatin = 12;
+            int xLocation = (this.Width / 2) - (Windowmsg.Width / 2);
+            Windowmsg.Location = new Point(xLocation, yLocatin);
         }
     }
 }

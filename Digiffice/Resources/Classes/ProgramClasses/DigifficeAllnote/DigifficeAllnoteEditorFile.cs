@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad
 {
-    public class DigifficeAllpadEditorFile
+    public class DigifficeAllnoteEditorFile
     {
         // Header Vars
         public string fileName;

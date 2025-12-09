@@ -17,6 +17,13 @@ namespace Digiffice
         public Register()
         {
             InitializeComponent();
+
+            // Hide form until fully loaded to prevent flickering
+            this.Opacity = 0;
+            this.Shown += (s, e) =>
+            {
+                this.Opacity = 1;
+            };
         }
 
         OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");

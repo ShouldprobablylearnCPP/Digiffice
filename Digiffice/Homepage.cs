@@ -38,18 +38,18 @@ namespace Digiffice
         private void Fill_Lists()
         {
             // Event Handlers
-            ProgramClickEventHandlers[0] = new EventHandler(DigifficeAllpad_Open);
-            ProgramMouseEnterEventHandlers[0] = new EventHandler(DigifficeAllpad_MouseEnter);
-            ProgramMouseLeaveEventHandlers[0] = new EventHandler(DigifficeAllpad_MouseLeave);
+            ProgramClickEventHandlers[0] = new EventHandler(DigifficeAllnote_Open);
+            ProgramMouseEnterEventHandlers[0] = new EventHandler(DigifficeAllnote_MouseEnter);
+            ProgramMouseLeaveEventHandlers[0] = new EventHandler(DigifficeAllnote_MouseLeave);
 
             // Program Icons
-            ProgramIcons[0] = Properties.Resources.DigifficeAllpadIcon;
+            ProgramIcons[0] = Properties.Resources.DigifficeAllnoteIcon;
 
             // Program Names
-            programNames[0] = "DigifficeAllpad";
+            programNames[0] = "DigifficeAllnote";
 
             // Program Infos
-            programInfos[0] = "Digiffice Allpad - A digital note-taking program for organising and editing all your notes.";
+            programInfos[0] = "Digiffice Allnote - A digital note-taking program for organising and editing all your notes.";
         }
 
         // Exit Button Events
@@ -136,16 +136,16 @@ namespace Digiffice
 
         // Digiffice Allpad
 
-        private void DigifficeAllpad_Open(object sender, EventArgs e)
+        private void DigifficeAllnote_Open(object sender, EventArgs e)
         {
             nonprotected_AccountData transfer_npac = new nonprotected_AccountData();
             transfer_npac.ac_username = this.username;
             string username = this.username;
-            DigifficeAllpad digifficeAllpad = new DigifficeAllpad(transfer_npac);
-            digifficeAllpad.Show();
+            DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(transfer_npac);
+            DigifficeAllnote.Show();
         }
 
-        private void DigifficeAllpad_MouseEnter(object sender, EventArgs e)
+        private void DigifficeAllnote_MouseEnter(object sender, EventArgs e)
         {
             // sender
             Panel btn = (Panel)sender;
@@ -154,7 +154,7 @@ namespace Digiffice
             btn.BackColor = Color.LightGray;
         }
 
-        private void DigifficeAllpad_MouseLeave(object sender, EventArgs e)
+        private void DigifficeAllnote_MouseLeave(object sender, EventArgs e)
         {
             // sender
             Panel btn = (Panel)sender;

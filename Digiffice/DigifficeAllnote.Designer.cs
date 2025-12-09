@@ -1,6 +1,6 @@
 ﻿namespace Digiffice
 {
-    partial class DigifficeAllpad
+    partial class DigifficeAllnote
     {
         /// <summary>
         /// Required designer variable.
@@ -31,13 +31,16 @@
             Homepanel = new Panel();
             ExitButton = new Button();
             Windowmsg = new Label();
+            DigifficeButton = new Button();
+            SectionSelectionPanel = new Panel();
+            FileTab = new Button();
             Homepanel.SuspendLayout();
+            SectionSelectionPanel.SuspendLayout();
             SuspendLayout();
             // 
             // Homepanel
             // 
             Homepanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            Homepanel.AutoSize = true;
             Homepanel.BackColor = SystemColors.ControlLight;
             Homepanel.BackgroundImage = Properties.Resources.Panel;
             Homepanel.BackgroundImageLayout = ImageLayout.Stretch;
@@ -72,26 +75,66 @@
             Windowmsg.AutoSize = true;
             Windowmsg.BackColor = Color.Transparent;
             Windowmsg.Font = new Font("Roboto", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Windowmsg.Location = new Point(12, 12);
+            Windowmsg.Location = new Point(852, 12);
             Windowmsg.Name = "Windowmsg";
-            Windowmsg.Size = new Size(207, 35);
+            Windowmsg.Size = new Size(216, 35);
             Windowmsg.TabIndex = 0;
-            Windowmsg.Text = "Digiffice Allpad";
+            Windowmsg.Text = "Digiffice Allnote";
+            Windowmsg.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // DigifficeAllpad
+            // DigifficeButton
+            // 
+            DigifficeButton.FlatAppearance.BorderSize = 0;
+            DigifficeButton.FlatStyle = FlatStyle.Flat;
+            DigifficeButton.Location = new Point(12, 12);
+            DigifficeButton.Name = "DigifficeButton";
+            DigifficeButton.Size = new Size(75, 75);
+            DigifficeButton.TabIndex = 3;
+            DigifficeButton.Text = "Return to Digiffice";
+            DigifficeButton.UseVisualStyleBackColor = true;
+            DigifficeButton.Click += DigifficeButton_Click;
+            // 
+            // SectionSelectionPanel
+            // 
+            SectionSelectionPanel.BackColor = SystemColors.GradientActiveCaption;
+            SectionSelectionPanel.Controls.Add(FileTab);
+            SectionSelectionPanel.ForeColor = SystemColors.ActiveCaptionText;
+            SectionSelectionPanel.Location = new Point(0, 59);
+            SectionSelectionPanel.Name = "SectionSelectionPanel";
+            SectionSelectionPanel.Size = new Size(1920, 40);
+            SectionSelectionPanel.TabIndex = 2;
+            // 
+            // FileTab
+            // 
+            FileTab.BackColor = Color.Transparent;
+            FileTab.FlatAppearance.BorderSize = 0;
+            FileTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            FileTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            FileTab.FlatStyle = FlatStyle.Flat;
+            FileTab.Font = new Font("Roboto", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            FileTab.Location = new Point(100, 8);
+            FileTab.Name = "FileTab";
+            FileTab.Size = new Size(75, 30);
+            FileTab.TabIndex = 0;
+            FileTab.Text = "File";
+            FileTab.UseVisualStyleBackColor = false;
+            // 
+            // DigifficeAllnote
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
+            Controls.Add(DigifficeButton);
+            Controls.Add(SectionSelectionPanel);
             Controls.Add(Homepanel);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "DigifficeAllpad";
+            Name = "DigifficeAllnote";
             Text = "DigifficeAllpad";
             Homepanel.ResumeLayout(false);
             Homepanel.PerformLayout();
+            SectionSelectionPanel.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -99,5 +142,8 @@
         private Panel Homepanel;
         private Button ExitButton;
         private Label Windowmsg;
+        private Panel SectionSelectionPanel;
+        private Button DigifficeButton;
+        private Button FileTab;
     }
 }
