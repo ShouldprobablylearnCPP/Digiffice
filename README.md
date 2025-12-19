@@ -21,7 +21,7 @@ DISCLAIMERS:
 - The master branch is the branch where the current release of Digiffice is. Currently, Digiffice is pre-release so the master branch will not contain a release version yet
 
 === 4 - Licensing ===
-- Digiffice is under the CC0 1.0 (Creative Commons 0) license.
+- Digiffice is under the GNU GPL 3.0 (GNU General Public License 3.0) license.
 
 WHAT TO EXPECT:
 
