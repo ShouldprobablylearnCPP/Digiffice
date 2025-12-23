@@ -131,7 +131,7 @@
             HelpTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             HelpTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
             HelpTab.FlatStyle = FlatStyle.Flat;
-            HelpTab.Font = new Font("Segoe UI", 12F);
+            HelpTab.Font = new Font("Roboto", 12F);
             HelpTab.Location = new Point(667, 10);
             HelpTab.Name = "HelpTab";
             HelpTab.Size = new Size(75, 30);
@@ -149,7 +149,7 @@
             ViewTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             ViewTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
             ViewTab.FlatStyle = FlatStyle.Flat;
-            ViewTab.Font = new Font("Segoe UI", 12F);
+            ViewTab.Font = new Font("Roboto", 12F);
             ViewTab.Location = new Point(586, 10);
             ViewTab.Name = "ViewTab";
             ViewTab.Size = new Size(75, 30);
@@ -167,7 +167,7 @@
             ReviewTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             ReviewTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
             ReviewTab.FlatStyle = FlatStyle.Flat;
-            ReviewTab.Font = new Font("Segoe UI", 12F);
+            ReviewTab.Font = new Font("Roboto", 12F);
             ReviewTab.Location = new Point(505, 10);
             ReviewTab.Name = "ReviewTab";
             ReviewTab.Size = new Size(75, 30);
@@ -185,7 +185,7 @@
             HistoryTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             HistoryTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
             HistoryTab.FlatStyle = FlatStyle.Flat;
-            HistoryTab.Font = new Font("Segoe UI", 12F);
+            HistoryTab.Font = new Font("Roboto", 12F);
             HistoryTab.Location = new Point(424, 10);
             HistoryTab.Name = "HistoryTab";
             HistoryTab.Size = new Size(75, 30);
@@ -203,7 +203,7 @@
             DrawTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             DrawTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
             DrawTab.FlatStyle = FlatStyle.Flat;
-            DrawTab.Font = new Font("Segoe UI", 12F);
+            DrawTab.Font = new Font("Roboto", 12F);
             DrawTab.Location = new Point(343, 10);
             DrawTab.Name = "DrawTab";
             DrawTab.Size = new Size(75, 30);
@@ -221,7 +221,7 @@
             InsertTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             InsertTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
             InsertTab.FlatStyle = FlatStyle.Flat;
-            InsertTab.Font = new Font("Segoe UI", 12F);
+            InsertTab.Font = new Font("Roboto", 12F);
             InsertTab.Location = new Point(262, 10);
             InsertTab.Name = "InsertTab";
             InsertTab.Size = new Size(75, 30);
@@ -239,7 +239,7 @@
             HomeTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             HomeTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
             HomeTab.FlatStyle = FlatStyle.Flat;
-            HomeTab.Font = new Font("Segoe UI", 12F);
+            HomeTab.Font = new Font("Roboto", 12F);
             HomeTab.Location = new Point(181, 10);
             HomeTab.Name = "HomeTab";
             HomeTab.Size = new Size(75, 30);
@@ -257,7 +257,7 @@
             FileTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             FileTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
             FileTab.FlatStyle = FlatStyle.Flat;
-            FileTab.Font = new Font("Segoe UI", 12F);
+            FileTab.Font = new Font("Roboto", 12F);
             FileTab.Location = new Point(100, 10);
             FileTab.Name = "FileTab";
             FileTab.Size = new Size(75, 30);

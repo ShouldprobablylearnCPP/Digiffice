@@ -12,12 +12,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Digiffice.Resources.Classes.ProgramClasses;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClasses;
+using System.Reflection;
 
 namespace Digiffice
 {
 
     public partial class DigifficeAllnote : Form
     {
+        // Class Lists
+        List<object> RibbonTabClasses = new List<object>();
+        List<Control> RibbonTabs = new List<Control>();
+
         // Class Variables
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
@@ -26,6 +32,7 @@ namespace Digiffice
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData)
         {
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            FillLists();
             DigifficeAllpad_NewFile("NewNotebook");
             InitializeComponent();
 
@@ -137,12 +144,32 @@ namespace Digiffice
         private void Tab_Click(object sender, EventArgs e)
         {
             Control senderCtrl = (Control)sender;
+            Point Origin = RibbonPanel.Location;
             senderCtrl.BackgroundImage = Properties.Resources.Tab;
             if (previouslySelectedTab != null && previouslySelectedTab != senderCtrl)
             {
                 previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             previouslySelectedTab = senderCtrl;
+
+            for (int i = 0; i < RibbonTabs.Count; i++)
+            {
+                Debug.WriteLine("Checking tab " + RibbonTabs[i].Name);
+                if (RibbonTabs[i].Name == sender)
+                {
+                    Type ribbonClass = RibbonTabClasses[i].GetType();
+                    MethodBase initUI = ribbonClass.GetMethod("InitialiseUI");
+                    if (initUI == null)
+                    {
+                        MessageBox.Show("UI init error", "Closing Allnote...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                    }
+                    else
+                    {
+                        initUI.Invoke(RibbonTabClasses[i], new object[] { RibbonPanel });
+                    }
+                }
+            }
         }
 
         // Windowmsg Events
@@ -170,6 +197,19 @@ namespace Digiffice
                 pixel = centimeters * g.DpiX / 2.54d;
             }
             return (int)pixel;
+        }
+
+        private void FillLists()
+        {
+            // Clear Lists (Prevents mismatching indexes)
+            RibbonTabClasses.Clear();
+            RibbonTabs.Clear();
+
+            // Fill RibbonTabClasses List
+            DigifficeAllnoteFileTab allnoteFileTab = new DigifficeAllnoteFileTab();
+            RibbonTabClasses.Add(allnoteFileTab);
+            // Fill RibbonTabs List
+            RibbonTabs.Add(FileTab);
         }
     }
 }
