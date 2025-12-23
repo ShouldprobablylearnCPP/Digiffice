@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -20,6 +21,7 @@ namespace Digiffice
         // Class Variables
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
+        Control previouslySelectedTab = null;
 
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData)
         {
@@ -54,7 +56,7 @@ namespace Digiffice
         // File Events
         private void DigifficeAllpad_NewFile(string fileName)
         {
-            Vector2 defaultPageSize_Inches = new Vector2(8.27f, 11.69f);
+            Vector2 defaultPageSize_cm = new Vector2(21.00f, 29.70f);
             DigifficeAllnoteEditorFile editorFile = new DigifficeAllnoteEditorFile();
             editorFile.fileName = fileName;
             DigifficeAllpad_NewChapter("New chapter", editorFile);
@@ -65,8 +67,9 @@ namespace Digiffice
                 this.Close();
             }
 #pragma warning disable CS8629 // Nullable value type may be null.
-            DigifficeAllpad_NewPage("New page", defaultPageSize_Inches, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
+            DigifficeAllpad_NewPage("New page", defaultPageSize_cm, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
 #pragma warning restore CS8629 // Nullable value type may be null.
+            DigifficeAllpad_ShowNote(editorFile.filePages[0]);
         }
 
         // File Element Events
@@ -90,6 +93,25 @@ namespace Digiffice
             parentNotebook.chapters.Add(newChapter);
         }
 
+        // File->Note Events / Editor Events
+        private void DigifficeAllpad_ShowNote(DigifficeAllnoteEditorFile.Page currentPage)
+        {
+            // Editable Page Functions
+            DigifficeAllpad_ShowEditablePageBackground(currentPage);
+        }
+
+        private void DigifficeAllpad_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
+        {
+            Panel notebg = new Panel();
+            notebg.BackColor = Color.White;
+            int sizex = Convertcm_pixels(currentPage.pageSize.X);
+            int sizey = Convertcm_pixels(currentPage.pageSize.Y);
+            notebg.Size = new Size(sizex, sizey);
+            Point notebgPos = new Point((this.Width / 2) - (notebg.Width / 2), 300);
+            notebg.Location = notebgPos;
+            this.Controls.Add(notebg);
+        }
+
         // Other File Events
 
         private DigifficeAllnoteEditorFile.Chapter? FindChapterByName(DigifficeAllnoteEditorFile file, string name)
@@ -105,17 +127,49 @@ namespace Digiffice
             return null;
         }
 
+        // Digiffice Button Events
         private void DigifficeButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        // Other Events
-        private void Center_WindowTitle()
+        // Allnote Tab Events
+        private void Tab_Click(object sender, EventArgs e)
         {
-            int yLocatin = 12;
-            int xLocation = (this.Width / 2) - (Windowmsg.Width / 2);
-            Windowmsg.Location = new Point(xLocation, yLocatin);
+            Control senderCtrl = (Control)sender;
+            senderCtrl.BackgroundImage = Properties.Resources.Tab;
+            if (previouslySelectedTab != null && previouslySelectedTab != senderCtrl)
+            {
+                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            previouslySelectedTab = senderCtrl;
+        }
+
+        // Windowmsg Events
+        private void Windowmsg_Paint(object sender, PaintEventArgs e)
+        {
+            // Center Windowmsg Label
+            int centerX = (this.Width - Windowmsg.Width) / 2;
+            Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
+        }
+
+        private void Windowmsg_TextChanged(object sender, EventArgs e)
+        {
+            // Center Windowmsg Label
+            int centerX = (this.Width - Windowmsg.Width) / 2;
+            Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
+        }
+
+        // Other Events
+
+        private int Convertcm_pixels(float centimeters)
+        {
+            double pixel = 0d;
+            using (Graphics g = this.CreateGraphics())
+            {
+                pixel = centimeters * g.DpiX / 2.54d;
+            }
+            return (int)pixel;
         }
     }
 }
