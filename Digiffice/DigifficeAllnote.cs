@@ -22,7 +22,7 @@ namespace Digiffice
     {
         // Class Lists
         List<object> RibbonTabClasses = new List<object>();
-        List<Control> RibbonTabs = new List<Control>();
+        List<Button> RibbonTabs = new List<Button>();
 
         // Class Variables
         Image xBtnDefault = Properties.Resources.XbtnDefault;
@@ -32,9 +32,9 @@ namespace Digiffice
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData)
         {
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-            FillLists();
             DigifficeAllpad_NewFile("NewNotebook");
             InitializeComponent();
+            FillLists();
 
             // Hide form until fully loaded to prevent flickering
             this.Opacity = 0;
@@ -143,6 +143,7 @@ namespace Digiffice
         // Allnote Tab Events
         private void Tab_Click(object sender, EventArgs e)
         {
+            Button senderBtn = null;
             Control senderCtrl = (Control)sender;
             Point Origin = RibbonPanel.Location;
             senderCtrl.BackgroundImage = Properties.Resources.Tab;
@@ -152,13 +153,23 @@ namespace Digiffice
             }
             previouslySelectedTab = senderCtrl;
 
+            if (sender is Button btn)
+            {
+                senderBtn = btn;
+            }
+            else
+            {
+                MessageBox.Show("Tab_Click event called by a non-button object...", "Closing Allnote...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+            }
+
             for (int i = 0; i < RibbonTabs.Count; i++)
             {
-                Debug.WriteLine("Checking tab " + RibbonTabs[i].Name);
-                if (RibbonTabs[i].Name == sender)
+                if (RibbonTabs[i].Name == senderBtn.Name)
                 {
                     Type ribbonClass = RibbonTabClasses[i].GetType();
                     MethodBase initUI = ribbonClass.GetMethod("InitialiseUI");
+
                     if (initUI == null)
                     {
                         MessageBox.Show("UI init error", "Closing Allnote...", MessageBoxButtons.OK, MessageBoxIcon.Error);
