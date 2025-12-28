@@ -167,6 +167,96 @@ namespace Digiffice
             homeTabContents.InitialiseUI(RibbonPanel);
             previouslySelectedTab = HomeTab;
         }
+        private void InsertTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (previouslySelectedTab != null)
+            {
+                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            InsertTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Insert Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
+            insertTabContents.InitialiseUI(RibbonPanel);
+            previouslySelectedTab = InsertTab;
+        }
+        private void DrawTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (previouslySelectedTab != null)
+            {
+                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            DrawTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Draw Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteDrawTab drawTabContents = new DigifficeAllnoteDrawTab();
+            drawTabContents.InitialiseUI(RibbonPanel);
+            previouslySelectedTab = DrawTab;
+        }
+        private void HistoryTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (previouslySelectedTab != null)
+            {
+                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            HistoryTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate History Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteHistoryTab historyTabContents = new DigifficeAllnoteHistoryTab();
+            historyTabContents.InitialiseUI(RibbonPanel);
+            previouslySelectedTab = HistoryTab;
+        }
+        private void ReviewTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (previouslySelectedTab != null)
+            {
+                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            ReviewTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Review Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteReviewTab reviewTabContents = new DigifficeAllnoteReviewTab();
+            reviewTabContents.InitialiseUI(RibbonPanel);
+            previouslySelectedTab = ReviewTab;
+        }
+        private void ViewTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (previouslySelectedTab != null)
+            {
+                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            ViewTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate View Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteViewTab viewTabContents = new DigifficeAllnoteViewTab();
+            viewTabContents.InitialiseUI(RibbonPanel);
+            previouslySelectedTab = ViewTab;
+        }
+        private void HelpTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (previouslySelectedTab != null)
+            {
+                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            HelpTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Help Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteHelpTab helpTabContents = new DigifficeAllnoteHelpTab();
+            helpTabContents.InitialiseUI(RibbonPanel);
+            previouslySelectedTab = HelpTab;
+        }
 
         // Windowmsg Events
         private void Windowmsg_Paint(object sender, PaintEventArgs e)

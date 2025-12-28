@@ -138,6 +138,7 @@
             HelpTab.TabIndex = 10;
             HelpTab.Text = "Help";
             HelpTab.UseVisualStyleBackColor = false;
+            HelpTab.Click += HelpTab_Click;
             // 
             // ViewTab
             // 
@@ -155,6 +156,7 @@
             ViewTab.TabIndex = 9;
             ViewTab.Text = "View";
             ViewTab.UseVisualStyleBackColor = false;
+            ViewTab.Click += ViewTab_Click;
             // 
             // ReviewTab
             // 
@@ -172,6 +174,7 @@
             ReviewTab.TabIndex = 8;
             ReviewTab.Text = "Review";
             ReviewTab.UseVisualStyleBackColor = false;
+            ReviewTab.Click += ReviewTab_Click;
             // 
             // HistoryTab
             // 
@@ -189,6 +192,7 @@
             HistoryTab.TabIndex = 7;
             HistoryTab.Text = "History";
             HistoryTab.UseVisualStyleBackColor = false;
+            HistoryTab.Click += HistoryTab_Click;
             // 
             // DrawTab
             // 
@@ -206,6 +210,7 @@
             DrawTab.TabIndex = 6;
             DrawTab.Text = "Draw";
             DrawTab.UseVisualStyleBackColor = false;
+            DrawTab.Click += DrawTab_Click;
             // 
             // InsertTab
             // 
@@ -223,6 +228,7 @@
             InsertTab.TabIndex = 5;
             InsertTab.Text = "Insert";
             InsertTab.UseVisualStyleBackColor = false;
+            InsertTab.Click += InsertTab_Click;
             // 
             // HomeTab
             // 
