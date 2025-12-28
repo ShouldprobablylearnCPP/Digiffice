@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
         // Class Elements
         Button NewAllnoteFileBtn = new Button();
 
-        public void InitialiseUI(Panel ribbonPnl)
+        public void InitialiseUI(Panel rbnPnl)
         {
             // NewFileBtn
             NewAllnoteFileBtn.Enabled = true;
@@ -26,7 +27,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             NewAllnoteFileBtn.FlatStyle = FlatStyle.Flat;
             NewAllnoteFileBtn.FlatAppearance.BorderSize = 0;
 
-            ribbonPnl.Controls.Add(NewAllnoteFileBtn);
+            rbnPnl.Controls.Add(NewAllnoteFileBtn);
         }
     }
 }

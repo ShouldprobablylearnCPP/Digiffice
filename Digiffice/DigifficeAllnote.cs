@@ -20,9 +20,6 @@ namespace Digiffice
 
     public partial class DigifficeAllnote : Form
     {
-        // Class Lists
-        List<object> RibbonTabClasses = new List<object>();
-        List<Button> RibbonTabs = new List<Button>();
 
         // Class Variables
         Image xBtnDefault = Properties.Resources.XbtnDefault;
@@ -34,7 +31,6 @@ namespace Digiffice
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             DigifficeAllpad_NewFile("NewNotebook");
             InitializeComponent();
-            FillLists();
 
             // Hide form until fully loaded to prevent flickering
             this.Opacity = 0;
@@ -141,51 +137,35 @@ namespace Digiffice
         }
 
         // Allnote Tab Events
-        private void Tab_Click(object sender, EventArgs e)
+        private void FileTab_Click(object sender, EventArgs e)
         {
-            Button senderBtn = null;
-            Control senderCtrl = (Control)sender;
-            Point Origin = RibbonPanel.Location;
-            senderCtrl.BackgroundImage = Properties.Resources.Tab;
-            if (previouslySelectedTab != null && previouslySelectedTab != senderCtrl)
+            // Change ribbon tab image
+            if (previouslySelectedTab != null)
             {
                 previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
-            previouslySelectedTab = senderCtrl;
+            FileTab.BackgroundImage = Properties.Resources.Tab;
 
-            if (sender is Button btn)
+            // Instantiate File Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
+            fileTabContents.InitialiseUI(RibbonPanel);
+            previouslySelectedTab = FileTab;
+        }
+        private void HomeTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (previouslySelectedTab != null)
             {
-                senderBtn = btn;
+                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
-            else
-            {
-                MessageBox.Show("Tab_Click event called by a non-button object...", "Closing Allnote...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
-            }
+            HomeTab.BackgroundImage = Properties.Resources.Tab;
 
-            for (int i = 0; i < RibbonTabs.Count; i++)
-            {
-                if (RibbonTabs[i].Name == senderBtn.Name)
-                {
-                    Type ribbonClass = RibbonTabClasses[i].GetType();
-                    MethodBase initUI = ribbonClass.GetMethod("InitialiseUI");
-
-                    foreach (Control ctrl in RibbonPanel.Controls)
-                    {
-                        RibbonPanel.Controls.Remove(ctrl);
-                    }
-
-                    if (initUI == null)
-                    {
-                        MessageBox.Show("UI init error", "Closing Allnote...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        this.Close();
-                    }
-                    else
-                    {
-                        initUI.Invoke(RibbonTabClasses[i], new object[] { RibbonPanel });
-                    }
-                }
-            }
+            // Instantiate Home Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteHomeTab homeTabContents = new DigifficeAllnoteHomeTab();
+            homeTabContents.InitialiseUI(RibbonPanel);
+            previouslySelectedTab = HomeTab;
         }
 
         // Windowmsg Events
@@ -213,19 +193,6 @@ namespace Digiffice
                 pixel = centimeters * g.DpiX / 2.54d;
             }
             return (int)pixel;
-        }
-
-        private void FillLists()
-        {
-            // Clear Lists (Prevents mismatching indexes)
-            RibbonTabClasses.Clear();
-            RibbonTabs.Clear();
-
-            // Fill RibbonTabClasses List
-            DigifficeAllnoteFileTab allnoteFileTab = new DigifficeAllnoteFileTab();
-            RibbonTabClasses.Add(allnoteFileTab);
-            // Fill RibbonTabs List
-            RibbonTabs.Add(FileTab);
         }
     }
 }

@@ -138,7 +138,6 @@
             HelpTab.TabIndex = 10;
             HelpTab.Text = "Help";
             HelpTab.UseVisualStyleBackColor = false;
-            HelpTab.Click += Tab_Click;
             // 
             // ViewTab
             // 
@@ -156,7 +155,6 @@
             ViewTab.TabIndex = 9;
             ViewTab.Text = "View";
             ViewTab.UseVisualStyleBackColor = false;
-            ViewTab.Click += Tab_Click;
             // 
             // ReviewTab
             // 
@@ -174,7 +172,6 @@
             ReviewTab.TabIndex = 8;
             ReviewTab.Text = "Review";
             ReviewTab.UseVisualStyleBackColor = false;
-            ReviewTab.Click += Tab_Click;
             // 
             // HistoryTab
             // 
@@ -192,7 +189,6 @@
             HistoryTab.TabIndex = 7;
             HistoryTab.Text = "History";
             HistoryTab.UseVisualStyleBackColor = false;
-            HistoryTab.Click += Tab_Click;
             // 
             // DrawTab
             // 
@@ -210,7 +206,6 @@
             DrawTab.TabIndex = 6;
             DrawTab.Text = "Draw";
             DrawTab.UseVisualStyleBackColor = false;
-            DrawTab.Click += Tab_Click;
             // 
             // InsertTab
             // 
@@ -228,7 +223,6 @@
             InsertTab.TabIndex = 5;
             InsertTab.Text = "Insert";
             InsertTab.UseVisualStyleBackColor = false;
-            InsertTab.Click += Tab_Click;
             // 
             // HomeTab
             // 
@@ -246,7 +240,7 @@
             HomeTab.TabIndex = 1;
             HomeTab.Text = "Home";
             HomeTab.UseVisualStyleBackColor = false;
-            HomeTab.Click += Tab_Click;
+            HomeTab.Click += HomeTab_Click;
             // 
             // FileTab
             // 
@@ -264,7 +258,7 @@
             FileTab.TabIndex = 0;
             FileTab.Text = "File";
             FileTab.UseVisualStyleBackColor = false;
-            FileTab.Click += Tab_Click;
+            FileTab.Click += FileTab_Click;
             // 
             // RibbonPanel
             // 
