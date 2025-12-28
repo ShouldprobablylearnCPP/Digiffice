@@ -18,7 +18,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
 
             NewAllnoteFileBtn.Size = new Size(110,110);
             NewAllnoteFileBtn.Location = new Point(20, 20);
-            NewAllnoteFileBtn.Text = "New";
+            NewAllnoteFileBtn.Text = "New Notebook";
             NewAllnoteFileBtn.TextAlign = ContentAlignment.BottomCenter;
             NewAllnoteFileBtn.Font = new Font("Roboto", 8, FontStyle.Regular);
             // insert background image here

@@ -170,6 +170,11 @@ namespace Digiffice
                     Type ribbonClass = RibbonTabClasses[i].GetType();
                     MethodBase initUI = ribbonClass.GetMethod("InitialiseUI");
 
+                    foreach (Control ctrl in RibbonPanel.Controls)
+                    {
+                        RibbonPanel.Controls.Remove(ctrl);
+                    }
+
                     if (initUI == null)
                     {
                         MessageBox.Show("UI init error", "Closing Allnote...", MessageBoxButtons.OK, MessageBoxIcon.Error);
