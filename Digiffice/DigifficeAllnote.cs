@@ -14,6 +14,7 @@ using Digiffice.Resources.Classes.ProgramClasses;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClasses;
 using System.Reflection;
+using Digiffice.Resources.Classes.ProgramClasses.CustomControls;
 
 namespace Digiffice
 {
@@ -29,8 +30,8 @@ namespace Digiffice
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData)
         {
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-            DigifficeAllpad_NewFile("NewNotebook");
             InitializeComponent();
+            DigifficeAllpad_NewFile("NewNotebook");
 
             // Hide form until fully loaded to prevent flickering
             this.Opacity = 0;
@@ -105,14 +106,29 @@ namespace Digiffice
 
         private void DigifficeAllpad_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
         {
-            Panel notebg = new Panel();
-            notebg.BackColor = Color.White;
+            // Create Page
+            Panel pagebg = new Panel();
+            pagebg.BackColor = Color.LightGray;
             int sizex = Convertcm_pixels(currentPage.pageSize.X);
             int sizey = Convertcm_pixels(currentPage.pageSize.Y);
-            notebg.Size = new Size(sizex, sizey);
-            Point notebgPos = new Point((this.Width / 2) - (notebg.Width / 2), 300);
-            notebg.Location = notebgPos;
-            this.Controls.Add(notebg);
+            pagebg.Size = new Size(SectionBG.Width - 170, SectionBG.Height - 70);
+            Point pagebgPos = new Point(20, 20);
+            pagebg.Location = pagebgPos;
+            SectionBG.Controls.Add(pagebg);
+
+            // Create Scrollbars
+            VScrollBar pageVScroll = new VScrollBar();
+            pageVScroll.Height = pagebg.Height;
+            pageVScroll.Width = 30;
+            pageVScroll.Location = new Point(pagebg.Right, pagebg.Top);
+            pageVScroll.Minimum = 0;
+            pageVScroll.Maximum = sizey - pagebg.Height;
+            SectionBG.Controls.Add(pageVScroll);
+
+            CustomHScrollBar pageHScroll = new CustomHScrollBar(new Point(pagebg.Left, pagebg.Bottom), new Size(pagebg.Width, 30));
+            //pageHScroll.Minimum = 0;
+            //pageHScroll.Maximum = sizex - pagebg.Width;
+            pageHScroll.addControlstoControl(SectionBG);
         }
 
         // Other File Events
@@ -283,6 +299,12 @@ namespace Digiffice
                 pixel = centimeters * g.DpiX / 2.54d;
             }
             return (int)pixel;
+        }
+
+        private void SectionBG_Paint(object sender, PaintEventArgs e)
+        {
+            this.SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 20);
+            this.SectionBG.Size = new Size((this.Width - SectionBG.Location.X) - 20, (this.Height - SectionBG.Location.Y) - 20);
         }
     }
 }

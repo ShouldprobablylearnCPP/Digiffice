@@ -42,6 +42,8 @@
             HomeTab = new Button();
             FileTab = new Button();
             RibbonPanel = new Panel();
+            LeftInfoPanel = new Panel();
+            SectionBG = new Panel();
             Homepanel.SuspendLayout();
             TabSelectionPanel.SuspendLayout();
             SuspendLayout();
@@ -277,12 +279,32 @@
             RibbonPanel.Size = new Size(1900, 150);
             RibbonPanel.TabIndex = 4;
             // 
+            // LeftInfoPanel
+            // 
+            LeftInfoPanel.BackColor = SystemColors.GradientActiveCaption;
+            LeftInfoPanel.Location = new Point(0, 257);
+            LeftInfoPanel.Name = "LeftInfoPanel";
+            LeftInfoPanel.Size = new Size(250, 823);
+            LeftInfoPanel.TabIndex = 5;
+            // 
+            // SectionBG
+            // 
+            SectionBG.BackColor = Color.DarkRed;
+            SectionBG.BorderStyle = BorderStyle.FixedSingle;
+            SectionBG.Location = new Point(270, 277);
+            SectionBG.Name = "SectionBG";
+            SectionBG.Size = new Size(1630, 783);
+            SectionBG.TabIndex = 6;
+            SectionBG.Paint += SectionBG_Paint;
+            // 
             // DigifficeAllnote
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
+            Controls.Add(SectionBG);
+            Controls.Add(LeftInfoPanel);
             Controls.Add(DigifficeButton);
             Controls.Add(TabSelectionPanel);
             Controls.Add(Homepanel);
@@ -311,5 +333,7 @@
         private Button ViewTab;
         private Button ReviewTab;
         private Button HelpTab;
+        private Panel LeftInfoPanel;
+        private Panel SectionBG;
     }
 }
