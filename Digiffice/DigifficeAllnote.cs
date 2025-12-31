@@ -106,28 +106,31 @@ namespace Digiffice
 
         private void DigifficeAllpad_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
         {
+            // Setup nonPageBg
+            nonPageBg.Location = new Point(20, 20);
+            nonPageBg.Size = new Size(SectionBG.Width - 170, SectionBG.Height - 70);
+
             // Create Page
             Panel pagebg = new Panel();
-            pagebg.BackColor = Color.LightGray;
+            pagebg.BackColor = Color.FromArgb(255,249,251,255);
             int sizex = Convertcm_pixels(currentPage.pageSize.X);
             int sizey = Convertcm_pixels(currentPage.pageSize.Y);
             pagebg.Size = new Size(SectionBG.Width - 170, SectionBG.Height - 70);
-            Point pagebgPos = new Point(20, 20);
+            Point pagebgPos = new Point(0, 0);
             pagebg.Location = pagebgPos;
-            SectionBG.Controls.Add(pagebg);
+            nonPageBg.Controls.Add(pagebg);
 
             // Create Scrollbars
-            VScrollBar pageVScroll = new VScrollBar();
-            pageVScroll.Height = pagebg.Height;
-            pageVScroll.Width = 30;
-            pageVScroll.Location = new Point(pagebg.Right, pagebg.Top);
-            pageVScroll.Minimum = 0;
-            pageVScroll.Maximum = sizey - pagebg.Height;
-            SectionBG.Controls.Add(pageVScroll);
+            CustomVScrollBar pageVScroll = new CustomVScrollBar(new Point(nonPageBg.Right, nonPageBg.Top), new Size(30, nonPageBg.Height));
+            //pageVScroll.Minimum = 0;
+            //pageVScroll.Maximum = sizey - pagebg.Height;
+            Debug.WriteLine(pagebg.Height);
+            pageVScroll.addControlstoControl(SectionBG);
 
-            CustomHScrollBar pageHScroll = new CustomHScrollBar(new Point(pagebg.Left, pagebg.Bottom), new Size(pagebg.Width, 30));
+            CustomHScrollBar pageHScroll = new CustomHScrollBar(new Point(nonPageBg.Left, nonPageBg.Bottom), new Size(nonPageBg.Width, 30));
             //pageHScroll.Minimum = 0;
             //pageHScroll.Maximum = sizex - pagebg.Width;
+            Debug.WriteLine(pagebg.Width);
             pageHScroll.addControlstoControl(SectionBG);
         }
 

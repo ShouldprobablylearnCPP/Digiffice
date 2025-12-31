@@ -11,30 +11,55 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
     public class CustomHScrollBar
     {
         public Control ctrlToAdd;
+
+        // Control Cols
+        public Color scrollBarBgCol = Color.White;
+        public Color leftScrollBtnCol = Color.White;
+        public Color rightScrollBtnCol = Color.White;
+        public Color scrollBarCol = Color.LightGray;
+
+        // Control Images
+        public Image? scrollBarBgImg = null;
+        public Image? leftScrollBtnImg = null;
+        public Image? rightScrollBtnImg = null;
+        public Image? scrollBarImg = null;
+
         public CustomHScrollBar(Point rectLocation, Size rectsize)
         {
             // Parent Control Properties
             Panel ScrollBarBgPnl = new Panel();
             ScrollBarBgPnl.Location = rectLocation;
             ScrollBarBgPnl.Size = rectsize;
-            ScrollBarBgPnl.BackColor = Color.White;
+            ScrollBarBgPnl.BackColor = scrollBarBgCol;
+            if (scrollBarBgImg != null)
+            {
+                ScrollBarBgPnl.BackgroundImage = scrollBarBgImg;
+            }
 
             // L+R Button Properties
             Button LeftScrollBtn = new Button();
             LeftScrollBtn.Size = new Size(rectsize.Height, rectsize.Height);
             LeftScrollBtn.Location = new Point(0, 0);
-            LeftScrollBtn.BackColor = Color.White;
+            LeftScrollBtn.BackColor = leftScrollBtnCol;
             LeftScrollBtn.FlatStyle = FlatStyle.Flat;
             LeftScrollBtn.FlatAppearance.BorderSize = 0;
             LeftScrollBtn.Click += LeftScrollBtn_Click;
+            if (leftScrollBtnImg != null)
+            {
+                LeftScrollBtn.BackgroundImage = leftScrollBtnImg;
+            }
 
             Button RightScrollBtn = new Button();
             RightScrollBtn.Size = new Size(rectsize.Height, rectsize.Height);
             RightScrollBtn.Location = new Point(rectsize.Width - rectsize.Height, 0);
-            RightScrollBtn.BackColor = Color.White;
+            RightScrollBtn.BackColor = rightScrollBtnCol;
             RightScrollBtn.FlatStyle = FlatStyle.Flat;
-            RightScrollBtn.FlatAppearance.BorderSize = 0;
+            RightScrollBtn.FlatAppearance.BorderSize = 0;  
             RightScrollBtn.Click += RightScrollBtn_Click;
+            if (rightScrollBtnImg != null)
+            {
+                RightScrollBtn.BackgroundImage = rightScrollBtnImg;
+            }
 
             ScrollBarBgPnl.Controls.Add(LeftScrollBtn);
             ScrollBarBgPnl.Controls.Add(RightScrollBtn);
@@ -43,6 +68,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             Panel ScrollBarPnl = new Panel();
             ScrollBarPnl.Size = new Size(rectsize.Height * 2, rectsize.Height);
             ScrollBarPnl.Location = new Point(LeftScrollBtn.Size.Width, 0);
+            ScrollBarPnl.BackColor = scrollBarCol;
+            if (scrollBarImg != null)
+            {
+                ScrollBarPnl.BackgroundImage = scrollBarImg;
+            }
 
             ScrollBarBgPnl.Controls.Add(ScrollBarPnl);
             ctrlToAdd = ScrollBarBgPnl;
