@@ -272,7 +272,7 @@
             // 
             // RibbonPanel
             // 
-            RibbonPanel.BackColor = SystemColors.ActiveCaption;
+            RibbonPanel.BackColor = Color.Transparent;
             RibbonPanel.BackgroundImage = Properties.Resources.FullRibbon;
             RibbonPanel.BackgroundImageLayout = ImageLayout.Stretch;
             RibbonPanel.ForeColor = SystemColors.ControlText;

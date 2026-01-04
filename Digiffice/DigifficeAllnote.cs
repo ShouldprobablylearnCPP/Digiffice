@@ -176,7 +176,14 @@ namespace Digiffice
             DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
             fileTabContents.InitialiseUI(RibbonPanel);
             previouslySelectedTab = FileTab;
+            FileTabOpen_Anim(fileTabContents);
         }
+
+        private void FileTabOpen_Anim(DigifficeAllnoteFileTab fileTab)
+        {
+            // insert animation here
+        }
+
         private void HomeTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image

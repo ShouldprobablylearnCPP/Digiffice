@@ -10,8 +10,8 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
     public class DigifficeAllnoteFileTab
     {
         // Class Elements
-        Button NewAllnoteFileBtn = new Button();
-        Button OpenAllnoteFileBtn = new Button();
+        public Button NewAllnoteFileBtn = new Button();
+        public Button OpenAllnoteFileBtn = new Button();
 
         public void InitialiseUI(Panel rbnPnl)
         {
@@ -19,7 +19,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             NewAllnoteFileBtn.Name = "NewAllnoteFileButton";
             NewAllnoteFileBtn.Enabled = true;
 
-            NewAllnoteFileBtn.Size = new Size(110,110);
+            NewAllnoteFileBtn.Size = new Size(110, 110);
             NewAllnoteFileBtn.Location = new Point(20, 20);
             NewAllnoteFileBtn.Text = "New Notebook";
             NewAllnoteFileBtn.TextAlign = ContentAlignment.BottomCenter;
@@ -31,7 +31,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
 
             NewAllnoteFileBtn.FlatStyle = FlatStyle.Flat;
             NewAllnoteFileBtn.FlatAppearance.BorderSize = 0;
-            NewAllnoteFileBtn.FlatAppearance.BorderColor = Color.FromArgb(0,0,0,0);
+            NewAllnoteFileBtn.FlatAppearance.BorderColor = Color.FromArgb(0, 0, 0, 0);
             NewAllnoteFileBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
             NewAllnoteFileBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
 
