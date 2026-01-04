@@ -12,19 +12,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
     {
         public Control ctrlToAdd;
 
-        // Control Cols
-        public Color scrollBarBgCol = Color.White;
-        public Color leftScrollBtnCol = Color.White;
-        public Color rightScrollBtnCol = Color.White;
-        public Color scrollBarCol = Color.LightGray;
-
-        // Control Images
-        public Image? scrollBarBgImg = null;
-        public Image? leftScrollBtnImg = null;
-        public Image? rightScrollBtnImg = null;
-        public Image? scrollBarImg = null;
-
-        public CustomHScrollBar(Point rectLocation, Size rectsize)
+        public CustomHScrollBar(Point rectLocation, Size rectsize, 
+            Color scrollBarBgCol, Color leftScrollBtnCol, Color rightScrollBtnCol, Color scrollBarCol, 
+            Image? scrollBarBgImg, Image? leftScrollBtnImg, Image? rightScrollBtnImg, Image? scrollBarImg)
         {
             // Parent Control Properties
             Panel ScrollBarBgPnl = new Panel();

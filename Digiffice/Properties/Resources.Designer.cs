@@ -183,6 +183,46 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap VScrollBar_DownScrollBtn {
+            get {
+                object obj = ResourceManager.GetObject("VScrollBar_DownScrollBtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap VScrollBar_LeftScrollBtn {
+            get {
+                object obj = ResourceManager.GetObject("VScrollBar_LeftScrollBtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap VScrollBar_RightScrollBtn {
+            get {
+                object obj = ResourceManager.GetObject("VScrollBar_RightScrollBtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap VScrollBar_UpScrollBtn {
+            get {
+                object obj = ResourceManager.GetObject("VScrollBar_UpScrollBtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap XbtnDefault {
             get {
                 object obj = ResourceManager.GetObject("XbtnDefault", resourceCulture);

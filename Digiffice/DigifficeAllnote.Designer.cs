@@ -294,9 +294,9 @@
             SectionBG.BackColor = Color.DarkRed;
             SectionBG.BorderStyle = BorderStyle.FixedSingle;
             SectionBG.Controls.Add(nonPageBg);
-            SectionBG.Location = new Point(270, 277);
+            SectionBG.Location = new Point(270, 317);
             SectionBG.Name = "SectionBG";
-            SectionBG.Size = new Size(1630, 783);
+            SectionBG.Size = new Size(1630, 743);
             SectionBG.TabIndex = 6;
             SectionBG.Paint += SectionBG_Paint;
             // 
@@ -305,7 +305,7 @@
             nonPageBg.BackColor = Color.Silver;
             nonPageBg.Location = new Point(20, 20);
             nonPageBg.Name = "nonPageBg";
-            nonPageBg.Size = new Size(1460, 713);
+            nonPageBg.Size = new Size(1340, 673);
             nonPageBg.TabIndex = 0;
             // 
             // DigifficeAllnote

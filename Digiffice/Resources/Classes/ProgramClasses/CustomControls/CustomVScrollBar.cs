@@ -21,7 +21,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
         public Image? upScrollBtnImg = null;
         public Image? downScrollBtnImg = null;
         public Image? scrollBarImg = null;
-        public CustomVScrollBar(Point rectLocation, Size rectsize)
+        public CustomVScrollBar(Point rectLocation, Size rectsize, 
+            Color scrollBarBgCol, Color upScrollBtnCol, Color downScrollBtnCol, Color scrollBarCol, 
+            Image? scrollBarBgImg, Image? upScrollBtnImg, Image? downScrollBtnImg, Image? scrollBarImg)
         {
             // Parent Control Properties
             Panel ScrollBarBgPnl = new Panel();
