@@ -33,6 +33,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             LeftScrollBtn.BackColor = leftScrollBtnCol;
             LeftScrollBtn.FlatStyle = FlatStyle.Flat;
             LeftScrollBtn.FlatAppearance.BorderSize = 0;
+            LeftScrollBtn.Cursor = Cursors.Hand;
             LeftScrollBtn.Click += LeftScrollBtn_Click;
             if (leftScrollBtnImg != null)
             {
@@ -45,6 +46,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             RightScrollBtn.BackColor = rightScrollBtnCol;
             RightScrollBtn.FlatStyle = FlatStyle.Flat;
             RightScrollBtn.FlatAppearance.BorderSize = 0;  
+            RightScrollBtn.Cursor = Cursors.Hand;
             RightScrollBtn.Click += RightScrollBtn_Click;
             if (rightScrollBtnImg != null)
             {

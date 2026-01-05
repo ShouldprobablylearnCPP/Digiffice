@@ -70,6 +70,7 @@
             // 
             txtUsername.BackColor = Color.FromArgb(230, 231, 233);
             txtUsername.BorderStyle = BorderStyle.None;
+            txtUsername.Cursor = Cursors.IBeam;
             txtUsername.Font = new Font("MS UI Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtUsername.Location = new Point(34, 124);
             txtUsername.Multiline = true;
@@ -81,6 +82,7 @@
             // 
             txtPassword.BackColor = Color.FromArgb(230, 231, 233);
             txtPassword.BorderStyle = BorderStyle.None;
+            txtPassword.Cursor = Cursors.IBeam;
             txtPassword.Font = new Font("MS UI Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtPassword.Location = new Point(34, 191);
             txtPassword.Multiline = true;
@@ -103,6 +105,7 @@
             // 
             txtConfirmPassword.BackColor = Color.FromArgb(230, 231, 233);
             txtConfirmPassword.BorderStyle = BorderStyle.None;
+            txtConfirmPassword.Cursor = Cursors.IBeam;
             txtConfirmPassword.Font = new Font("MS UI Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtConfirmPassword.Location = new Point(34, 265);
             txtConfirmPassword.Multiline = true;

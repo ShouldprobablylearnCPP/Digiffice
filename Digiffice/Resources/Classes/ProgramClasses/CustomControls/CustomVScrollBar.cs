@@ -42,6 +42,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             UpScrollBtn.BackColor = upScrollBtnCol;
             UpScrollBtn.FlatStyle = FlatStyle.Flat;
             UpScrollBtn.FlatAppearance.BorderSize = 0;
+            UpScrollBtn.Cursor = Cursors.Hand;
             UpScrollBtn.Click += UpScrollBtn_Click;
             if (upScrollBtnImg != null)
             {
@@ -54,6 +55,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             DownScrollBtn.BackColor = downScrollBtnCol;
             DownScrollBtn.FlatStyle = FlatStyle.Flat;
             DownScrollBtn.FlatAppearance.BorderSize = 0;
+            DownScrollBtn.Cursor = Cursors.Hand;
             DownScrollBtn.Click += DownScrollBtn_Click;
             if (downScrollBtnImg != null)
             {

@@ -67,6 +67,7 @@
             // 
             ExitButton.BackColor = Color.Transparent;
             ExitButton.BackgroundImageLayout = ImageLayout.Stretch;
+            ExitButton.Cursor = Cursors.Hand;
             ExitButton.FlatAppearance.BorderSize = 0;
             ExitButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(0, 0, 0, 0);
             ExitButton.FlatStyle = FlatStyle.Flat;

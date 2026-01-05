@@ -28,6 +28,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             NewAllnoteFileBtn.ImageAlign = ContentAlignment.MiddleCenter;
             NewAllnoteFileBtn.BackgroundImageLayout = ImageLayout.Stretch;
             NewAllnoteFileBtn.BackColor = Color.Transparent;
+            NewAllnoteFileBtn.Cursor = Cursors.Hand;
 
             NewAllnoteFileBtn.FlatStyle = FlatStyle.Flat;
             NewAllnoteFileBtn.FlatAppearance.BorderSize = 0;
@@ -54,6 +55,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             OpenAllnoteFileBtn.ImageAlign = ContentAlignment.MiddleCenter;
             OpenAllnoteFileBtn.BackgroundImageLayout = ImageLayout.Stretch;
             OpenAllnoteFileBtn.BackColor = Color.Transparent;
+            OpenAllnoteFileBtn.Cursor = Cursors.Hand;
 
             OpenAllnoteFileBtn.FlatStyle = FlatStyle.Flat;
             OpenAllnoteFileBtn.FlatAppearance.BorderSize = 0;

@@ -116,6 +116,7 @@
             // 
             txtPasswordlogin.BackColor = Color.FromArgb(230, 231, 233);
             txtPasswordlogin.BorderStyle = BorderStyle.None;
+            txtPasswordlogin.Cursor = Cursors.IBeam;
             txtPasswordlogin.Font = new Font("MS UI Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtPasswordlogin.Location = new Point(32, 244);
             txtPasswordlogin.Multiline = true;
@@ -138,6 +139,7 @@
             // 
             txtUsernamelogin.BackColor = Color.FromArgb(230, 231, 233);
             txtUsernamelogin.BorderStyle = BorderStyle.None;
+            txtUsernamelogin.Cursor = Cursors.IBeam;
             txtUsernamelogin.Font = new Font("MS UI Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtUsernamelogin.Location = new Point(32, 177);
             txtUsernamelogin.Multiline = true;

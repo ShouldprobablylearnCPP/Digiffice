@@ -98,6 +98,7 @@
             // 
             // DigifficeButton
             // 
+            DigifficeButton.Cursor = Cursors.Hand;
             DigifficeButton.FlatAppearance.BorderSize = 0;
             DigifficeButton.FlatStyle = FlatStyle.Flat;
             DigifficeButton.Location = new Point(12, 12);
@@ -131,6 +132,7 @@
             HelpTab.BackColor = Color.Transparent;
             HelpTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             HelpTab.BackgroundImageLayout = ImageLayout.Stretch;
+            HelpTab.Cursor = Cursors.Hand;
             HelpTab.FlatAppearance.BorderSize = 0;
             HelpTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             HelpTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
@@ -149,6 +151,7 @@
             ViewTab.BackColor = Color.Transparent;
             ViewTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             ViewTab.BackgroundImageLayout = ImageLayout.Stretch;
+            ViewTab.Cursor = Cursors.Hand;
             ViewTab.FlatAppearance.BorderSize = 0;
             ViewTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             ViewTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
@@ -167,6 +170,7 @@
             ReviewTab.BackColor = Color.Transparent;
             ReviewTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             ReviewTab.BackgroundImageLayout = ImageLayout.Stretch;
+            ReviewTab.Cursor = Cursors.Hand;
             ReviewTab.FlatAppearance.BorderSize = 0;
             ReviewTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             ReviewTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
@@ -185,6 +189,7 @@
             HistoryTab.BackColor = Color.Transparent;
             HistoryTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             HistoryTab.BackgroundImageLayout = ImageLayout.Stretch;
+            HistoryTab.Cursor = Cursors.Hand;
             HistoryTab.FlatAppearance.BorderSize = 0;
             HistoryTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             HistoryTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
@@ -203,6 +208,7 @@
             DrawTab.BackColor = Color.Transparent;
             DrawTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             DrawTab.BackgroundImageLayout = ImageLayout.Stretch;
+            DrawTab.Cursor = Cursors.Hand;
             DrawTab.FlatAppearance.BorderSize = 0;
             DrawTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             DrawTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
@@ -221,6 +227,7 @@
             InsertTab.BackColor = Color.Transparent;
             InsertTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             InsertTab.BackgroundImageLayout = ImageLayout.Stretch;
+            InsertTab.Cursor = Cursors.Hand;
             InsertTab.FlatAppearance.BorderSize = 0;
             InsertTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             InsertTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
@@ -239,6 +246,7 @@
             HomeTab.BackColor = Color.Transparent;
             HomeTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             HomeTab.BackgroundImageLayout = ImageLayout.Stretch;
+            HomeTab.Cursor = Cursors.Hand;
             HomeTab.FlatAppearance.BorderSize = 0;
             HomeTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             HomeTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
@@ -257,6 +265,7 @@
             FileTab.BackColor = Color.Transparent;
             FileTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             FileTab.BackgroundImageLayout = ImageLayout.Stretch;
+            FileTab.Cursor = Cursors.Hand;
             FileTab.FlatAppearance.BorderSize = 0;
             FileTab.FlatAppearance.MouseDownBackColor = Color.Transparent;
             FileTab.FlatAppearance.MouseOverBackColor = Color.Transparent;
