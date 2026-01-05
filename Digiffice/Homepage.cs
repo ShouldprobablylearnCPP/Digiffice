@@ -134,7 +134,7 @@ namespace Digiffice
             ProgramOpen_Button_PaintProperties(program, currentButton);
         }
 
-        // Digiffice Allpad
+        // Digiffice Allnote Events
 
         private void DigifficeAllnote_Open(object sender, EventArgs e)
         {
