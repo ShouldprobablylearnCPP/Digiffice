@@ -12,6 +12,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
         // Class Elements
         Button NewAllnoteFileBtn = new Button();
         Button OpenAllnoteFileBtn = new Button();
+        Label NewNotebookFileLbl = new Label();
 
         public void InitialiseUI(Panel rbnPnl)
         {

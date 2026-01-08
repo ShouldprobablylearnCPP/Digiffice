@@ -67,7 +67,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
 
             // Scroll Bar Properties
             Panel ScrollBarPnl = new Panel();
-            ScrollBarPnl.Size = new Size(rectsize.Width, rectsize.Width * 2);
+            ScrollBarPnl.Size = new Size(rectsize.Width, rectsize.Width * 4);
             ScrollBarPnl.Location = new Point(0, UpScrollBtn.Size.Width);
             ScrollBarPnl.BackColor = scrollBarCol;
             if (scrollBarImg != null)
