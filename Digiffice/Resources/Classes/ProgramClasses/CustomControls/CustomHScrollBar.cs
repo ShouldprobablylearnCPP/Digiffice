@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -12,8 +13,17 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
     {
         public Control ctrlToAdd;
 
-        public CustomHScrollBar(Point rectLocation, Size rectsize, 
-            Color scrollBarBgCol, Color leftScrollBtnCol, Color rightScrollBtnCol, Color scrollBarCol, 
+        public int minVal = 0;
+        public int maxVal = 0;
+        public int range = 0;
+        public int currentVal = 0;
+        public int minX = 0;
+        public int maxX = 0;
+
+        Panel Scrollbar;
+
+        public CustomHScrollBar(Point rectLocation, Size rectsize,
+            Color scrollBarBgCol, Color leftScrollBtnCol, Color rightScrollBtnCol, Color scrollBarCol,
             Image? scrollBarBgImg, Image? leftScrollBtnImg, Image? rightScrollBtnImg, Image? scrollBarImg)
         {
             // Parent Control Properties
@@ -45,7 +55,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             RightScrollBtn.Location = new Point(rectsize.Width - rectsize.Height, 0);
             RightScrollBtn.BackColor = rightScrollBtnCol;
             RightScrollBtn.FlatStyle = FlatStyle.Flat;
-            RightScrollBtn.FlatAppearance.BorderSize = 0;  
+            RightScrollBtn.FlatAppearance.BorderSize = 0;
             RightScrollBtn.Cursor = Cursors.Hand;
             RightScrollBtn.Click += RightScrollBtn_Click;
             if (rightScrollBtnImg != null)
@@ -65,19 +75,37 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             {
                 ScrollBarPnl.BackgroundImage = scrollBarImg;
             }
+            Scrollbar = ScrollBarPnl;
 
+            // Init function vars
+            minX = LeftScrollBtn.Width;
+            maxX = rectsize.Width - (RightScrollBtn.Size.Width + ScrollBarPnl.Width);
+
+            // Prepare control to add
             ScrollBarBgPnl.Controls.Add(ScrollBarPnl);
             ctrlToAdd = ScrollBarBgPnl;
         }
 
         public void LeftScrollBtn_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            int change = (maxX - minX) / 10;
+            Scrollbar.Location = new Point(Math.Max(Scrollbar.Location.X - change, minX), Scrollbar.Location.Y);
+            if (Scrollbar.Location.X - change < minX)
+            {
+                Scrollbar.Location = new Point(minX, Scrollbar.Location.Y);
+            }
+            setcurrentVal();
         }
 
         public void RightScrollBtn_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            int change = (maxX - minX) / 10;
+            Scrollbar.Location = new Point(Math.Min(Scrollbar.Location.X + change, maxX), Scrollbar.Location.Y);
+            if (Scrollbar.Location.X + change > maxX)
+            {
+                Scrollbar.Location = new Point(maxX, Scrollbar.Location.Y);
+            }
+            setcurrentVal();
         }
 
         public void addControlstoControl(Control control)
@@ -88,6 +116,23 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
         public void addControlstoForm(Form form)
         {
             form.Controls.Add(ctrlToAdd);
+        }
+
+        public void setMinMaxRange(int min, int max)
+        {
+            this.minVal = min;
+            this.maxVal = max;
+            this.range = maxVal - minVal;
+        }
+
+        public void setcurrentVal()
+        {
+            currentVal = minVal + (int)((((double)(ctrlToAdd.Controls[2].Location.X - minX)) / (double)(maxX - minX)) * (double)range);
+        }
+
+        public int getCurrentVal()
+        {
+            return currentVal;
         }
     }
 }

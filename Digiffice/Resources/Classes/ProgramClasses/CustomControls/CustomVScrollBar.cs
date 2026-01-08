@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,17 +11,15 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
     {
         public Control ctrlToAdd;
 
-        // Control Cols
-        public Color scrollBarBgCol = Color.White;
-        public Color upScrollBtnCol = Color.White;
-        public Color downScrollBtnCol = Color.White;
-        public Color scrollBarCol = Color.LightGray;
+        public int minVal = 0;
+        public int maxVal = 0;
+        public int range = 0;
+        public int currentVal = 0;
+        public int minY = 0;
+        public int maxY = 0;
 
-        // Control Images
-        public Image? scrollBarBgImg = null;
-        public Image? upScrollBtnImg = null;
-        public Image? downScrollBtnImg = null;
-        public Image? scrollBarImg = null;
+        Panel Scrollbar;
+
         public CustomVScrollBar(Point rectLocation, Size rectsize, 
             Color scrollBarBgCol, Color upScrollBtnCol, Color downScrollBtnCol, Color scrollBarCol, 
             Image? scrollBarBgImg, Image? upScrollBtnImg, Image? downScrollBtnImg, Image? scrollBarImg)
@@ -74,19 +73,37 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             {
                 ScrollBarPnl.BackgroundImage = scrollBarImg;
             }
+            Scrollbar = ScrollBarPnl;
 
+            // Init function vars
+            minY = UpScrollBtn.Width;
+            maxY = rectsize.Height - (DownScrollBtn.Size.Width + ScrollBarPnl.Height);
+
+            // Prepare control to add
             ScrollBarBgPnl.Controls.Add(ScrollBarPnl);
             ctrlToAdd = ScrollBarBgPnl;
         }
 
         public void UpScrollBtn_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            int change = (maxY - minY) / 10;
+            Scrollbar.Location = new Point(Scrollbar.Location.X, Math.Max(Scrollbar.Location.Y - change, minY));
+            if (Scrollbar.Location.Y - change < minY)
+            {
+                Scrollbar.Location = new Point(Scrollbar.Location.X, minY);
+            }
+            setcurrentVal();
         }
 
         public void DownScrollBtn_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            int change = (maxY - minY) / 10;
+            Scrollbar.Location = new Point(Scrollbar.Location.X, Math.Min(Scrollbar.Location.Y + change, maxY));
+            if (Scrollbar.Location.Y + change > maxY)
+            {
+                Scrollbar.Location = new Point(Scrollbar.Location.X, maxY);
+            }
+            setcurrentVal();
         }
 
         public void addControlstoControl(Control control)
@@ -97,6 +114,24 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
         public void addControlstoForm(Form form)
         {
             form.Controls.Add(ctrlToAdd);
+        }
+
+        public void setMinMaxRange(int min, int max)
+        {
+            this.minVal = min;
+            this.maxVal = max;
+            this.range = maxVal - minVal;
+        }
+
+        public void setcurrentVal()
+        {
+            currentVal = minVal + (int)((((double)(ctrlToAdd.Controls[2].Location.Y - minY)) / (double)(maxY - minY)) * (double)range);
+            Debug.WriteLine("Current VScroll Value: " + currentVal);
+        }
+
+        public int getCurrentVal()
+        {
+            return currentVal;
         }
     }
 }
