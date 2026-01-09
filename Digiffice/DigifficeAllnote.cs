@@ -4,17 +4,19 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Digiffice.Resources.Classes.ProgramClasses;
-using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
-using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClasses;
-using System.Reflection;
 using Digiffice.Resources.Classes.ProgramClasses.CustomControls;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClasses;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
 
 namespace Digiffice
 {
@@ -27,11 +29,18 @@ namespace Digiffice
         Image xBtnHover = Properties.Resources.XbtnHover;
         Control previouslySelectedTab = null;
 
+        // Notebook Variables
+        Color notebook_ChapterCol = Color.Red;
+
+        // Editor Variables
+        DigifficeAllnoteEditorFile.Chapter? currentChapter = null;
+        DigifficeAllnoteEditorFile.Page? currentPage = null;
+
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData)
         {
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             InitializeComponent();
-            DigifficeAllpad_NewFile("NewNotebook");
+            DigifficeAllnote_NewFile("NewNotebook");
 
             // Hide form until fully loaded to prevent flickering
             this.Opacity = 0;
@@ -58,12 +67,13 @@ namespace Digiffice
         }
 
         // File Events
-        private void DigifficeAllpad_NewFile(string fileName)
+        // ..._New... Events
+        private void DigifficeAllnote_NewFile(string fileName)
         {
             Vector2 defaultPageSize_cm = new Vector2(21.00f, 29.70f);
             DigifficeAllnoteEditorFile editorFile = new DigifficeAllnoteEditorFile();
             editorFile.fileName = fileName;
-            DigifficeAllpad_NewChapter("New chapter", editorFile);
+            DigifficeAllnote_NewChapter("New chapter", editorFile);
             DigifficeAllnoteEditorFile.Chapter? firstChapter = FindChapterByName(editorFile, "New chapter");
             if (firstChapter == null)
             {
@@ -71,13 +81,12 @@ namespace Digiffice
                 this.Close();
             }
 #pragma warning disable CS8629 // Nullable value type may be null.
-            DigifficeAllpad_NewPage("New page", defaultPageSize_cm, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
+            DigifficeAllnote_NewPage("New page", defaultPageSize_cm, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
 #pragma warning restore CS8629 // Nullable value type may be null.
-            DigifficeAllpad_ShowNote(editorFile.filePages[0]);
+            DigifficeAllnote_ShowNote(editorFile.chapters[0]);
         }
 
-        // File Element Events
-        private void DigifficeAllpad_NewPage(string pageName, Vector2 Size, DigifficeAllnoteEditorFile parentNotebook, DigifficeAllnoteEditorFile.Chapter parentChapter)
+        private void DigifficeAllnote_NewPage(string pageName, Vector2 Size, DigifficeAllnoteEditorFile parentNotebook, DigifficeAllnoteEditorFile.Chapter parentChapter)
         {
             DigifficeAllnoteEditorFile.Page newPage = new DigifficeAllnoteEditorFile.Page();
             newPage.pageSize = Size;
@@ -89,22 +98,43 @@ namespace Digiffice
             parentChapter.chapterPages.Add(newPage);
         }
 
-        private void DigifficeAllpad_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
+        private void DigifficeAllnote_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
         {
             DigifficeAllnoteEditorFile.Chapter newChapter = new DigifficeAllnoteEditorFile.Chapter();
+            Random rnd = new Random();
+            newChapter.chapterNum = parentNotebook.chapters.Count + 1;
+            if (newChapter.chapterNum != 1)
+            {
+                newChapter.chapterCol = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+            }
+            else
+            {
+                newChapter.chapterCol = Color.LightPink;
+            }
             newChapter.chapterName = chapterName;
             newChapter.chapterNum = parentNotebook.chapters.Count + 1;
             parentNotebook.chapters.Add(newChapter);
         }
 
-        // File->Note Events / Editor Events
-        private void DigifficeAllpad_ShowNote(DigifficeAllnoteEditorFile.Page currentPage)
+        // ..._Show... Events
+        private void DigifficeAllnote_ShowChapter(DigifficeAllnoteEditorFile.Chapter chapter)
         {
-            // Editable Page Functions
-            DigifficeAllpad_ShowEditablePageBackground(currentPage);
+            // Update current chapter
+            currentChapter = chapter;
+            notebook_ChapterCol = chapter.chapterCol;
+            currentPage = chapter.chapterPages[0];
         }
 
-        private void DigifficeAllpad_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
+        private void DigifficeAllnote_ShowNote(DigifficeAllnoteEditorFile.Chapter chapter)
+        {
+            // Show Editable Page
+            DigifficeAllnote_ShowChapter(chapter);
+            DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[0]);
+
+            // Initialise Editor Functions
+        }
+
+        private void DigifficeAllnote_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
         {
             // Setup SectionBg
             SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 20);
@@ -139,7 +169,6 @@ namespace Digiffice
         }
 
         // Other File Events
-
         private DigifficeAllnoteEditorFile.Chapter? FindChapterByName(DigifficeAllnoteEditorFile file, string name)
         {
             foreach (DigifficeAllnoteEditorFile.Chapter chapter in file.chapters)
@@ -313,6 +342,18 @@ namespace Digiffice
         {
             this.SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 20);
             this.SectionBG.Size = new Size((this.Width - SectionBG.Location.X) - 20, (this.Height - SectionBG.Location.Y) - 20);
+
+            
+
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            Rectangle rect = this.SectionBG.ClientRectangle;
+            using (LinearGradientBrush brush = new LinearGradientBrush(rect, notebook_ChapterCol, Color.FromArgb(255, 
+                Math.Clamp(notebook_ChapterCol.R + 10, 0, 255),
+                Math.Clamp(notebook_ChapterCol.G + 10, 0, 255),
+                Math.Clamp(notebook_ChapterCol.B + 10, 0, 255)), LinearGradientMode.Vertical))
+            {
+                e.Graphics.FillRectangle(brush, rect);
+            }
         }
     }
 }

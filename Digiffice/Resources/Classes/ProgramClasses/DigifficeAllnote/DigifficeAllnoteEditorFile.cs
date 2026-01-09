@@ -43,7 +43,8 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad
             public string chapterName;
             public List<Page> chapterPages = new List<Page>();
             public int chapterNum;
-            public ChapterGroup parentChapterGroup;
+            public ChapterGroup? parentChapterGroup;
+            public Color chapterCol;
 
             public Chapter()
             {
