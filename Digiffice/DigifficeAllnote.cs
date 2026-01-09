@@ -128,8 +128,7 @@ namespace Digiffice
             CustomVScrollBar pageVScroll = new CustomVScrollBar(new Point(nonPageBg.Right, nonPageBg.Top), new Size(30, nonPageBg.Height),
                 Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
                 null, Properties.Resources.VScrollBar_UpScrollBtn, Properties.Resources.VScrollBar_DownScrollBtn, Properties.Resources.CustomVScrollBar_1);
-            pageVScroll.minVal = 0;
-            pageVScroll.maxVal = sizey - pagebg.Height;
+            pageVScroll.setMinMaxRange(0, sizey - pagebg.Height);
             pageVScroll.addControlstoControl(SectionBG);
 
             CustomHScrollBar pageHScroll = new CustomHScrollBar(new Point(nonPageBg.Left, nonPageBg.Bottom), new Size(nonPageBg.Width, 30),

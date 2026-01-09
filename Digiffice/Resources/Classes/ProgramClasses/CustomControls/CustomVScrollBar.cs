@@ -126,7 +126,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
         public void setcurrentVal()
         {
             currentVal = minVal + (int)((((double)(ctrlToAdd.Controls[2].Location.Y - minY)) / (double)(maxY - minY)) * (double)range);
-            Debug.WriteLine("Current VScroll Value: " + currentVal);
         }
 
         public int getCurrentVal()
