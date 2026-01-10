@@ -343,10 +343,10 @@ namespace Digiffice
             this.SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 20);
             this.SectionBG.Size = new Size((this.Width - SectionBG.Location.X) - 20, (this.Height - SectionBG.Location.Y) - 20);
 
-            
-
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            Rectangle rect = this.SectionBG.ClientRectangle;
+            Point fixedClientRectLocation = new Point(SectionBG.ClientRectangle.Location.X - 1, SectionBG.ClientRectangle.Location.Y - 1);
+            Size fixedClientRectSize = new Size(SectionBG.ClientRectangle.Size.Width + 1, SectionBG.ClientRectangle.Size.Height + 1);
+            Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
             using (LinearGradientBrush brush = new LinearGradientBrush(rect, notebook_ChapterCol, Color.FromArgb(255, 
                 Math.Clamp(notebook_ChapterCol.R + 10, 0, 255),
                 Math.Clamp(notebook_ChapterCol.G + 10, 0, 255),
