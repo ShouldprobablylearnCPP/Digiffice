@@ -35,7 +35,7 @@ WHAT TO EXPECT:
 - While the list of supported Operating systems is not available yet, it will be compatible with many, even some legacy ones. While it won't be compatible with everything, I am aiming for at least 90% of PCs to be able to run it.
 
 === 4 - UI ===
-- The Interface of Digiffice will be similar to that of other office software programs, however it may look slightly different. Despite this, it will still be easy to figure out and use.
+- The Interface of Digiffice will be similar to that of other office software programs, however there will be mostly slight differences. Despite this, it should still be easy to use.
 
 FAQs:
 
