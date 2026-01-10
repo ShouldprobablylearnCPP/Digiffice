@@ -18,6 +18,8 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
         public int minY = 0;
         public int maxY = 0;
 
+        public bool scrollbar_isDragging = false;
+
         Panel Scrollbar;
 
         public CustomVScrollBar(Point rectLocation, Size rectsize, 
@@ -33,6 +35,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             {
                 ScrollBarBgPnl.BackgroundImage = scrollBarBgImg;
             }
+            ScrollBarBgPnl.MouseClick += ScrollBarBgPnl_Click;
 
             // L+R Button Properties
             Button UpScrollBtn = new Button();
@@ -74,6 +77,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
                 ScrollBarPnl.BackgroundImage = scrollBarImg;
             }
             Scrollbar = ScrollBarPnl;
+            ScrollBarPnl.MouseUp += Scrollbar_MouseUp;
+            ScrollBarPnl.MouseDown += Scrollbar_MouseDown;
+            ScrollBarPnl.MouseMove += Scrollbar_MouseMove;
 
             // Init function vars
             minY = UpScrollBtn.Width;
@@ -82,6 +88,16 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             // Prepare control to add
             ScrollBarBgPnl.Controls.Add(ScrollBarPnl);
             ctrlToAdd = ScrollBarBgPnl;
+        }
+
+        // Event Handlers
+
+        public void ScrollBarBgPnl_Click(object sender, MouseEventArgs e)
+        {
+            Panel ScrollBarBgPanel = (Panel)sender;
+            int newY = e.Y - (Scrollbar.Height / 2);
+            Scrollbar.Location = new Point(Scrollbar.Location.X, Math.Clamp(newY, minY, maxY));
+            setcurrentVal();
         }
 
         public void UpScrollBtn_Click(object sender, EventArgs e)
@@ -104,6 +120,29 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
                 Scrollbar.Location = new Point(Scrollbar.Location.X, maxY);
             }
             setcurrentVal();
+        }
+
+        private void Scrollbar_MouseUp(object sender, MouseEventArgs e)
+        {
+            scrollbar_isDragging = false;
+        }
+
+        private void Scrollbar_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                scrollbar_isDragging = true;
+            }
+        }
+
+        private void Scrollbar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (scrollbar_isDragging)
+            {
+                int newY = Scrollbar.Location.Y + e.Y - (Scrollbar.Height / 2);
+                Scrollbar.Location = new Point(Scrollbar.Location.X, Math.Clamp(newY, minY, maxY));
+                setcurrentVal();
+            }
         }
 
         public void addControlstoControl(Control control)
