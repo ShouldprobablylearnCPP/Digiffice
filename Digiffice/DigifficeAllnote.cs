@@ -136,10 +136,6 @@ namespace Digiffice
 
         private void DigifficeAllnote_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
         {
-            // Setup SectionBg
-            SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 20);
-            SectionBG.Size = new Size((this.Width - SectionBG.Location.X) - 20, (this.Height - SectionBG.Location.Y) - 20);
-
             // Setup nonPageBg
             nonPageBg.Location = new Point(20, 20);
             nonPageBg.Size = new Size(SectionBG.Width - 290, SectionBG.Height - 70);
@@ -340,7 +336,7 @@ namespace Digiffice
 
         private void SectionBG_Paint(object sender, PaintEventArgs e)
         {
-            this.SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 20);
+            this.SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 60);
             this.SectionBG.Size = new Size((this.Width - SectionBG.Location.X) - 20, (this.Height - SectionBG.Location.Y) - 20);
 
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
