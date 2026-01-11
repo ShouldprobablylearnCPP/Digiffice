@@ -19,6 +19,7 @@ namespace Digiffice
         Image[] ProgramIcons = new Image[1];
         string[] programNames = new string[1];
         string[] programInfos = new string[1];
+        string[] programVersions = new string[1];
 
         // Program Button Group
         Panel programOpen_Button = new Panel();
@@ -50,6 +51,9 @@ namespace Digiffice
 
             // Program Infos
             programInfos[0] = "Digiffice Allnote - A digital note-taking program for organising and editing all your notes.";
+
+            // Program Versions
+            programVersions[0] = "0.2.0";
         }
 
         // Exit Button Events
@@ -138,10 +142,13 @@ namespace Digiffice
 
         private void DigifficeAllnote_Open(object sender, EventArgs e)
         {
+            DigifficeAllnote_Splashscreen splashscreen = new DigifficeAllnote_Splashscreen(programVersions[0]);
+            splashscreen.Show();
+
             nonprotected_AccountData transfer_npac = new nonprotected_AccountData();
             transfer_npac.ac_username = this.username;
             string username = this.username;
-            DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(transfer_npac);
+            DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(transfer_npac, splashscreen);
             DigifficeAllnote.Show();
         }
 

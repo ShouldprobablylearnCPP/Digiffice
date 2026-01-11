@@ -123,6 +123,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DigifficeAllnoteSplashscreen {
+            get {
+                object obj = ResourceManager.GetObject("DigifficeAllnoteSplashscreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DigifficeAppBG {
             get {
                 object obj = ResourceManager.GetObject("DigifficeAppBG", resourceCulture);

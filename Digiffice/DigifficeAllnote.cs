@@ -36,7 +36,7 @@ namespace Digiffice
         DigifficeAllnoteEditorFile.Chapter? currentChapter = null;
         DigifficeAllnoteEditorFile.Page? currentPage = null;
 
-        public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData)
+        public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             InitializeComponent();
@@ -47,6 +47,7 @@ namespace Digiffice
             this.Shown += (s, e) =>
             {
                 this.Opacity = 1;
+                splashscreen.Close();
             };
         }
 
@@ -344,9 +345,9 @@ namespace Digiffice
             Size fixedClientRectSize = new Size(SectionBG.ClientRectangle.Size.Width + 1, SectionBG.ClientRectangle.Size.Height + 1);
             Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
             using (LinearGradientBrush brush = new LinearGradientBrush(rect, notebook_ChapterCol, Color.FromArgb(255, 
-                Math.Clamp(notebook_ChapterCol.R + 10, 0, 255),
-                Math.Clamp(notebook_ChapterCol.G + 10, 0, 255),
-                Math.Clamp(notebook_ChapterCol.B + 10, 0, 255)), LinearGradientMode.Vertical))
+                Math.Clamp(notebook_ChapterCol.R + 15, 0, 255),
+                Math.Clamp(notebook_ChapterCol.G + 15, 0, 255),
+                Math.Clamp(notebook_ChapterCol.B + 15, 0, 255)), LinearGradientMode.Vertical))
             {
                 e.Graphics.FillRectangle(brush, rect);
             }

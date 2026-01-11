@@ -301,7 +301,6 @@
             // SectionBG
             // 
             SectionBG.BackColor = Color.DarkRed;
-            SectionBG.BorderStyle = BorderStyle.FixedSingle;
             SectionBG.Controls.Add(nonPageBg);
             SectionBG.Location = new Point(270, 317);
             SectionBG.Name = "SectionBG";
