@@ -349,13 +349,20 @@ namespace Digiffice
             Point fixedClientRectLocation = new Point(SectionBG.ClientRectangle.Location.X - 1, SectionBG.ClientRectangle.Location.Y - 1);
             Size fixedClientRectSize = new Size(SectionBG.ClientRectangle.Size.Width + 1, SectionBG.ClientRectangle.Size.Height + 1);
             Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
-            using (LinearGradientBrush brush = new LinearGradientBrush(rect, notebook_ChapterCol, Color.FromArgb(255, 
+            using (LinearGradientBrush brush = new LinearGradientBrush(rect, notebook_ChapterCol, Color.FromArgb(255,
                 Math.Clamp(notebook_ChapterCol.R + 15, 0, 255),
                 Math.Clamp(notebook_ChapterCol.G + 15, 0, 255),
                 Math.Clamp(notebook_ChapterCol.B + 15, 0, 255)), LinearGradientMode.Vertical))
             {
                 e.Graphics.FillRectangle(brush, rect);
             }
+        }
+
+        private void CosmeticPanel_BetweenScrollbars_Paint(object sender, PaintEventArgs e)
+        {
+            // Setup CosmeticPanel_BetweenScrollbars
+            CosmeticPanel_BetweenScrollbars.Location = new Point(nonPageBg.Right, nonPageBg.Bottom);
+            CosmeticPanel_BetweenScrollbars.Size = new Size(30, 30);
         }
     }
 }

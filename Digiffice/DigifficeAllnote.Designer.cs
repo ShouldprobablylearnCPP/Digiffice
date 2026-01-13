@@ -44,6 +44,7 @@
             RibbonPanel = new Panel();
             LeftInfoPanel = new Panel();
             SectionBG = new Panel();
+            CosmeticPanel_BetweenScrollbars = new Panel();
             nonPageBg = new Panel();
             Homepanel.SuspendLayout();
             TabSelectionPanel.SuspendLayout();
@@ -301,12 +302,22 @@
             // SectionBG
             // 
             SectionBG.BackColor = Color.DarkRed;
+            SectionBG.Controls.Add(CosmeticPanel_BetweenScrollbars);
             SectionBG.Controls.Add(nonPageBg);
             SectionBG.Location = new Point(270, 317);
             SectionBG.Name = "SectionBG";
             SectionBG.Size = new Size(1630, 743);
             SectionBG.TabIndex = 6;
             SectionBG.Paint += SectionBG_Paint;
+            // 
+            // CosmeticPanel_BetweenScrollbars
+            // 
+            CosmeticPanel_BetweenScrollbars.BackColor = Color.LightGray;
+            CosmeticPanel_BetweenScrollbars.Location = new Point(1360, 693);
+            CosmeticPanel_BetweenScrollbars.Name = "CosmeticPanel_BetweenScrollbars";
+            CosmeticPanel_BetweenScrollbars.Size = new Size(30, 30);
+            CosmeticPanel_BetweenScrollbars.TabIndex = 1;
+            CosmeticPanel_BetweenScrollbars.Paint += CosmeticPanel_BetweenScrollbars_Paint;
             // 
             // nonPageBg
             // 
@@ -356,5 +367,6 @@
         private Panel LeftInfoPanel;
         private Panel SectionBG;
         private Panel nonPageBg;
+        private Panel CosmeticPanel_BetweenScrollbars;
     }
 }
