@@ -38,8 +38,13 @@ namespace Digiffice
 
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
+            // Set dimensions
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+
+            // Initialize components
             InitializeComponent();
+
+            // Call Custom Prerequesite Functions
             DigifficeAllnote_NewFile("NewNotebook");
 
             // Hide form until fully loaded to prevent flickering

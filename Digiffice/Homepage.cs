@@ -26,11 +26,18 @@ namespace Digiffice
 
         public Homepage(nonprotected_AccountData nonprotected_AccData)
         {
+            // Initialise form dimensions
             nonprotected_AccountData transferrable_nonprotectedaccdata = nonprotected_AccData;
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+
+            // Initialize components
             InitializeComponent();
+
+            // Declare variable values
             username = nonprotected_AccData.ac_username;
             Welcomemsg.Text = "Welcome to Digiffice, " + username + "!";
+
+            // Call Custom Prerequesite Functions
             Fill_Lists();
             Homepage_ProgramButtons_Setup(DigifficeProgramsNum);
         }
