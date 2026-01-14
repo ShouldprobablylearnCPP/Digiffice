@@ -29,6 +29,10 @@ namespace Digiffice
         Image xBtnHover = Properties.Resources.XbtnHover;
         Control previouslySelectedTab = null;
 
+        // Border Panels
+        Panel SectionBG_Borderpnl = new Panel();
+        Panel nonPageBG_Borderpnl = new Panel();
+
         // Notebook Variables
         Color notebook_ChapterCol = Color.Red;
 
@@ -45,6 +49,7 @@ namespace Digiffice
             InitializeComponent();
 
             // Call Custom Prerequesite Functions
+            SetupBorderPanels();
             DigifficeAllnote_NewFile("NewNotebook");
 
             // Hide form until fully loaded to prevent flickering
@@ -168,6 +173,13 @@ namespace Digiffice
                 null, Properties.Resources.VScrollBar_LeftScrollBtn, Properties.Resources.VScrollBar_RightScrollBtn, Properties.Resources.CustomHScrollBar_1);
             pageHScroll.setMinMaxRange(0, sizex - pagebg.Width);
             pageHScroll.addControlstoControl(SectionBG);
+
+            // Setup/Reconfigure nonPageBG_Borderpnl
+            nonPageBG_Borderpnl.Location = new Point(nonPageBg.Location.X - 1, nonPageBg.Location.Y - 1);
+            nonPageBG_Borderpnl.Size = new Size(nonPageBg.Width + pageVScroll.ctrlToAdd.Width + 2, nonPageBg.Height + pageHScroll.ctrlToAdd.Height + 2);
+            nonPageBG_Borderpnl.BackColor = Color.Navy;
+            nonPageBG_Borderpnl.SendToBack();
+            SectionBG.Controls.Add(nonPageBG_Borderpnl);
         }
 
         // Other File Events
@@ -363,6 +375,16 @@ namespace Digiffice
             // Setup CosmeticPanel_BetweenScrollbars
             CosmeticPanel_BetweenScrollbars.Location = new Point(nonPageBg.Right, nonPageBg.Bottom);
             CosmeticPanel_BetweenScrollbars.Size = new Size(30, 30);
+        }
+
+        private void SetupBorderPanels()
+        {
+            // Setup SectionBG_Borderpnl
+            SectionBG_Borderpnl.Location = new Point(SectionBG.Location.X - 1, SectionBG.Location.Y - 1);
+            SectionBG_Borderpnl.Size = new Size(SectionBG.Width + 2, SectionBG.Height + 2);
+            SectionBG_Borderpnl.BackColor = Color.Navy;
+            SectionBG_Borderpnl.SendToBack();
+            this.Controls.Add(SectionBG_Borderpnl);
         }
     }
 }
