@@ -20,7 +20,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
 
         public bool scrollbar_isDragging = false;
 
-        Panel Scrollbar;
+        PictureBox Scrollbar;
 
         public CustomVScrollBar(Point rectLocation, Size rectsize, 
             Color scrollBarBgCol, Color upScrollBtnCol, Color downScrollBtnCol, Color scrollBarCol, 
@@ -68,7 +68,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             ScrollBarBgPnl.Controls.Add(DownScrollBtn);
 
             // Scroll Bar Properties
-            Panel ScrollBarPnl = new Panel();
+            PictureBox ScrollBarPnl = new PictureBox();
             ScrollBarPnl.Size = new Size(rectsize.Width, rectsize.Width * 4);
             ScrollBarPnl.Location = new Point(0, UpScrollBtn.Size.Width);
             ScrollBarPnl.BackColor = scrollBarCol;

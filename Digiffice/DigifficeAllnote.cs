@@ -48,7 +48,8 @@ namespace Digiffice
             // Initialize components
             InitializeComponent();
 
-            // Call Custom Prerequesite Functions
+            // Call Custom/Prerequesite Functions
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             SetupBorderPanels();
             DigifficeAllnote_NewFile("NewNotebook");
 
