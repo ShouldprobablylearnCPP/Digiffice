@@ -39,6 +39,7 @@ namespace Digiffice
         // Editor Variables
         DigifficeAllnoteEditorFile.Chapter? currentChapter = null;
         DigifficeAllnoteEditorFile.Page? currentPage = null;
+        Label currentSelectedPage_Lbl = null;
 
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
@@ -85,17 +86,17 @@ namespace Digiffice
             Vector2 defaultPageSize_cm = new Vector2(21.00f, 29.70f);
             DigifficeAllnoteEditorFile editorFile = new DigifficeAllnoteEditorFile();
             editorFile.fileName = fileName;
-            DigifficeAllnote_NewChapter("New chapter", editorFile);
-            DigifficeAllnoteEditorFile.Chapter? firstChapter = FindChapterByName(editorFile, "New chapter");
+            DigifficeAllnote_NewChapter("Unnamed Chapter", editorFile);
+            DigifficeAllnoteEditorFile.Chapter? firstChapter = FindChapterByName(editorFile, "Unnamed Chapter");
             if (firstChapter == null)
             {
                 MessageBox.Show("Error creating new notebook: first chapter not found. Closing Digiffice Allpad...");
                 this.Close();
             }
 #pragma warning disable CS8629 // Nullable value type may be null.
-            DigifficeAllnote_NewPage("New page", defaultPageSize_cm, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
+            DigifficeAllnote_NewPage("Unnamed Page", defaultPageSize_cm, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
 #pragma warning restore CS8629 // Nullable value type may be null.
-            DigifficeAllnote_ShowNote(editorFile.chapters[0]);
+            DigifficeAllnote_ShowNote(editorFile.chapters[0], editorFile);
         }
 
         private void DigifficeAllnote_NewPage(string pageName, Vector2 Size, DigifficeAllnoteEditorFile parentNotebook, DigifficeAllnoteEditorFile.Chapter parentChapter)
@@ -137,11 +138,12 @@ namespace Digiffice
             currentPage = chapter.chapterPages[0];
         }
 
-        private void DigifficeAllnote_ShowNote(DigifficeAllnoteEditorFile.Chapter chapter)
+        private void DigifficeAllnote_ShowNote(DigifficeAllnoteEditorFile.Chapter chapter, DigifficeAllnoteEditorFile editorFile)
         {
             // Show Editable Page
             DigifficeAllnote_ShowChapter(chapter);
             DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[0]);
+            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorFile, chapter);
 
             // Initialise Editor Functions
         }
@@ -183,6 +185,49 @@ namespace Digiffice
             SectionBG.Controls.Add(nonPageBG_Borderpnl);
         }
 
+        private void DigifficeAllnote_ShowChaptersAndPagesInInspectors(DigifficeAllnoteEditorFile file, DigifficeAllnoteEditorFile.Chapter chapter)
+        {
+            for (int i = 0; i < chapter.chapterPages.Count;)
+            {
+                // Instantiate Page Panel and add to SectionBG_Pages
+                Label inspector_PageLabel = new Label();
+                inspector_PageLabel.Name = "Inspector_PageLabel_" + chapter.chapterPages[i].pageNum;
+                inspector_PageLabel.Text = chapter.chapterPages[i].pageNum + ". " + chapter.chapterPages[i].pageTitle;
+                inspector_PageLabel.TextAlign = ContentAlignment.MiddleCenter;
+                inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Bold);
+                inspector_PageLabel.Size = new Size(200, 50);
+                inspector_PageLabel.BackColor = Color.White;
+                inspector_PageLabel.ForeColor = Color.Black;
+                inspector_PageLabel.BorderStyle = BorderStyle.None;
+                inspector_PageLabel.Location = new Point(0, 1 + (i * 51));
+                inspector_PageLabel.Cursor = Cursors.Hand;
+                inspector_PageLabel.Click += (s, e) =>
+                {
+                    if (currentSelectedPage_Lbl != null)
+                    {
+                        currentSelectedPage_Lbl.BackColor = Color.White;
+                    }
+                    currentSelectedPage_Lbl = inspector_PageLabel;
+                    inspector_PageLabel.BackColor = Color.Blue;
+                    currentPage = chapter.chapterPages[i - 1];
+                    DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[i - 1]);
+                };
+                SectionBG_Pages.Controls.Add(inspector_PageLabel);
+
+                // Instantiate Border Panel and add to SectionBG_Pages
+                Panel inspector_PageLabel_Border = new Panel();
+                inspector_PageLabel_Border.Name = "Inspector_PageLabel_Border_" + chapter.chapterPages[i].pageNum;
+                inspector_PageLabel_Border.Size = new Size(inspector_PageLabel.Width + 2, inspector_PageLabel.Height + 2);
+                inspector_PageLabel_Border.Location = new Point(inspector_PageLabel.Location.X - 1, inspector_PageLabel.Location.Y - 1);
+                inspector_PageLabel_Border.BackColor = Color.Navy;
+                SectionBG_Pages.Controls.Add(inspector_PageLabel_Border);
+
+                i++;
+            }
+
+            SectionBGPages_BorderCover.SendToBack();
+        }
+
         // Other File Events
         private DigifficeAllnoteEditorFile.Chapter? FindChapterByName(DigifficeAllnoteEditorFile file, string name)
         {
@@ -201,6 +246,14 @@ namespace Digiffice
         private void DigifficeButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        // Other Button Events
+        private void NewPage_Click(object sender, EventArgs e)
+        {
+            // To Be Implemented
+            // Todo: Change NewPage text colour based on background (Do in SectionBG_Paint)
+            // Todo: Make Image for NewPage button
         }
 
         // Allnote Tab Events
