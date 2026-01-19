@@ -44,12 +44,13 @@
             RibbonPanel = new Panel();
             LeftInfoPanel = new Panel();
             SectionBG = new Panel();
+            CloseOpenSectionBGPagesBtn = new Button();
             NewPageBtn = new Button();
             SectionBG_Pages = new Panel();
             SectionBGPages_BorderCover = new Panel();
             CosmeticPanel_BetweenScrollbars = new Panel();
             nonPageBg = new Panel();
-            CloseOpenSectionBGPagesBtn = new Button();
+            CosmeticPanel_ButtonSeperator_SectionBG = new Panel();
             Homepanel.SuspendLayout();
             TabSelectionPanel.SuspendLayout();
             SectionBG.SuspendLayout();
@@ -307,6 +308,7 @@
             // SectionBG
             // 
             SectionBG.BackColor = Color.DarkRed;
+            SectionBG.Controls.Add(CosmeticPanel_ButtonSeperator_SectionBG);
             SectionBG.Controls.Add(CloseOpenSectionBGPagesBtn);
             SectionBG.Controls.Add(NewPageBtn);
             SectionBG.Controls.Add(SectionBG_Pages);
@@ -317,6 +319,22 @@
             SectionBG.Size = new Size(1630, 743);
             SectionBG.TabIndex = 6;
             SectionBG.Paint += SectionBG_Paint;
+            // 
+            // CloseOpenSectionBGPagesBtn
+            // 
+            CloseOpenSectionBGPagesBtn.BackColor = Color.Transparent;
+            CloseOpenSectionBGPagesBtn.Cursor = Cursors.Hand;
+            CloseOpenSectionBGPagesBtn.FlatAppearance.BorderSize = 0;
+            CloseOpenSectionBGPagesBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            CloseOpenSectionBGPagesBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            CloseOpenSectionBGPagesBtn.FlatStyle = FlatStyle.Flat;
+            CloseOpenSectionBGPagesBtn.Font = new Font("Roboto", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CloseOpenSectionBGPagesBtn.Location = new Point(1569, 19);
+            CloseOpenSectionBGPagesBtn.Name = "CloseOpenSectionBGPagesBtn";
+            CloseOpenSectionBGPagesBtn.Size = new Size(40, 40);
+            CloseOpenSectionBGPagesBtn.TabIndex = 4;
+            CloseOpenSectionBGPagesBtn.TextAlign = ContentAlignment.MiddleRight;
+            CloseOpenSectionBGPagesBtn.UseVisualStyleBackColor = false;
             // 
             // NewPageBtn
             // 
@@ -329,7 +347,7 @@
             NewPageBtn.Font = new Font("Roboto", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             NewPageBtn.Location = new Point(1391, 19);
             NewPageBtn.Name = "NewPageBtn";
-            NewPageBtn.Size = new Size(178, 40);
+            NewPageBtn.Size = new Size(177, 40);
             NewPageBtn.TabIndex = 3;
             NewPageBtn.Text = "New Page";
             NewPageBtn.TextAlign = ContentAlignment.MiddleRight;
@@ -370,21 +388,13 @@
             nonPageBg.Size = new Size(1340, 673);
             nonPageBg.TabIndex = 0;
             // 
-            // CloseOpenSectionBGPagesBtn
+            // CosmeticPanel_ButtonSeperator_SectionBG
             // 
-            CloseOpenSectionBGPagesBtn.BackColor = Color.Transparent;
-            CloseOpenSectionBGPagesBtn.Cursor = Cursors.Hand;
-            CloseOpenSectionBGPagesBtn.FlatAppearance.BorderSize = 0;
-            CloseOpenSectionBGPagesBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            CloseOpenSectionBGPagesBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            CloseOpenSectionBGPagesBtn.FlatStyle = FlatStyle.Flat;
-            CloseOpenSectionBGPagesBtn.Font = new Font("Roboto", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            CloseOpenSectionBGPagesBtn.Location = new Point(1569, 19);
-            CloseOpenSectionBGPagesBtn.Name = "CloseOpenSectionBGPagesBtn";
-            CloseOpenSectionBGPagesBtn.Size = new Size(40, 40);
-            CloseOpenSectionBGPagesBtn.TabIndex = 4;
-            CloseOpenSectionBGPagesBtn.TextAlign = ContentAlignment.MiddleRight;
-            CloseOpenSectionBGPagesBtn.UseVisualStyleBackColor = false;
+            CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Black;
+            CosmeticPanel_ButtonSeperator_SectionBG.Location = new Point(1568, 24);
+            CosmeticPanel_ButtonSeperator_SectionBG.Name = "CosmeticPanel_ButtonSeperator_SectionBG";
+            CosmeticPanel_ButtonSeperator_SectionBG.Size = new Size(1, 30);
+            CosmeticPanel_ButtonSeperator_SectionBG.TabIndex = 5;
             // 
             // DigifficeAllnote
             // 
@@ -432,5 +442,6 @@
         private Panel SectionBGPages_BorderCover;
         private Button NewPageBtn;
         private Button CloseOpenSectionBGPagesBtn;
+        private Panel CosmeticPanel_ButtonSeperator_SectionBG;
     }
 }

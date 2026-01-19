@@ -195,7 +195,7 @@ namespace Digiffice
                 inspector_PageLabel.Text = chapter.chapterPages[i].pageNum + ". " + chapter.chapterPages[i].pageTitle;
                 inspector_PageLabel.TextAlign = ContentAlignment.MiddleCenter;
                 inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Bold);
-                inspector_PageLabel.Size = new Size(200, 50);
+                inspector_PageLabel.Size = new Size(SectionBG_Pages.Width - 1, 50);
                 inspector_PageLabel.BackColor = Color.White;
                 inspector_PageLabel.ForeColor = Color.Black;
                 inspector_PageLabel.BorderStyle = BorderStyle.None;
@@ -248,11 +248,10 @@ namespace Digiffice
             this.Close();
         }
 
-        // Other Button Events
+        // NewPageBtn Events
         private void NewPage_Click(object sender, EventArgs e)
         {
             // To Be Implemented
-            // Todo: Change NewPage text colour based on background (Do in SectionBG_Paint)
             // Todo: Make Image for NewPage button
         }
 
@@ -421,6 +420,24 @@ namespace Digiffice
                 Math.Clamp(notebook_ChapterCol.B + 15, 0, 255)), LinearGradientMode.Vertical))
             {
                 e.Graphics.FillRectangle(brush, rect);
+            }
+
+            // Change NewPageBtn text colour based on notebook_ChapterCol brightness
+            double Value_Darkness = (notebook_ChapterCol.R + notebook_ChapterCol.G + notebook_ChapterCol.B) / (255 * 3);
+            if (Value_Darkness < 0.33)
+            {
+                NewPageBtn.ForeColor = Color.Black;
+                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Black;
+            }
+            else if (Value_Darkness < 0.66)
+            {
+                NewPageBtn.ForeColor = Color.Gray;
+                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Gray;
+            }
+            else
+            {
+                NewPageBtn.ForeColor = Color.White;
+                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.White;
             }
         }
 
