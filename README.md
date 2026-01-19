@@ -12,7 +12,7 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 DISCLAIMERS:
 
 === 1 - Accounts are NOT secure as of the last update ===
-- Until this project reaches a stable state, the account system will not be secure at this moment in time.
+- Until this project reaches a stable state, the account system will not be secure.
 
 === 2 - This is a long term project ===
 - I will be supporting this project for a very long time, hopefully many years. However, it may also take quite a while to develop, as I am a solo developer with other projects alongside it.
