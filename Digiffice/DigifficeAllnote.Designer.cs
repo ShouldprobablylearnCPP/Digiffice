@@ -44,13 +44,13 @@
             RibbonPanel = new Panel();
             LeftInfoPanel = new Panel();
             SectionBG = new Panel();
+            CosmeticPanel_ButtonSeperator_SectionBG = new Panel();
             CloseOpenSectionBGPagesBtn = new Button();
             NewPageBtn = new Button();
             SectionBG_Pages = new Panel();
             SectionBGPages_BorderCover = new Panel();
             CosmeticPanel_BetweenScrollbars = new Panel();
             nonPageBg = new Panel();
-            CosmeticPanel_ButtonSeperator_SectionBG = new Panel();
             Homepanel.SuspendLayout();
             TabSelectionPanel.SuspendLayout();
             SectionBG.SuspendLayout();
@@ -320,6 +320,14 @@
             SectionBG.TabIndex = 6;
             SectionBG.Paint += SectionBG_Paint;
             // 
+            // CosmeticPanel_ButtonSeperator_SectionBG
+            // 
+            CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Black;
+            CosmeticPanel_ButtonSeperator_SectionBG.Location = new Point(1568, 24);
+            CosmeticPanel_ButtonSeperator_SectionBG.Name = "CosmeticPanel_ButtonSeperator_SectionBG";
+            CosmeticPanel_ButtonSeperator_SectionBG.Size = new Size(1, 30);
+            CosmeticPanel_ButtonSeperator_SectionBG.TabIndex = 5;
+            // 
             // CloseOpenSectionBGPagesBtn
             // 
             CloseOpenSectionBGPagesBtn.BackColor = Color.Transparent;
@@ -388,14 +396,6 @@
             nonPageBg.Size = new Size(1340, 673);
             nonPageBg.TabIndex = 0;
             // 
-            // CosmeticPanel_ButtonSeperator_SectionBG
-            // 
-            CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Black;
-            CosmeticPanel_ButtonSeperator_SectionBG.Location = new Point(1568, 24);
-            CosmeticPanel_ButtonSeperator_SectionBG.Name = "CosmeticPanel_ButtonSeperator_SectionBG";
-            CosmeticPanel_ButtonSeperator_SectionBG.Size = new Size(1, 30);
-            CosmeticPanel_ButtonSeperator_SectionBG.TabIndex = 5;
-            // 
             // DigifficeAllnote
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -409,7 +409,7 @@
             Controls.Add(Homepanel);
             FormBorderStyle = FormBorderStyle.None;
             Name = "DigifficeAllnote";
-            Text = "DigifficeAllpad";
+            Text = "DigifficeAllnote";
             Homepanel.ResumeLayout(false);
             Homepanel.PerformLayout();
             TabSelectionPanel.ResumeLayout(false);
