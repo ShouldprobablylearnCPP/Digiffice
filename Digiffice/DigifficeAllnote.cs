@@ -37,6 +37,7 @@ namespace Digiffice
         Color notebook_ChapterCol = Color.Red;
 
         // Editor Variables
+        DigifficeAllnoteEditorFile editorNotebook;
         DigifficeAllnoteEditorFile.Chapter? currentChapter = null;
         DigifficeAllnoteEditorFile.Page? currentPage = null;
         Label currentSelectedPage_Lbl = null;
@@ -96,7 +97,7 @@ namespace Digiffice
 #pragma warning disable CS8629 // Nullable value type may be null.
             DigifficeAllnote_NewPage("Unnamed Page", defaultPageSize_cm, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
 #pragma warning restore CS8629 // Nullable value type may be null.
-            DigifficeAllnote_ShowNote(editorFile.chapters[0], editorFile);
+            DigifficeAllnote_ShowNote(editorFile);
         }
 
         private void DigifficeAllnote_NewPage(string pageName, Vector2 Size, DigifficeAllnoteEditorFile parentNotebook, DigifficeAllnoteEditorFile.Chapter parentChapter)
@@ -138,9 +139,11 @@ namespace Digiffice
             currentPage = chapter.chapterPages[0];
         }
 
-        private void DigifficeAllnote_ShowNote(DigifficeAllnoteEditorFile.Chapter chapter, DigifficeAllnoteEditorFile editorFile)
+        private void DigifficeAllnote_ShowNote(DigifficeAllnoteEditorFile editorFile)
         {
             // Show Editable Page
+            editorNotebook = editorFile;
+            DigifficeAllnoteEditorFile.Chapter chapter = editorFile.chapters[0];
             DigifficeAllnote_ShowChapter(chapter);
             DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[0]);
             DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorFile, chapter);
@@ -194,23 +197,40 @@ namespace Digiffice
                 inspector_PageLabel.Name = "Inspector_PageLabel_" + chapter.chapterPages[i].pageNum;
                 inspector_PageLabel.Text = chapter.chapterPages[i].pageNum + ". " + chapter.chapterPages[i].pageTitle;
                 inspector_PageLabel.TextAlign = ContentAlignment.MiddleCenter;
-                inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Bold);
-                inspector_PageLabel.Size = new Size(SectionBG_Pages.Width - 1, 50);
+                inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Regular);
+                inspector_PageLabel.Size = new Size(SectionBG_Pages.Width - 1, 35);
                 inspector_PageLabel.BackColor = Color.White;
                 inspector_PageLabel.ForeColor = Color.Black;
                 inspector_PageLabel.BorderStyle = BorderStyle.None;
-                inspector_PageLabel.Location = new Point(0, 1 + (i * 51));
+                inspector_PageLabel.Location = new Point(0, 1 + (i * 36));
                 inspector_PageLabel.Cursor = Cursors.Hand;
                 inspector_PageLabel.Click += (s, e) =>
                 {
+                    // Deselect previous selected page
                     if (currentSelectedPage_Lbl != null)
                     {
                         currentSelectedPage_Lbl.BackColor = Color.White;
+                        currentSelectedPage_Lbl.Refresh();
                     }
                     currentSelectedPage_Lbl = inspector_PageLabel;
-                    inspector_PageLabel.BackColor = Color.Blue;
                     currentPage = chapter.chapterPages[i - 1];
+
+                    // Show selected page
                     DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[i - 1]);
+
+                    // Paint selected page label
+                    PaintEventArgs pe = new PaintEventArgs(inspector_PageLabel.CreateGraphics(), inspector_PageLabel.ClientRectangle);
+                    pe.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    Point fixedClientRectLocation = new Point(inspector_PageLabel.ClientRectangle.Location.X - 1, inspector_PageLabel.ClientRectangle.Location.Y - 1);
+                    Size fixedClientRectSize = new Size(inspector_PageLabel.Width + 2, inspector_PageLabel.Height + 2);
+                    Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
+                    using (LinearGradientBrush brush = new LinearGradientBrush(rect, Color.White, Color.LightBlue, LinearGradientMode.Horizontal))
+                    {
+                        pe.Graphics.FillRectangle(brush, rect);
+                    }
+
+                    // Render Text above gradient
+                    TextRenderer.DrawText(pe.Graphics, inspector_PageLabel.Text, inspector_PageLabel.Font, inspector_PageLabel.ClientRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
                 };
                 SectionBG_Pages.Controls.Add(inspector_PageLabel);
 
@@ -251,8 +271,13 @@ namespace Digiffice
         // NewPageBtn Events
         private void NewPage_Click(object sender, EventArgs e)
         {
-            // To Be Implemented
-            // Todo: Make Image for NewPage button
+            DigifficeAllnoteEditorFile.Page newPage = new DigifficeAllnoteEditorFile.Page();
+            DigifficeAllnoteEditorFile.Chapter chapter = (DigifficeAllnoteEditorFile.Chapter)currentChapter;
+            newPage.pageTitle = "Unnamed Page";
+            newPage.pageNum = editorNotebook.filePages.Count + 1;
+            chapter.chapterPages.Add(newPage);
+            editorNotebook.filePages.Add(newPage);
+            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorNotebook, chapter);
         }
 
         // Allnote Tab Events

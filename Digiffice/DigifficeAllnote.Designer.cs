@@ -347,18 +347,19 @@
             // NewPageBtn
             // 
             NewPageBtn.BackColor = Color.Transparent;
+            NewPageBtn.BackgroundImage = Properties.Resources.NewPageBtn;
+            NewPageBtn.BackgroundImageLayout = ImageLayout.Stretch;
             NewPageBtn.Cursor = Cursors.Hand;
             NewPageBtn.FlatAppearance.BorderSize = 0;
             NewPageBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
             NewPageBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
             NewPageBtn.FlatStyle = FlatStyle.Flat;
-            NewPageBtn.Font = new Font("Roboto", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            NewPageBtn.Font = new Font("Roboto", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             NewPageBtn.Location = new Point(1391, 19);
             NewPageBtn.Name = "NewPageBtn";
             NewPageBtn.Size = new Size(177, 40);
             NewPageBtn.TabIndex = 3;
             NewPageBtn.Text = "New Page";
-            NewPageBtn.TextAlign = ContentAlignment.MiddleRight;
             NewPageBtn.UseVisualStyleBackColor = false;
             NewPageBtn.Click += NewPage_Click;
             // 
