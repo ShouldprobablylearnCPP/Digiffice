@@ -84,7 +84,6 @@ namespace Digiffice
         // ..._New... Events
         private void DigifficeAllnote_NewFile(string fileName)
         {
-            Vector2 defaultPageSize_cm = new Vector2(21.00f, 29.70f);
             DigifficeAllnoteEditorFile editorFile = new DigifficeAllnoteEditorFile();
             editorFile.fileName = fileName;
             DigifficeAllnote_NewChapter("Unnamed Chapter", editorFile);
@@ -94,9 +93,6 @@ namespace Digiffice
                 MessageBox.Show("Error creating new notebook: first chapter not found. Closing Digiffice Allpad...");
                 this.Close();
             }
-#pragma warning disable CS8629 // Nullable value type may be null.
-            DigifficeAllnote_NewPage("Unnamed Page", defaultPageSize_cm, editorFile, (DigifficeAllnoteEditorFile.Chapter)firstChapter);
-#pragma warning restore CS8629 // Nullable value type may be null.
             DigifficeAllnote_ShowNote(editorFile);
         }
 
@@ -114,6 +110,7 @@ namespace Digiffice
 
         private void DigifficeAllnote_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
         {
+            // Create Chapter
             DigifficeAllnoteEditorFile.Chapter newChapter = new DigifficeAllnoteEditorFile.Chapter();
             Random rnd = new Random();
             newChapter.chapterNum = parentNotebook.chapters.Count + 1;
@@ -127,6 +124,11 @@ namespace Digiffice
             }
             newChapter.chapterName = chapterName;
             newChapter.chapterNum = parentNotebook.chapters.Count + 1;
+
+            // Create first page in chapter
+            Vector2 defaultPageSize_cm = new Vector2(21.00f, 29.70f);
+            DigifficeAllnote_NewPage("Unnamed Page", defaultPageSize_cm, parentNotebook, newChapter);
+
             parentNotebook.chapters.Add(newChapter);
         }
 
@@ -190,6 +192,12 @@ namespace Digiffice
 
         private void DigifficeAllnote_ShowChaptersAndPagesInInspectors(DigifficeAllnoteEditorFile file, DigifficeAllnoteEditorFile.Chapter chapter)
         {
+            DigifficeAllnote_ShowPagesInInspector(chapter);
+        }
+
+        private void DigifficeAllnote_ShowPagesInInspector(DigifficeAllnoteEditorFile.Chapter chapter)
+        {
+            // Pages from chapter
             for (int i = 0; i < chapter.chapterPages.Count;)
             {
                 // Instantiate Page Panel and add to SectionBG_Pages
@@ -244,8 +252,6 @@ namespace Digiffice
 
                 i++;
             }
-
-            SectionBGPages_BorderCover.SendToBack();
         }
 
         // Other File Events
@@ -271,13 +277,22 @@ namespace Digiffice
         // NewPageBtn Events
         private void NewPage_Click(object sender, EventArgs e)
         {
+            // Todo: Replace with DigifficeAllnote_NewPage() function
             DigifficeAllnoteEditorFile.Page newPage = new DigifficeAllnoteEditorFile.Page();
             DigifficeAllnoteEditorFile.Chapter chapter = (DigifficeAllnoteEditorFile.Chapter)currentChapter;
             newPage.pageTitle = "Unnamed Page";
-            newPage.pageNum = editorNotebook.filePages.Count + 1;
+            newPage.pageNum = chapter.chapterPages.Count + 1;
             chapter.chapterPages.Add(newPage);
-            editorNotebook.filePages.Add(newPage);
+            editorNotebook.filePages.Insert(chapter.chapterPages.Count - 1, newPage);
             DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorNotebook, chapter);
+        }
+
+        // NewChapterBtn Events
+        private void NewChapterBtn_Click(object sender, EventArgs e)
+        {
+            DigifficeAllnote_NewChapter("Unnamed Chapter", editorNotebook);
+            DigifficeAllnoteEditorFile.Chapter newChapter = editorNotebook.chapters[editorNotebook.chapters.Count - 1];
+            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorNotebook, newChapter);
         }
 
         // Allnote Tab Events
