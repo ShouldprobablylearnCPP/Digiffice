@@ -12,13 +12,18 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 DISCLAIMERS:
 
 === 1 - Accounts are NOT secure as of the last update ===
-- Until this project reaches a stable state, the account system will not be secure.
+- Until this project reaches a stable state, the account system will not be secure. Vulnerabilities include:
+- SQL Injection
+- Plaintext storage
+
+- These vulnerabilities will be patched when the first version of Digiffice is released.
 
 === 2 - This is a long term project ===
 - I will be supporting this project for a very long time, hopefully many years. However, it may also take quite a while to develop, as I am a solo developer with other projects alongside it.
 
 === 3 - The master branch is/will be the current release ===
-- The master branch is the branch where the current release of Digiffice is. Currently, Digiffice is pre-release so the master branch will not contain a release version yet
+- The master branch is the branch where the current release of Digiffice is. Currently, Digiffice is pre-release so the master branch will not contain a release version yet.
+- The master branch will only contain the needed source code, which means IP addresses that connect to servers in the software will not be declared/present in the source code (master branch)
 
 === 4 - Licensing ===
 - Digiffice is under the GNU GPL 3.0 (GNU General Public License 3.0) license.
