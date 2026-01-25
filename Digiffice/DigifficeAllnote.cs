@@ -41,6 +41,7 @@ namespace Digiffice
         DigifficeAllnoteEditorFile.Chapter? currentChapter = null;
         DigifficeAllnoteEditorFile.Page? currentPage = null;
         Label currentSelectedPage_Lbl = null;
+        Panel currentSelectedPage_Lbl_Border = null;
 
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
@@ -104,8 +105,9 @@ namespace Digiffice
             newPage.CreatedDateTime = DateTime.Now;
             newPage.pageNum = parentNotebook.filePages.Count + 1;
             newPage.parentChapter = parentChapter;
-            parentNotebook.filePages.Add(newPage);
+            parentNotebook.filePages.Insert(parentChapter.chapterPages.Count, newPage);
             parentChapter.chapterPages.Add(newPage);
+            DigifficeAllnote_ShowPagesInInspector(parentChapter);
         }
 
         private void DigifficeAllnote_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
@@ -133,12 +135,14 @@ namespace Digiffice
         }
 
         // ..._Show... Events
-        private void DigifficeAllnote_ShowChapter(DigifficeAllnoteEditorFile.Chapter chapter)
+        private void DigifficeAllnote_ShowChapter(DigifficeAllnoteEditorFile.Chapter chapter, DigifficeAllnoteEditorFile editorFile)
         {
             // Update current chapter
             currentChapter = chapter;
             notebook_ChapterCol = chapter.chapterCol;
             currentPage = chapter.chapterPages[0];
+            DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[0]);
+            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorFile, chapter);
         }
 
         private void DigifficeAllnote_ShowNote(DigifficeAllnoteEditorFile editorFile)
@@ -146,9 +150,7 @@ namespace Digiffice
             // Show Editable Page
             editorNotebook = editorFile;
             DigifficeAllnoteEditorFile.Chapter chapter = editorFile.chapters[0];
-            DigifficeAllnote_ShowChapter(chapter);
-            DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[0]);
-            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorFile, chapter);
+            DigifficeAllnote_ShowChapter(chapter, editorFile);
 
             // Initialise Editor Functions
         }
@@ -278,13 +280,8 @@ namespace Digiffice
         private void NewPage_Click(object sender, EventArgs e)
         {
             // Todo: Replace with DigifficeAllnote_NewPage() function
-            DigifficeAllnoteEditorFile.Page newPage = new DigifficeAllnoteEditorFile.Page();
             DigifficeAllnoteEditorFile.Chapter chapter = (DigifficeAllnoteEditorFile.Chapter)currentChapter;
-            newPage.pageTitle = "Unnamed Page";
-            newPage.pageNum = chapter.chapterPages.Count + 1;
-            chapter.chapterPages.Add(newPage);
-            editorNotebook.filePages.Insert(chapter.chapterPages.Count - 1, newPage);
-            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorNotebook, chapter);
+            DigifficeAllnote_NewPage("Unnamed Page", new Vector2(21.00f, 29.70f), editorNotebook, chapter);
         }
 
         // NewChapterBtn Events

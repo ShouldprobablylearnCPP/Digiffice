@@ -52,9 +52,9 @@
             CosmeticPanel_BetweenScrollbars = new Panel();
             nonPageBg = new Panel();
             NewChapterBtn = new Button();
-            NewChapterBtn_BorderPnl = new Panel();
             Homepanel.SuspendLayout();
             TabSelectionPanel.SuspendLayout();
+            LeftInfoPanel.SuspendLayout();
             SectionBG.SuspendLayout();
             SectionBG_Pages.SuspendLayout();
             SuspendLayout();
@@ -302,6 +302,7 @@
             // LeftInfoPanel
             // 
             LeftInfoPanel.BackColor = SystemColors.GradientActiveCaption;
+            LeftInfoPanel.Controls.Add(NewChapterBtn);
             LeftInfoPanel.Location = new Point(0, 257);
             LeftInfoPanel.Name = "LeftInfoPanel";
             LeftInfoPanel.Size = new Size(250, 823);
@@ -409,7 +410,7 @@
             NewChapterBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
             NewChapterBtn.FlatStyle = FlatStyle.Flat;
             NewChapterBtn.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            NewChapterBtn.Location = new Point(1750, 287);
+            NewChapterBtn.Location = new Point(10, 6);
             NewChapterBtn.Name = "NewChapterBtn";
             NewChapterBtn.Size = new Size(150, 30);
             NewChapterBtn.TabIndex = 7;
@@ -418,22 +419,12 @@
             NewChapterBtn.UseVisualStyleBackColor = false;
             NewChapterBtn.Click += NewChapterBtn_Click;
             // 
-            // NewChapterBtn_BorderPnl
-            // 
-            NewChapterBtn_BorderPnl.BackColor = Color.Navy;
-            NewChapterBtn_BorderPnl.Location = new Point(1750, 316);
-            NewChapterBtn_BorderPnl.Name = "NewChapterBtn_BorderPnl";
-            NewChapterBtn_BorderPnl.Size = new Size(150, 1);
-            NewChapterBtn_BorderPnl.TabIndex = 8;
-            // 
             // DigifficeAllnote
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
-            Controls.Add(NewChapterBtn_BorderPnl);
-            Controls.Add(NewChapterBtn);
             Controls.Add(SectionBG);
             Controls.Add(LeftInfoPanel);
             Controls.Add(DigifficeButton);
@@ -445,6 +436,7 @@
             Homepanel.ResumeLayout(false);
             Homepanel.PerformLayout();
             TabSelectionPanel.ResumeLayout(false);
+            LeftInfoPanel.ResumeLayout(false);
             SectionBG.ResumeLayout(false);
             SectionBG_Pages.ResumeLayout(false);
             ResumeLayout(false);
@@ -476,6 +468,5 @@
         private Button CloseOpenSectionBGPagesBtn;
         private Panel CosmeticPanel_ButtonSeperator_SectionBG;
         private Button NewChapterBtn;
-        private Panel NewChapterBtn_BorderPnl;
     }
 }
