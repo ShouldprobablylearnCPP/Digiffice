@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,49 +14,49 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad
         public string fileName;
         public List<Page> filePages = new List<Page>();
         public List<Chapter> chapters = new List<Chapter>();
-        public struct Page
+        public class Page
         {
-            public Vector2 pageSize;
-            public string pageTitle;
-            public DateTime CreatedDateTime;
-            public int pageNum;
-            List<object> pageElements = new List<object>();
-            public Chapter parentChapter;
+            public Vector2 pageSize { get; set; }
+            public string pageTitle { get; set; }
+            public DateTime CreatedDateTime { get; set; } = DateTime.Now;
+            public int pageNum { get; set; }
+            public List<object> pageElements { get; set; } = new List<object>();
+            public Chapter parentChapter { get; set; }
 
             public Page()
             {
             }
         }
 
-        public struct SubPage
+        public class SubPage
         {
-            public string subPageTitle;
-            public List<object> subPageElements = new List<object>();
-            public Page parentPage;
+            public string subPageTitle { get; set; }
+            public List<object> subPageElements { get; set; } = new List<object>();
+            public Page parentPage { get; set; }
 
             public SubPage()
             {
             }
         }
 
-        public struct Chapter
+        public class Chapter
         {
-            public string chapterName;
-            public List<Page> chapterPages = new List<Page>();
-            public int chapterNum;
-            public ChapterGroup? parentChapterGroup;
-            public Color chapterCol;
+            public string chapterName { get; set; }
+            public List<Page> chapterPages { get; set; } = new List<Page>();
+            public int chapterNum { get; set; }
+            public ChapterGroup? parentChapterGroup { get; set; }
+            public Color chapterCol { get; set; }
 
             public Chapter()
             {
             }
         }
 
-        public struct ChapterGroup
+        public class ChapterGroup
         {
-            public string chapterGroupName;
-            public List<Chapter> groupChapters = new List<Chapter>();
-            public int chapterGroupNum;
+            public string chapterGroupName { get; set; }
+            public List<Chapter> groupChapters { get; set; } = new List<Chapter>();
+            public int chapterGroupNum { get; set; }
 
             public ChapterGroup()
             {

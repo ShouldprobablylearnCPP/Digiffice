@@ -43,6 +43,7 @@
             FileTab = new Button();
             RibbonPanel = new Panel();
             LeftInfoPanel = new Panel();
+            NewChapterBtn = new Button();
             SectionBG = new Panel();
             CosmeticPanel_ButtonSeperator_SectionBG = new Panel();
             CloseOpenSectionBGPagesBtn = new Button();
@@ -51,10 +52,10 @@
             SectionBGPages_BorderCover = new Panel();
             CosmeticPanel_BetweenScrollbars = new Panel();
             nonPageBg = new Panel();
-            NewChapterBtn = new Button();
+            SectionBG_Chapters_BorderCover = new Panel();
+            SectionBG_Chapters = new Panel();
             Homepanel.SuspendLayout();
             TabSelectionPanel.SuspendLayout();
-            LeftInfoPanel.SuspendLayout();
             SectionBG.SuspendLayout();
             SectionBG_Pages.SuspendLayout();
             SuspendLayout();
@@ -302,11 +303,29 @@
             // LeftInfoPanel
             // 
             LeftInfoPanel.BackColor = SystemColors.GradientActiveCaption;
-            LeftInfoPanel.Controls.Add(NewChapterBtn);
             LeftInfoPanel.Location = new Point(0, 257);
             LeftInfoPanel.Name = "LeftInfoPanel";
             LeftInfoPanel.Size = new Size(250, 823);
             LeftInfoPanel.TabIndex = 5;
+            // 
+            // NewChapterBtn
+            // 
+            NewChapterBtn.BackColor = Color.Transparent;
+            NewChapterBtn.BackgroundImage = Properties.Resources.NewChapterBtn;
+            NewChapterBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            NewChapterBtn.FlatAppearance.BorderSize = 0;
+            NewChapterBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            NewChapterBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            NewChapterBtn.FlatStyle = FlatStyle.Flat;
+            NewChapterBtn.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NewChapterBtn.Location = new Point(1750, 287);
+            NewChapterBtn.Name = "NewChapterBtn";
+            NewChapterBtn.Size = new Size(150, 30);
+            NewChapterBtn.TabIndex = 7;
+            NewChapterBtn.Text = "New Chapter";
+            NewChapterBtn.TextAlign = ContentAlignment.MiddleRight;
+            NewChapterBtn.UseVisualStyleBackColor = false;
+            NewChapterBtn.Click += NewChapterBtn_Click;
             // 
             // SectionBG
             // 
@@ -400,24 +419,21 @@
             nonPageBg.Size = new Size(1340, 673);
             nonPageBg.TabIndex = 0;
             // 
-            // NewChapterBtn
+            // SectionBG_Chapters_BorderCover
             // 
-            NewChapterBtn.BackColor = Color.Transparent;
-            NewChapterBtn.BackgroundImage = Properties.Resources.NewChapterBtn;
-            NewChapterBtn.BackgroundImageLayout = ImageLayout.Stretch;
-            NewChapterBtn.FlatAppearance.BorderSize = 0;
-            NewChapterBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            NewChapterBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            NewChapterBtn.FlatStyle = FlatStyle.Flat;
-            NewChapterBtn.Font = new Font("Roboto", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            NewChapterBtn.Location = new Point(10, 6);
-            NewChapterBtn.Name = "NewChapterBtn";
-            NewChapterBtn.Size = new Size(150, 30);
-            NewChapterBtn.TabIndex = 7;
-            NewChapterBtn.Text = "New Chapter";
-            NewChapterBtn.TextAlign = ContentAlignment.MiddleRight;
-            NewChapterBtn.UseVisualStyleBackColor = false;
-            NewChapterBtn.Click += NewChapterBtn_Click;
+            SectionBG_Chapters_BorderCover.BackColor = Color.Navy;
+            SectionBG_Chapters_BorderCover.Location = new Point(600, 316);
+            SectionBG_Chapters_BorderCover.Name = "SectionBG_Chapters_BorderCover";
+            SectionBG_Chapters_BorderCover.Size = new Size(1300, 1);
+            SectionBG_Chapters_BorderCover.TabIndex = 8;
+            // 
+            // SectionBG_Chapters
+            // 
+            SectionBG_Chapters.BackColor = Color.Transparent;
+            SectionBG_Chapters.Location = new Point(600, 287);
+            SectionBG_Chapters.Name = "SectionBG_Chapters";
+            SectionBG_Chapters.Size = new Size(1100, 30);
+            SectionBG_Chapters.TabIndex = 9;
             // 
             // DigifficeAllnote
             // 
@@ -425,6 +441,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
+            Controls.Add(SectionBG_Chapters_BorderCover);
+            Controls.Add(SectionBG_Chapters);
+            Controls.Add(NewChapterBtn);
             Controls.Add(SectionBG);
             Controls.Add(LeftInfoPanel);
             Controls.Add(DigifficeButton);
@@ -436,7 +455,6 @@
             Homepanel.ResumeLayout(false);
             Homepanel.PerformLayout();
             TabSelectionPanel.ResumeLayout(false);
-            LeftInfoPanel.ResumeLayout(false);
             SectionBG.ResumeLayout(false);
             SectionBG_Pages.ResumeLayout(false);
             ResumeLayout(false);
@@ -468,5 +486,7 @@
         private Button CloseOpenSectionBGPagesBtn;
         private Panel CosmeticPanel_ButtonSeperator_SectionBG;
         private Button NewChapterBtn;
+        private Panel SectionBG_Chapters_BorderCover;
+        private Panel SectionBG_Chapters;
     }
 }
