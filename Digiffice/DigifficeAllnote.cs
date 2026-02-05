@@ -230,9 +230,12 @@ namespace Digiffice
             for (int i = 0; i < chapter.chapterPages.Count;)
             {
                 // Instantiate Page Panel and add to SectionBG_Pages
+
+                DigifficeAllnoteEditorFile.Page pageToShow = chapter.chapterPages[i];
+
                 Label inspector_PageLabel = new Label();
-                inspector_PageLabel.Name = "Inspector_PageLabel_" + chapter.chapterPages[i].pageNum;
-                inspector_PageLabel.Text = chapter.chapterPages[i].pageNum + ". " + chapter.chapterPages[i].pageTitle;
+                inspector_PageLabel.Name = "Inspector_PageLabel_" + pageToShow.pageNum;
+                inspector_PageLabel.Text = pageToShow.pageNum + ". " + pageToShow.pageTitle;
                 inspector_PageLabel.TextAlign = ContentAlignment.MiddleCenter;
                 inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Regular);
                 inspector_PageLabel.Size = new Size(SectionBG_Pages.Width - 1, 35);
@@ -250,11 +253,10 @@ namespace Digiffice
                         currentSelectedPage_Lbl.Refresh();
                     }
                     currentSelectedPage_Lbl = inspector_PageLabel;
-                    currentPage = chapter.chapterPages[i - 1];
+                    currentPage = pageToShow;
 
                     // Show selected page
-                    MessageBox.Show("Switched to page: " + chapter.chapterPages[i - 1].pageNum);
-                    DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[i - 1]);
+                    DigifficeAllnote_ShowEditablePageBackground(pageToShow);
 
                     // Paint selected page label
                     PaintEventArgs pe = new PaintEventArgs(inspector_PageLabel.CreateGraphics(), inspector_PageLabel.ClientRectangle);
