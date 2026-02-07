@@ -401,6 +401,7 @@
             SectionBGPages_BorderCover.Name = "SectionBGPages_BorderCover";
             SectionBGPages_BorderCover.Size = new Size(1, 635);
             SectionBGPages_BorderCover.TabIndex = 0;
+            SectionBGPages_BorderCover.Tag = "nondestruct";
             // 
             // CosmeticPanel_BetweenScrollbars
             // 

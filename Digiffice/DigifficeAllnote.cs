@@ -224,7 +224,14 @@ namespace Digiffice
 
         private void DigifficeAllnote_ShowPagesInInspector(DigifficeAllnoteEditorFile.Chapter chapter)
         {
+            // Get Border Cover
+            Panel inspector_Pages_BorderCover = SectionBGPages_BorderCover;
+
+            // Clear controls
             SectionBG_Pages.Controls.Clear();
+
+            // Add Border Cover
+            SectionBG_Pages.Controls.Add(inspector_Pages_BorderCover);
 
             // Pages from chapter
             for (int i = 0; i < chapter.chapterPages.Count;)
@@ -509,9 +516,9 @@ namespace Digiffice
             Size fixedClientRectSize = new Size(SectionBG.ClientRectangle.Size.Width + 1, SectionBG.ClientRectangle.Size.Height + 1);
             Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
             using (LinearGradientBrush brush = new LinearGradientBrush(rect, notebook_ChapterCol, Color.FromArgb(255,
-                Math.Clamp(notebook_ChapterCol.R + 20, 0, 255),
-                Math.Clamp(notebook_ChapterCol.G + 20, 0, 255),
-                Math.Clamp(notebook_ChapterCol.B + 20, 0, 255)), LinearGradientMode.Vertical))
+                Math.Clamp(notebook_ChapterCol.R + 30, 0, 255),
+                Math.Clamp(notebook_ChapterCol.G + 30, 0, 255),
+                Math.Clamp(notebook_ChapterCol.B + 30, 0, 255)), LinearGradientMode.Vertical))
             {
                 e.Graphics.FillRectangle(brush, rect);
             }
