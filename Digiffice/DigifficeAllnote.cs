@@ -42,6 +42,8 @@ namespace Digiffice
         DigifficeAllnoteEditorFile.Chapter currentChapter = new DigifficeAllnoteEditorFile.Chapter();
         DigifficeAllnoteEditorFile.Page? currentPage = null;
         Label currentSelectedPage_Lbl = null;
+        CustomHScrollBar hScrollBar = null;
+        CustomVScrollBar vScrollBar = null;
 
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
@@ -54,6 +56,7 @@ namespace Digiffice
             // Call Custom/Prerequesite Functions
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             SetupBorderPanels();
+            DigifficeAllnote_EditorPrerequisite();
             DigifficeAllnote_NewFile("NewNotebook");
 
             // Hide form until fully loaded to prevent flickering
@@ -179,12 +182,12 @@ namespace Digiffice
 
         private void DigifficeAllnote_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
         {
-            // Setup nonPageBg
-            nonPageBg.Location = new Point(20, 20);
-            nonPageBg.Size = new Size(SectionBG.Width - 290, SectionBG.Height - 70);
+            // Clear previous Page BG and Scrollbars
+            nonPageBg.Controls.Clear();
 
             // Create Page
             Panel pagebg = new Panel();
+            pagebg.Name = "PageBG";
             pagebg.BackColor = Color.FromArgb(255, 249, 251, 255);
             int sizex = Convertcm_pixels(currentPage.pageSize.X);
             int sizey = Convertcm_pixels(currentPage.pageSize.Y);
@@ -193,25 +196,45 @@ namespace Digiffice
             pagebg.Location = pagebgPos;
             nonPageBg.Controls.Add(pagebg);
 
-            // Create Scrollbars
-            CustomVScrollBar pageVScroll = new CustomVScrollBar(new Point(nonPageBg.Right, nonPageBg.Top), new Size(30, nonPageBg.Height),
-                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
-                null, Properties.Resources.VScrollBar_UpScrollBtn, Properties.Resources.VScrollBar_DownScrollBtn, Properties.Resources.CustomVScrollBar_1);
-            pageVScroll.setMinMaxRange(0, sizey - pagebg.Height);
-            pageVScroll.addControlstoControl(SectionBG);
-
-            CustomHScrollBar pageHScroll = new CustomHScrollBar(new Point(nonPageBg.Left, nonPageBg.Bottom), new Size(nonPageBg.Width, 30),
-                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
-                null, Properties.Resources.VScrollBar_LeftScrollBtn, Properties.Resources.VScrollBar_RightScrollBtn, Properties.Resources.CustomHScrollBar_1);
-            pageHScroll.setMinMaxRange(0, sizex - pagebg.Width);
-            pageHScroll.addControlstoControl(SectionBG);
+            // Edit Scrollbar Ranges and Sizes
+            vScrollBar.setMinMaxRange(0, sizey - pagebg.Height);
+            hScrollBar.setMinMaxRange(0, sizex - pagebg.Width);
 
             // Setup/Reconfigure nonPageBG_Borderpnl
             nonPageBG_Borderpnl.Location = new Point(nonPageBg.Location.X - 1, nonPageBg.Location.Y - 1);
-            nonPageBG_Borderpnl.Size = new Size(nonPageBg.Width + pageVScroll.ctrlToAdd.Width + 2, nonPageBg.Height + pageHScroll.ctrlToAdd.Height + 2);
+            nonPageBG_Borderpnl.Size = new Size(nonPageBg.Width + vScrollBar.ctrlToAdd.Width + 2, nonPageBg.Height + hScrollBar.ctrlToAdd.Height + 2);
             nonPageBG_Borderpnl.BackColor = Color.Navy;
             nonPageBG_Borderpnl.SendToBack();
             SectionBG.Controls.Add(nonPageBG_Borderpnl);
+
+            // Show Page Title and Created DateTime
+            DigifficeAllnote_ShowPageTitleAndDatetime(currentPage);
+        }
+
+        private void DigifficeAllnote_ShowPageTitleAndDatetime(DigifficeAllnoteEditorFile.Page page)
+        {
+            // Create Page Title and Created DateTime Controls
+            TextBox pageTitle = new TextBox();
+            pageTitle.Location = new Point(20, 20);
+            pageTitle.Size = new Size(300, 20);
+            pageTitle.BackColor = Color.White;
+            pageTitle.ForeColor = Color.Black;
+            pageTitle.BorderStyle = BorderStyle.None;
+            pageTitle.Font = new Font("Roboto", 14, FontStyle.Bold);
+            pageTitle.Text = page.pageTitle;
+
+            Label PageCreatedDateTime = new Label();
+            PageCreatedDateTime.Location = new Point(20, 50);
+            PageCreatedDateTime.Size = new Size(300, 20);
+            //PageCreatedDateTime.BackColor = Color.FromArgb(0, 0, 0, 0);
+            PageCreatedDateTime.ForeColor = Color.Black;
+            PageCreatedDateTime.Font = new Font("Roboto", 10, FontStyle.Regular);
+            PageCreatedDateTime.Text = page.CreatedDateTime.ToString("g");
+
+            // Add controls to PageBg
+            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+            pagebg.Controls.Add(pageTitle);
+            pagebg.Controls.Add(PageCreatedDateTime);
         }
 
         private void DigifficeAllnote_ShowChaptersAndPagesInInspectors(DigifficeAllnoteEditorFile file, DigifficeAllnoteEditorFile.Chapter chapter)
@@ -557,6 +580,32 @@ namespace Digiffice
             SectionBG_Borderpnl.BackColor = Color.Navy;
             SectionBG_Borderpnl.SendToBack();
             this.Controls.Add(SectionBG_Borderpnl);
+        }
+
+        // Prerequisite Functions
+
+        private void DigifficeAllnote_EditorPrerequisite()
+        {
+            // Setup nonPageBg
+            nonPageBg.Location = new Point(20, 20);
+            nonPageBg.Size = new Size(SectionBG.Width - 290, SectionBG.Height - 70);
+
+            // Create Scrollbars
+            CustomVScrollBar pageVScroll = new CustomVScrollBar(new Point(nonPageBg.Right, nonPageBg.Top), new Size(30, nonPageBg.Height),
+                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
+                null, Properties.Resources.VScrollBar_UpScrollBtn, Properties.Resources.VScrollBar_DownScrollBtn, Properties.Resources.CustomVScrollBar_1);
+            pageVScroll.setMinMaxRange(0, 0);
+            pageVScroll.addControlstoControl(SectionBG);
+
+            CustomHScrollBar pageHScroll = new CustomHScrollBar(new Point(nonPageBg.Left, nonPageBg.Bottom), new Size(nonPageBg.Width, 30),
+                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
+                null, Properties.Resources.VScrollBar_LeftScrollBtn, Properties.Resources.VScrollBar_RightScrollBtn, Properties.Resources.CustomHScrollBar_1);
+            pageHScroll.setMinMaxRange(0, 0);
+            pageHScroll.addControlstoControl(SectionBG);
+
+            // Add scrollbars to class variables for later use
+            hScrollBar = pageHScroll;
+            vScrollBar = pageVScroll;
         }
     }
 }
