@@ -220,8 +220,22 @@ namespace Digiffice
             pageTitle.BackColor = Color.White;
             pageTitle.ForeColor = Color.Black;
             pageTitle.BorderStyle = BorderStyle.None;
+            pageTitle.TextAlign = HorizontalAlignment.Left;
             pageTitle.Font = new Font("Roboto", 14, FontStyle.Bold);
             pageTitle.Text = page.pageTitle;
+            pageTitle.TextChanged += (s, e) =>
+            {
+                SizeF size = TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font);
+                pageTitle.Size = new Size((int)size.Width + 10, pageTitle.Height);
+                page.pageTitle = pageTitle.Text;
+                if (currentSelectedPage_Lbl != null)
+                {
+                    currentSelectedPage_Lbl.Text = page.pageNum + ". " + page.pageTitle;
+                    currentSelectedPage_Lbl.Refresh();
+                    PaintEventArgs pe = new PaintEventArgs(currentSelectedPage_Lbl.CreateGraphics(), currentSelectedPage_Lbl.ClientRectangle);
+                    SelectedPageLabel_Paint(currentSelectedPage_Lbl, pe);
+                }
+            };
 
             Label PageCreatedDateTime = new Label();
             PageCreatedDateTime.Location = new Point(20, 50);
@@ -290,17 +304,8 @@ namespace Digiffice
 
                     // Paint selected page label
                     PaintEventArgs pe = new PaintEventArgs(inspector_PageLabel.CreateGraphics(), inspector_PageLabel.ClientRectangle);
-                    pe.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                    Point fixedClientRectLocation = new Point(inspector_PageLabel.ClientRectangle.Location.X - 1, inspector_PageLabel.ClientRectangle.Location.Y - 1);
-                    Size fixedClientRectSize = new Size(inspector_PageLabel.Width + 2, inspector_PageLabel.Height + 2);
-                    Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
-                    using (LinearGradientBrush brush = new LinearGradientBrush(rect, Color.White, Color.LightBlue, LinearGradientMode.Horizontal))
-                    {
-                        pe.Graphics.FillRectangle(brush, rect);
-                    }
-
-                    // Render Text above gradient
-                    TextRenderer.DrawText(pe.Graphics, inspector_PageLabel.Text, inspector_PageLabel.Font, inspector_PageLabel.ClientRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                    SelectedPageLabel_Paint(inspector_PageLabel, pe);
+                    // Todo: Paint when selected but not clicked (eg. when chapter is selected, first page is automatically selected but not clicked so it doesn't get painted) (Also applies to chapter labels in chapter inspector)
                 };
 
                 SectionBG_Pages.Controls.Add(inspector_PageLabel);
@@ -570,6 +575,24 @@ namespace Digiffice
             // Setup CosmeticPanel_BetweenScrollbars
             CosmeticPanel_BetweenScrollbars.Location = new Point(nonPageBg.Right, nonPageBg.Bottom);
             CosmeticPanel_BetweenScrollbars.Size = new Size(30, 30);
+        }
+
+        private void SelectedPageLabel_Paint(object sender, PaintEventArgs e)
+        {
+            Label inspector_PageLabel = (Label)sender;
+
+            // Paint selected page label
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            Point fixedClientRectLocation = new Point(inspector_PageLabel.ClientRectangle.Location.X - 1, inspector_PageLabel.ClientRectangle.Location.Y - 1);
+            Size fixedClientRectSize = new Size(inspector_PageLabel.Width + 2, inspector_PageLabel.Height + 2);
+            Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
+            using (LinearGradientBrush brush = new LinearGradientBrush(rect, Color.White, Color.LightBlue, LinearGradientMode.Horizontal))
+            {
+                e.Graphics.FillRectangle(brush, rect);
+            }
+
+            // Render Text above gradient
+            TextRenderer.DrawText(e.Graphics, inspector_PageLabel.Text, inspector_PageLabel.Font, inspector_PageLabel.ClientRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
 
         private void SetupBorderPanels()
