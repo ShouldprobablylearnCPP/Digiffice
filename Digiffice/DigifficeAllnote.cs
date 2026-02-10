@@ -44,6 +44,7 @@ namespace Digiffice
         Label currentSelectedPage_Lbl = null;
         CustomHScrollBar hScrollBar = null;
         CustomVScrollBar vScrollBar = null;
+        bool allowedToCreateTextBoxOnPage = true;
 
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
@@ -209,6 +210,41 @@ namespace Digiffice
 
             // Show Page Title and Created DateTime
             DigifficeAllnote_ShowPageTitleAndDatetime(currentPage);
+
+            // Create a textbox anywhere on the page that is clicked
+            pagebg.Click += (s, e) =>
+            {
+                if (allowedToCreateTextBoxOnPage)
+                {
+                    // Creates textbox at clicked location
+                    Point clickLocation = pagebg.PointToClient(Cursor.Position);
+                    TextBox newTextBox = new TextBox();
+                    newTextBox.Location = clickLocation;
+                    newTextBox.Size = new Size(200, 20);
+                    newTextBox.Text = "New Text";
+                    newTextBox.BackColor = Color.White;
+                    newTextBox.ForeColor = Color.Black;
+                    newTextBox.Font = new Font("Roboto", 10, FontStyle.Regular);
+                    newTextBox.BorderStyle = BorderStyle.FixedSingle;
+                    newTextBox.Multiline = true;
+                    pagebg.Controls.Add(newTextBox);
+                    newTextBox.Focus();
+
+                    // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
+                    allowedToCreateTextBoxOnPage = false;
+                }
+                else
+                {
+                    // If any control is focused, unfocus it and allow textbox creation on next click
+                    if (this.ActiveControl != null)
+                    {
+                        this.ActiveControl = null;
+                    }
+
+                    // Allow textbox creation on next click
+                    allowedToCreateTextBoxOnPage = true;
+                }
+            };
         }
 
         private void DigifficeAllnote_ShowPageTitleAndDatetime(DigifficeAllnoteEditorFile.Page page)
@@ -235,6 +271,10 @@ namespace Digiffice
                     PaintEventArgs pe = new PaintEventArgs(currentSelectedPage_Lbl.CreateGraphics(), currentSelectedPage_Lbl.ClientRectangle);
                     SelectedPageLabel_Paint(currentSelectedPage_Lbl, pe);
                 }
+            };
+            pageTitle.GotFocus += (s, e) =>
+            {
+                allowedToCreateTextBoxOnPage = false;
             };
 
             Label PageCreatedDateTime = new Label();

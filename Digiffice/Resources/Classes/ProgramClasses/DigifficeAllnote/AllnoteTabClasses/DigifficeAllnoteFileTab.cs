@@ -37,8 +37,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             NewAllnoteFileBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
             NewAllnoteFileBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
 
-            NewAllnoteFileBtn.Cursor = Cursors.Hand;
-
             NewAllnoteFileBtn.Click += new EventHandler(NewAllnoteFileButton_Click);
 
             rbnPnl.Controls.Add(NewAllnoteFileBtn);
@@ -63,8 +61,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             OpenAllnoteFileBtn.FlatAppearance.BorderColor = Color.FromArgb(0, 0, 0, 0);
             OpenAllnoteFileBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
             OpenAllnoteFileBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
-
-            OpenAllnoteFileBtn.Cursor = Cursors.Hand;
 
             OpenAllnoteFileBtn.Click += new EventHandler(OpenAllnoteFileButton_Click);
 
