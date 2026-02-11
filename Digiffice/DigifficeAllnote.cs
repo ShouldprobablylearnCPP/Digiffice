@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
@@ -211,12 +212,28 @@ namespace Digiffice
             // Show Page Title and Created DateTime
             DigifficeAllnote_ShowPageTitleAndDatetime(currentPage);
 
+            // Load page elements
+            foreach (var item in currentPage.pageElements)
+            {
+                // Create control for control checker
+                Control itemCtrl;
+                try
+                {
+                    itemCtrl = (Control)item;
+                    pagebg.Controls.Add(itemCtrl);
+                }
+                catch (InvalidCastException)
+                {
+
+                }
+            }
+
             // Create a textbox anywhere on the page that is clicked
             pagebg.Click += (s, e) =>
             {
                 if (allowedToCreateTextBoxOnPage)
                 {
-                    // Creates textbox at clicked location
+                    // Creates RichTextBox at clicked location
                     Point clickLocation = pagebg.PointToClient(Cursor.Position);
                     RichTextBox newRichTextBox = new RichTextBox();
                     newRichTextBox.Location = clickLocation;
@@ -237,7 +254,12 @@ namespace Digiffice
                         DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
                     };
                     pagebg.Controls.Add(newRichTextBox);
+
+                    // Focuses on new RichTextBox
                     newRichTextBox.Focus();
+
+                    // Adds new RichTextBox to Page Elements
+                    currentPage.pageElements.Add(newRichTextBox);
 
                     // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
                     allowedToCreateTextBoxOnPage = false;
