@@ -218,17 +218,26 @@ namespace Digiffice
                 {
                     // Creates textbox at clicked location
                     Point clickLocation = pagebg.PointToClient(Cursor.Position);
-                    TextBox newTextBox = new TextBox();
-                    newTextBox.Location = clickLocation;
-                    newTextBox.Size = new Size(200, 20);
-                    newTextBox.Text = "New Text";
-                    newTextBox.BackColor = Color.White;
-                    newTextBox.ForeColor = Color.Black;
-                    newTextBox.Font = new Font("Roboto", 10, FontStyle.Regular);
-                    newTextBox.BorderStyle = BorderStyle.FixedSingle;
-                    newTextBox.Multiline = true;
-                    pagebg.Controls.Add(newTextBox);
-                    newTextBox.Focus();
+                    RichTextBox newRichTextBox = new RichTextBox();
+                    newRichTextBox.Location = clickLocation;
+                    newRichTextBox.Size = new Size(200, new Font("Roboto", 10, FontStyle.Regular).Height + newRichTextBox.Margin.Vertical);
+                    newRichTextBox.Text = "New Text";
+                    newRichTextBox.BackColor = Color.White;
+                    newRichTextBox.ForeColor = Color.Black;
+                    newRichTextBox.Font = new Font("Roboto", 10, FontStyle.Regular);
+                    newRichTextBox.BorderStyle = BorderStyle.FixedSingle;
+                    newRichTextBox.Multiline = true;
+                    newRichTextBox.ScrollBars = RichTextBoxScrollBars.None;
+                    newRichTextBox.TextChanged += (s, e) =>
+                    {
+                        DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
+                    };
+                    newRichTextBox.SizeChanged += (s, e) =>
+                    {
+                        DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
+                    };
+                    pagebg.Controls.Add(newRichTextBox);
+                    newRichTextBox.Focus();
 
                     // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
                     allowedToCreateTextBoxOnPage = false;
@@ -562,7 +571,7 @@ namespace Digiffice
             Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
         }
 
-        // Other Events
+        // Other Events/Functions
 
         private int Convertcm_pixels(float centimeters)
         {
@@ -610,6 +619,12 @@ namespace Digiffice
             }
         }
 
+        private void DigifficeAllnote_EditSizeOfRichTextBox(RichTextBox richTextBox)
+        {
+            int lineCount = richTextBox.GetLineFromCharIndex(richTextBox.TextLength) + 1;
+            int newHeight = (lineCount * richTextBox.Font.Height) + richTextBox.Margin.Vertical;
+            richTextBox.Height = newHeight;
+        }
         private void CosmeticPanel_BetweenScrollbars_Paint(object sender, PaintEventArgs e)
         {
             // Setup CosmeticPanel_BetweenScrollbars
