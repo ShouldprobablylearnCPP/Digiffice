@@ -233,33 +233,66 @@ namespace Digiffice
             {
                 if (allowedToCreateTextBoxOnPage)
                 {
-                    // Creates RichTextBox at clicked location
+                    // Creates Parent panel
                     Point clickLocation = pagebg.PointToClient(Cursor.Position);
+                    Panel newPanel = new Panel();
+                    newPanel.Location = clickLocation;
+                    newPanel.Size = new Size(200, 10);
+                    newPanel.BackColor = Color.Gray;
+                    newPanel.BorderStyle = BorderStyle.None;
+                    pagebg.Controls.Add(newPanel);
+
+                    // Make Parent Panel Draggable
+                    bool isDragging = false;
+                    newPanel.MouseDown += (s, e) =>
+                    {
+                        isDragging = true;
+                    };
+                    newPanel.MouseUp += (s, e) =>
+                    {
+                        isDragging = false;
+                    };
+                    newPanel.MouseMove += (s, e) =>
+                    {
+                        if (isDragging)
+                        {
+                            int newX = newPanel.Location.X + e.X - (newPanel.Width / 2);
+                            int newY = newPanel.Location.Y + e.Y;
+                            newPanel.Location = new Point(newX, newY);
+                        }
+                    };
+
+                    // Creates RichTextBox at clicked location
                     RichTextBox newRichTextBox = new RichTextBox();
-                    newRichTextBox.Location = clickLocation;
-                    newRichTextBox.Size = new Size(200, new Font("Roboto", 10, FontStyle.Regular).Height + newRichTextBox.Margin.Vertical);
+                    newRichTextBox.Location = new Point(1, 10);
+                    newRichTextBox.Size = new Size(198, new Font("Roboto", 10, FontStyle.Regular).Height);
                     newRichTextBox.Text = "New Text";
                     newRichTextBox.BackColor = Color.White;
                     newRichTextBox.ForeColor = Color.Black;
                     newRichTextBox.Font = new Font("Roboto", 10, FontStyle.Regular);
-                    newRichTextBox.BorderStyle = BorderStyle.FixedSingle;
+                    newRichTextBox.BorderStyle = BorderStyle.None;
                     newRichTextBox.Multiline = true;
                     newRichTextBox.ScrollBars = RichTextBoxScrollBars.None;
                     newRichTextBox.TextChanged += (s, e) =>
                     {
                         DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
+                        newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
                     };
                     newRichTextBox.SizeChanged += (s, e) =>
                     {
                         DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
+                        newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
                     };
-                    pagebg.Controls.Add(newRichTextBox);
+                    newPanel.Controls.Add(newRichTextBox);
+
+                    // Resize Parent Panel to prevent RichTextBox from being cut off
+                    newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
 
                     // Focuses on new RichTextBox
                     newRichTextBox.Focus();
 
                     // Adds new RichTextBox to Page Elements
-                    currentPage.pageElements.Add(newRichTextBox);
+                    currentPage.pageElements.Add(newPanel);
 
                     // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
                     allowedToCreateTextBoxOnPage = false;
@@ -644,7 +677,7 @@ namespace Digiffice
         private void DigifficeAllnote_EditSizeOfRichTextBox(RichTextBox richTextBox)
         {
             int lineCount = richTextBox.GetLineFromCharIndex(richTextBox.TextLength) + 1;
-            int newHeight = (lineCount * richTextBox.Font.Height) + richTextBox.Margin.Vertical;
+            int newHeight = (lineCount * richTextBox.Font.Height);
             richTextBox.Height = newHeight;
         }
         private void CosmeticPanel_BetweenScrollbars_Paint(object sender, PaintEventArgs e)
