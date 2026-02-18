@@ -29,7 +29,7 @@ namespace Digiffice
         // Class Variables
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
-        Control previouslySelectedTab = null;
+        Control currentSelectedTab = null;
 
         // Border Panels
         Panel SectionBG_Borderpnl = new Panel();
@@ -238,12 +238,14 @@ namespace Digiffice
                     Panel newPanel = new Panel();
                     newPanel.Location = clickLocation;
                     newPanel.Size = new Size(200, 10);
-                    newPanel.BackColor = Color.Gray;
+                    newPanel.BackColor = Color.FromArgb(255, 185, 209, 234);
                     newPanel.BorderStyle = BorderStyle.None;
                     pagebg.Controls.Add(newPanel);
 
                     // Make Parent Panel Draggable
                     bool isDragging = false;
+
+                    // newPanel events
                     newPanel.MouseDown += (s, e) =>
                     {
                         isDragging = true;
@@ -262,8 +264,100 @@ namespace Digiffice
                         }
                     };
 
+                    // Create Remove Button
+                    Button removeBtn = new Button();
+                    removeBtn.Size = new Size(8, 8);
+                    removeBtn.Location = new Point(1, 1);
+                    removeBtn.FlatStyle = FlatStyle.Flat;
+                    removeBtn.FlatAppearance.BorderSize = 0;
+                    removeBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
+                    removeBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
+                    removeBtn.BackgroundImage = Properties.Resources.BinIcon1;
+                    removeBtn.BackgroundImageLayout = ImageLayout.Stretch;
+                    removeBtn.Cursor = Cursors.Hand;
+
+                    // removeBtn events
+                    removeBtn.Click += (s, e) =>
+                    {
+                        // Removes active control and allows a new RichTextBox to be created on the page
+                        this.ActiveControl = null;
+                        allowedToCreateTextBoxOnPage = true;
+
+                        // Remove newPanel
+                        pagebg.Controls.Remove(newPanel);
+                        newPanel.Dispose();
+                    };
+                    newPanel.Controls.Add(removeBtn);
+
+                    // Create Resize X Arrows
+                    Panel xResizeArrows = new Panel();
+                    xResizeArrows.Size = new Size(16, 8);
+                    xResizeArrows.Location = new Point(newPanel.Width - (xResizeArrows.Width + 1), 1);
+                    xResizeArrows.BorderStyle = BorderStyle.None;
+                    xResizeArrows.BackgroundImage = Properties.Resources.ResizeXArrowsIcon;
+                    xResizeArrows.BackgroundImageLayout = ImageLayout.Stretch;
+                    xResizeArrows.Cursor = Cursors.SizeWE;
+
+                    bool isXResizing = false;
+                    xResizeArrows.MouseDown += (s, e) =>
+                    {
+                        // Resizing when mouse down
+                        isXResizing = true;
+                    };
+                    xResizeArrows.MouseUp += (s, e) =>
+                    {
+                        // Not resizing when mouse up
+                        isXResizing = false;
+                    };
+                    xResizeArrows.MouseMove += (s, e) =>
+                    {
+                        // Check if mouse is down (isXResizing)
+                        if (isXResizing)
+                        {
+                            // Gets relative point and applies new width
+                            Point relativePoint = pagebg.PointToClient(Cursor.Position);
+                            int newWidth = relativePoint.X - newPanel.Location.X;
+                            newPanel.Width = newWidth;
+
+                            // Loop gets each controls and applies new Locations/Sizes - works due to each control being a different type
+                            foreach (Control ctrl in newPanel.Controls)
+                            {
+                                // Try Catch blocks detect type of control
+                                try
+                                {
+                                    // Gets RichTextBox and does necessary size changes
+                                    RichTextBox rtb = (RichTextBox)ctrl;
+                                    rtb.Size = new Size(newPanel.Width - 2, rtb.Height);
+                                    DigifficeAllnote_EditSizeOfRichTextBox(rtb);
+                                    newPanel.Height = rtb.Height + 11;
+                                }
+                                catch (InvalidCastException)
+                                {
+
+                                }
+
+                                try
+                                {
+                                    // Gets Panel and applies new Location(s)
+                                    Panel pnl = (Panel)ctrl;
+                                    if (pnl == xResizeArrows)
+                                    {
+                                        pnl.Location = new Point(newPanel.Width - (pnl.Width + 1), 1);
+                                    }
+                                }
+                                catch (InvalidCastException)
+                                {
+
+                                }
+                            }
+                        }
+                    };
+
+                    newPanel.Controls.Add(xResizeArrows);
+
                     // Creates RichTextBox at clicked location
                     RichTextBox newRichTextBox = new RichTextBox();
+                    newRichTextBox.Name = "RichTextBox";
                     newRichTextBox.Location = new Point(1, 10);
                     newRichTextBox.Size = new Size(198, new Font("Roboto", 10, FontStyle.Regular).Height);
                     newRichTextBox.Text = "New Text";
@@ -273,6 +367,8 @@ namespace Digiffice
                     newRichTextBox.BorderStyle = BorderStyle.None;
                     newRichTextBox.Multiline = true;
                     newRichTextBox.ScrollBars = RichTextBoxScrollBars.None;
+
+                    // newRichTextBox events
                     newRichTextBox.TextChanged += (s, e) =>
                     {
                         DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
@@ -281,8 +377,34 @@ namespace Digiffice
                     newRichTextBox.SizeChanged += (s, e) =>
                     {
                         DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
-                        newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
                     };
+                    newRichTextBox.GotFocus += (s, e) =>
+                    {
+                        // Show Home Tab
+                        if (currentSelectedTab != HomeTab)
+                        {
+                            HomeTab_Click(HomeTab, new EventArgs());
+                        }
+                    };
+                    newRichTextBox.KeyDown += (s, e) =>
+                    {
+                        if (e.KeyCode == Keys.Delete)
+                        {
+                            // Removes newPanel
+                            this.ActiveControl = null;
+                            allowedToCreateTextBoxOnPage = true;
+                            pagebg.Controls.Remove(newPanel);
+                            newPanel.Dispose();
+                        }
+
+                        if (e.KeyCode == Keys.Escape)
+                        {
+                            // Defocuses RichTextBox
+                            this.ActiveControl = null;
+                            allowedToCreateTextBoxOnPage = true;
+                        }
+                    };
+                    // Add RichTextBox to Parent Panel
                     newPanel.Controls.Add(newRichTextBox);
 
                     // Resize Parent Panel to prevent RichTextBox from being cut off
@@ -309,6 +431,15 @@ namespace Digiffice
                     allowedToCreateTextBoxOnPage = true;
                 }
             };
+        }
+
+        private void NewRichTextBox_SelectionChanged(object? sender, EventArgs e)
+        {
+            // Show Home Tab
+            if (currentSelectedTab != HomeTab)
+            {
+                HomeTab_Click(HomeTab, new EventArgs());
+            }
         }
 
         private void DigifficeAllnote_ShowPageTitleAndDatetime(DigifficeAllnoteEditorFile.Page page)
@@ -492,9 +623,9 @@ namespace Digiffice
         private void FileTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image
-            if (previouslySelectedTab != null)
+            if (currentSelectedTab != null)
             {
-                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             FileTab.BackgroundImage = Properties.Resources.Tab;
 
@@ -502,15 +633,15 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
             fileTabContents.InitialiseUI(RibbonPanel);
-            previouslySelectedTab = FileTab;
+            currentSelectedTab = FileTab;
         }
 
         private void HomeTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image
-            if (previouslySelectedTab != null)
+            if (currentSelectedTab != null)
             {
-                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             HomeTab.BackgroundImage = Properties.Resources.Tab;
 
@@ -518,14 +649,14 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteHomeTab homeTabContents = new DigifficeAllnoteHomeTab();
             homeTabContents.InitialiseUI(RibbonPanel);
-            previouslySelectedTab = HomeTab;
+            currentSelectedTab = HomeTab;
         }
         private void InsertTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image
-            if (previouslySelectedTab != null)
+            if (currentSelectedTab != null)
             {
-                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             InsertTab.BackgroundImage = Properties.Resources.Tab;
 
@@ -533,14 +664,14 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
             insertTabContents.InitialiseUI(RibbonPanel);
-            previouslySelectedTab = InsertTab;
+            currentSelectedTab = InsertTab;
         }
         private void DrawTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image
-            if (previouslySelectedTab != null)
+            if (currentSelectedTab != null)
             {
-                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             DrawTab.BackgroundImage = Properties.Resources.Tab;
 
@@ -548,14 +679,14 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteDrawTab drawTabContents = new DigifficeAllnoteDrawTab();
             drawTabContents.InitialiseUI(RibbonPanel);
-            previouslySelectedTab = DrawTab;
+            currentSelectedTab = DrawTab;
         }
         private void HistoryTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image
-            if (previouslySelectedTab != null)
+            if (currentSelectedTab != null)
             {
-                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             HistoryTab.BackgroundImage = Properties.Resources.Tab;
 
@@ -563,14 +694,14 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteHistoryTab historyTabContents = new DigifficeAllnoteHistoryTab();
             historyTabContents.InitialiseUI(RibbonPanel);
-            previouslySelectedTab = HistoryTab;
+            currentSelectedTab = HistoryTab;
         }
         private void ReviewTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image
-            if (previouslySelectedTab != null)
+            if (currentSelectedTab != null)
             {
-                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             ReviewTab.BackgroundImage = Properties.Resources.Tab;
 
@@ -578,14 +709,14 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteReviewTab reviewTabContents = new DigifficeAllnoteReviewTab();
             reviewTabContents.InitialiseUI(RibbonPanel);
-            previouslySelectedTab = ReviewTab;
+            currentSelectedTab = ReviewTab;
         }
         private void ViewTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image
-            if (previouslySelectedTab != null)
+            if (currentSelectedTab != null)
             {
-                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             ViewTab.BackgroundImage = Properties.Resources.Tab;
 
@@ -593,14 +724,14 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteViewTab viewTabContents = new DigifficeAllnoteViewTab();
             viewTabContents.InitialiseUI(RibbonPanel);
-            previouslySelectedTab = ViewTab;
+            currentSelectedTab = ViewTab;
         }
         private void HelpTab_Click(object sender, EventArgs e)
         {
             // Change ribbon tab image
-            if (previouslySelectedTab != null)
+            if (currentSelectedTab != null)
             {
-                previouslySelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
             }
             HelpTab.BackgroundImage = Properties.Resources.Tab;
 
@@ -608,7 +739,7 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteHelpTab helpTabContents = new DigifficeAllnoteHelpTab();
             helpTabContents.InitialiseUI(RibbonPanel);
-            previouslySelectedTab = HelpTab;
+            currentSelectedTab = HelpTab;
         }
 
         // Windowmsg Events
