@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,8 +16,19 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
         Button OpenAllnoteFileBtn = new Button();
         Label NewNotebookFileLbl = new Label();
 
+        // Prerequisite variables
+        public EventHandler NewAllnoteFileBtn_Click;
+
         public void InitialiseUI(Panel rbnPnl)
         {
+            // Check prerequisites
+            if (NewAllnoteFileBtn_Click == null)
+            {
+                // Show user error
+                MessageBox.Show("Digiffice Allnote Error - Code 1. Returning from DigifficeAllnoteFileTab.InitialiseUI()", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             // NewFileBtn
             NewAllnoteFileBtn.Name = "NewAllnoteFileButton";
             NewAllnoteFileBtn.Enabled = true;
@@ -37,7 +50,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             NewAllnoteFileBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
             NewAllnoteFileBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
 
-            NewAllnoteFileBtn.Click += new EventHandler(NewAllnoteFileButton_Click);
+            NewAllnoteFileBtn.Click += NewAllnoteFileBtn_Click;
 
             rbnPnl.Controls.Add(NewAllnoteFileBtn);
 
@@ -67,10 +80,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             rbnPnl.Controls.Add(OpenAllnoteFileBtn);
         }
 
-        public void NewAllnoteFileButton_Click(object sender, EventArgs e)
+        public void Prerequisites_InitialiseUI(EventHandler NewAllnoteFileBtn_ClickEventHandler)
         {
-            // insert functionality here
-            MessageBox.Show("New Notebook button clicked!", "", MessageBoxButtons.OK);
+            NewAllnoteFileBtn_Click = NewAllnoteFileBtn_ClickEventHandler;
         }
 
         public void OpenAllnoteFileButton_Click(object sender, EventArgs e)

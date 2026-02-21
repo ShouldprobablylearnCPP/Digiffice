@@ -40,12 +40,16 @@ namespace Digiffice
 
         // Editor Variables
         DigifficeAllnoteEditorFile editorNotebook;
+        DigifficeAllnoteEditorFile notebookAtLastSave;
         DigifficeAllnoteEditorFile.Chapter currentChapter = new DigifficeAllnoteEditorFile.Chapter();
         DigifficeAllnoteEditorFile.Page? currentPage = null;
         Label currentSelectedPage_Lbl = null;
         CustomHScrollBar hScrollBar = null;
         CustomVScrollBar vScrollBar = null;
+
+        // Editing variables
         bool allowedToCreateTextBoxOnPage = true;
+        bool allnoteFile_SavedAfterLatestChange = false;
 
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
@@ -131,6 +135,8 @@ namespace Digiffice
             }
 
             DigifficeAllnote_ShowPagesInInspector(parentChapter);
+
+            DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false);
         }
 
         private void DigifficeAllnote_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
@@ -281,7 +287,7 @@ namespace Digiffice
                     {
                         // Removes active control and allows a new RichTextBox to be created on the page
                         this.ActiveControl = null;
-                        allowedToCreateTextBoxOnPage = true;
+                        DigifficeAllnote_ChangeEditingVariables(true, false);
 
                         // Remove newPanel
                         pagebg.Controls.Remove(newPanel);
@@ -315,6 +321,9 @@ namespace Digiffice
                         if (isXResizing)
                         {
                             // Gets relative point and applies new width
+
+// Fix Issue where resizing has an offset - only occurs when a control is loaded from pageElements.
+
                             Point relativePoint = pagebg.PointToClient(Cursor.Position);
                             int newWidth = relativePoint.X - newPanel.Location.X;
                             newPanel.Width = newWidth;
@@ -392,7 +401,7 @@ namespace Digiffice
                         {
                             // Removes newPanel
                             this.ActiveControl = null;
-                            allowedToCreateTextBoxOnPage = true;
+                            DigifficeAllnote_ChangeEditingVariables(true, false);
                             pagebg.Controls.Remove(newPanel);
                             newPanel.Dispose();
                         }
@@ -401,7 +410,7 @@ namespace Digiffice
                         {
                             // Defocuses RichTextBox
                             this.ActiveControl = null;
-                            allowedToCreateTextBoxOnPage = true;
+                            DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange);
                         }
                     };
                     // Add RichTextBox to Parent Panel
@@ -417,7 +426,7 @@ namespace Digiffice
                     currentPage.pageElements.Add(newPanel);
 
                     // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
-                    allowedToCreateTextBoxOnPage = false;
+                    DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange);
                 }
                 else
                 {
@@ -428,7 +437,7 @@ namespace Digiffice
                     }
 
                     // Allow textbox creation on next click
-                    allowedToCreateTextBoxOnPage = true;
+                    DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange);
                 }
             };
         }
@@ -469,7 +478,7 @@ namespace Digiffice
             };
             pageTitle.GotFocus += (s, e) =>
             {
-                allowedToCreateTextBoxOnPage = false;
+                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange);
             };
 
             Label PageCreatedDateTime = new Label();
@@ -632,6 +641,9 @@ namespace Digiffice
             // Instantiate File Tab Contents
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            fileTabContents.Prerequisites_InitialiseUI(NewAllnoteFileBtn_Click);
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             fileTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = FileTab;
         }
@@ -757,7 +769,7 @@ namespace Digiffice
             Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
         }
 
-        // Other Events/Functions
+        // Other Events
 
         private int Convertcm_pixels(float centimeters)
         {
@@ -805,12 +817,6 @@ namespace Digiffice
             }
         }
 
-        private void DigifficeAllnote_EditSizeOfRichTextBox(RichTextBox richTextBox)
-        {
-            int lineCount = richTextBox.GetLineFromCharIndex(richTextBox.TextLength) + 1;
-            int newHeight = (lineCount * richTextBox.Font.Height);
-            richTextBox.Height = newHeight;
-        }
         private void CosmeticPanel_BetweenScrollbars_Paint(object sender, PaintEventArgs e)
         {
             // Setup CosmeticPanel_BetweenScrollbars
@@ -836,6 +842,57 @@ namespace Digiffice
             TextRenderer.DrawText(e.Graphics, inspector_PageLabel.Text, inspector_PageLabel.Font, inspector_PageLabel.ClientRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
 
+        private void NewAllnoteFileBtn_Click(object sender, EventArgs e)
+        {
+            // Create continue boolean
+            bool continueBool = false;
+
+            // Show Messagebox if !allnoteFile_SavedAfterLatestChange
+
+            if (!allnoteFile_SavedAfterLatestChange)
+            {
+                DialogResult resultSave = MessageBox.Show("Would you like to save before creating a new file? Any Unsaved Changes will be lost.", "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (resultSave)
+                {
+                    case DialogResult.Yes:
+                        // Use Saving feature when implemented
+                        // Continue on with creating New Notebook
+                        continueBool = true;
+                        break;
+
+                    case DialogResult.No:
+                        // Continue on with creating New Notebook
+                        continueBool = true;
+                        break;
+
+                    case DialogResult.Cancel:
+                        continueBool = false;
+                        break;
+                        
+                }
+            }
+
+            DialogResult resultConfirm = MessageBox.Show("Are you sure you want to close this notebook?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            // Check Result of resultConfirm
+            if (resultConfirm == DialogResult.Yes)
+            {
+                continueBool = true;
+            }
+            else
+            {
+                continueBool = false;
+            }
+
+            // Continue with Function if continueBool
+            if (continueBool)
+            {
+
+            }
+        }
+
+        // Other Functions
+
         private void SetupBorderPanels()
         {
             // Setup SectionBG_Borderpnl
@@ -844,6 +901,19 @@ namespace Digiffice
             SectionBG_Borderpnl.BackColor = Color.Navy;
             SectionBG_Borderpnl.SendToBack();
             this.Controls.Add(SectionBG_Borderpnl);
+        }
+
+        private void DigifficeAllnote_EditSizeOfRichTextBox(RichTextBox richTextBox)
+        {
+            int lineCount = richTextBox.GetLineFromCharIndex(richTextBox.TextLength) + 1;
+            int newHeight = (lineCount * richTextBox.Font.Height);
+            richTextBox.Height = newHeight;
+        }
+        
+        private void DigifficeAllnote_ChangeEditingVariables(bool allowedToCreateTextBoxOnPageLocal, bool allnoteFile_SavedAfterLatestChangeLocal)
+        {
+            allowedToCreateTextBoxOnPage = allowedToCreateTextBoxOnPageLocal;
+            allnoteFile_SavedAfterLatestChange = allnoteFile_SavedAfterLatestChangeLocal;
         }
 
         // Prerequisite Functions
@@ -870,6 +940,15 @@ namespace Digiffice
             // Add scrollbars to class variables for later use
             hScrollBar = pageHScroll;
             vScrollBar = pageVScroll;
+        }
+
+        // Saving and Saving Related Functions/Events
+
+        private void DigifficeAllnote_SaveFile()
+        {
+            notebookAtLastSave = editorNotebook;
+
+            // Implement Saving
         }
     }
 }
