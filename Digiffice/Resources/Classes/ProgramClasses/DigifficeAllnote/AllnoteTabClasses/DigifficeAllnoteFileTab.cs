@@ -14,15 +14,16 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
         // Class Elements
         Button NewAllnoteFileBtn = new Button();
         Button OpenAllnoteFileBtn = new Button();
-        Label NewNotebookFileLbl = new Label();
+        Button SaveFileBtn = new Button();
 
         // Prerequisite variables
         public EventHandler NewAllnoteFileBtn_Click;
+        public EventHandler SaveFileBtn_Click;
 
         public void InitialiseUI(Panel rbnPnl)
         {
             // Check prerequisites
-            if (NewAllnoteFileBtn_Click == null)
+            if (NewAllnoteFileBtn_Click == null || SaveFileBtn_Click == null)
             {
                 // Show user error
                 MessageBox.Show("Digiffice Allnote Error - Code 1. Returning from DigifficeAllnoteFileTab.InitialiseUI()", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -78,11 +79,37 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             OpenAllnoteFileBtn.Click += new EventHandler(OpenAllnoteFileButton_Click);
 
             rbnPnl.Controls.Add(OpenAllnoteFileBtn);
+
+            // SaveFileBtn
+            SaveFileBtn.Name = "SaveFileButton";
+            SaveFileBtn.Enabled = true;
+
+            SaveFileBtn.Size = new Size(130, 45);
+            SaveFileBtn.Location = new Point(280, 20);
+            SaveFileBtn.Text = "Save Notebook";
+            SaveFileBtn.TextAlign = ContentAlignment.MiddleRight;
+            SaveFileBtn.Font = new Font("Roboto", 8, FontStyle.Regular);
+            SaveFileBtn.Image = Properties.Resources.SaveNotebookBtn;
+            SaveFileBtn.ImageAlign = ContentAlignment.MiddleLeft;
+            SaveFileBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            SaveFileBtn.BackColor = Color.Transparent;
+            SaveFileBtn.Cursor = Cursors.Hand;
+
+            SaveFileBtn.FlatStyle = FlatStyle.Flat;
+            SaveFileBtn.FlatAppearance.BorderSize = 0;
+            SaveFileBtn.FlatAppearance.BorderColor = Color.FromArgb(0, 0, 0, 0);
+            SaveFileBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            SaveFileBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
+            SaveFileBtn.Click += new EventHandler(SaveFileBtn_Click);
+
+            rbnPnl.Controls.Add(SaveFileBtn);
         }
 
-        public void Prerequisites_InitialiseUI(EventHandler NewAllnoteFileBtn_ClickEventHandler)
+        public void Prerequisites_InitialiseUI(EventHandler NewAllnoteFileBtn_ClickEventHandler, EventHandler SaveFileBtn_ClickEventHandler)
         {
             NewAllnoteFileBtn_Click = NewAllnoteFileBtn_ClickEventHandler;
+            SaveFileBtn_Click = SaveFileBtn_ClickEventHandler;
         }
 
         public void OpenAllnoteFileButton_Click(object sender, EventArgs e)

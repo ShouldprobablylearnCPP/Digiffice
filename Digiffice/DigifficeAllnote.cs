@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -19,6 +20,7 @@ using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClasses;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
 using static Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad.DigifficeAllnoteEditorFile;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File;
 
 namespace Digiffice
 {
@@ -46,11 +48,28 @@ namespace Digiffice
         Label currentSelectedPage_Lbl = null;
         CustomHScrollBar hScrollBar = null;
         CustomVScrollBar vScrollBar = null;
+        string openFilePath = null;
 
         // Editing variables
         bool allowedToCreateTextBoxOnPage = true;
         bool allnoteFile_SavedAfterLatestChange = false;
 
+        // Override Functions
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // Check for Ctrl + S
+            if (keyData == (Keys.Control | Keys.S))
+            {
+                // Ctrl + S pressed - Save file
+                MessageBox.Show("saving file...");
+                DigifficeAllnote_SaveFile(editorNotebook, openFilePath);
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+
+        // Form
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
             // Set dimensions
@@ -73,6 +92,8 @@ namespace Digiffice
                 splashscreen.Close();
             };
         }
+
+        // Form Events
 
         // Exit Button Events
         private void ExitButton_Click(object sender, EventArgs e)
@@ -242,6 +263,7 @@ namespace Digiffice
                     // Creates Parent panel
                     Point clickLocation = pagebg.PointToClient(Cursor.Position);
                     Panel newPanel = new Panel();
+                    newPanel.Tag = "NewPnl_RTB"; // Create tag for identifying panels that contain RichTextBoxes for future reference (eg. when saving/loading file)
                     newPanel.Location = clickLocation;
                     newPanel.Size = new Size(200, 10);
                     newPanel.BackColor = Color.FromArgb(255, 185, 209, 234);
@@ -290,6 +312,7 @@ namespace Digiffice
                         DigifficeAllnote_ChangeEditingVariables(true, false);
 
                         // Remove newPanel
+                        currentPage.pageElements.Remove(newPanel);
                         pagebg.Controls.Remove(newPanel);
                         newPanel.Dispose();
                     };
@@ -322,7 +345,7 @@ namespace Digiffice
                         {
                             // Gets relative point and applies new width
 
-// Fix Issue where resizing has an offset - only occurs when a control is loaded from pageElements.
+                            // Fix Issue where resizing has an offset - only occurs when a control is loaded from pageElements.
 
                             Point relativePoint = pagebg.PointToClient(Cursor.Position);
                             int newWidth = relativePoint.X - newPanel.Location.X;
@@ -440,6 +463,21 @@ namespace Digiffice
                     DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange);
                 }
             };
+        }
+
+        // ..._Close... Events
+        private void DigifficeAllnote_CloseNotebook()
+        {
+            // Clear Editor
+            nonPageBg.Controls.Clear();
+            SectionBG_Chapters.Controls.Clear();
+            SectionBG_Pages.Controls.Clear();
+            // Clear Editor Variables
+            editorNotebook = null;
+            notebookAtLastSave = null;
+            currentChapter = null;
+            currentPage = null;
+            currentSelectedPage_Lbl = null;
         }
 
         private void NewRichTextBox_SelectionChanged(object? sender, EventArgs e)
@@ -642,7 +680,7 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            fileTabContents.Prerequisites_InitialiseUI(NewAllnoteFileBtn_Click);
+            fileTabContents.Prerequisites_InitialiseUI(NewAllnoteFileBtn_Click, SaveNotebookBtn_Click);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             fileTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = FileTab;
@@ -855,7 +893,7 @@ namespace Digiffice
                 switch (resultSave)
                 {
                     case DialogResult.Yes:
-                        // Use Saving feature when implemented
+                        SaveNotebookBtn_Click(sender, e);
                         // Continue on with creating New Notebook
                         continueBool = true;
                         break;
@@ -868,7 +906,7 @@ namespace Digiffice
                     case DialogResult.Cancel:
                         continueBool = false;
                         break;
-                        
+
                 }
             }
 
@@ -887,8 +925,15 @@ namespace Digiffice
             // Continue with Function if continueBool
             if (continueBool)
             {
-
+                // Close Notebook
+                DigifficeAllnote_CloseNotebook();
+                DigifficeAllnote_NewFile("New Notebook");
             }
+        }
+
+        private void SaveNotebookBtn_Click(object sender, EventArgs e)
+        {
+            DigifficeAllnote_SaveFile(editorNotebook, openFilePath);
         }
 
         // Other Functions
@@ -909,7 +954,7 @@ namespace Digiffice
             int newHeight = (lineCount * richTextBox.Font.Height);
             richTextBox.Height = newHeight;
         }
-        
+
         private void DigifficeAllnote_ChangeEditingVariables(bool allowedToCreateTextBoxOnPageLocal, bool allnoteFile_SavedAfterLatestChangeLocal)
         {
             allowedToCreateTextBoxOnPage = allowedToCreateTextBoxOnPageLocal;
@@ -944,11 +989,34 @@ namespace Digiffice
 
         // Saving and Saving Related Functions/Events
 
-        private void DigifficeAllnote_SaveFile()
+        private void DigifficeAllnote_SaveFile(DigifficeAllnoteEditorFile fileToSave, string filePath)
         {
             notebookAtLastSave = editorNotebook;
 
-            // Implement Saving
+            // Check to see if filePath is empty
+            if (filePath == null)
+            {
+                // Show Dialog to choose file path
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Title = "Save Digiffice Allnote Notebook";
+                saveFileDialog.Filter = "Digiffice Allnote Notebook (*.dgan)|*.dgan";
+                DialogResult result = saveFileDialog.ShowDialog();
+
+                // Handle Dialog Result
+                if (result == DialogResult.OK)
+                {
+                    // Save path to variable
+                    string chosenFilePath = saveFileDialog.FileName;
+                    openFilePath = chosenFilePath;
+
+                    // Check if .dgan extension. If so, save file using DigifficeFileWriterDGAN.
+                    if (Path.GetExtension(chosenFilePath) == ".dgan")
+                    {
+                        DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
+                        fileWriter.WriteDGANFile(fileToSave, chosenFilePath);
+                    }
+                }
+            }
         }
     }
 }
