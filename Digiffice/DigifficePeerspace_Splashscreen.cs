@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace Digiffice
 {
-    public partial class DigifficeAllnote_Splashscreen : Form
+    public partial class DigifficePeerspace_Splashscreen : Form
     {
         string versionGLB;
-        public DigifficeAllnote_Splashscreen(string version)
+        public DigifficePeerspace_Splashscreen(string version)
         {
             versionGLB = version;
             InitializeComponent();

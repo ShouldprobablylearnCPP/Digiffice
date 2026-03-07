@@ -1,6 +1,6 @@
 ﻿namespace Digiffice
 {
-    partial class DigifficeAllnote_Splashscreen
+    partial class DigifficePeerspace_Splashscreen
     {
         /// <summary>
         /// Required designer variable.
@@ -30,17 +30,14 @@
         {
             SuspendLayout();
             // 
-            // DigifficeAllnote_Splashscreen
+            // DigifficePeerspace_Splashscreen
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackgroundImage = Properties.Resources.AllnoteSplashscreen;
-            ClientSize = new Size(600, 400);
+            ClientSize = new Size(800, 450);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "DigifficeAllnote_Splashscreen";
-            ShowInTaskbar = false;
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "DigifficeAllnote_Splashscreen";
+            Name = "DigifficePeerspace_Splashscreen";
+            Text = "DigifficePeerspace_Splashscreen";
             ResumeLayout(false);
         }
 

@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>False</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +30,24 @@
 
   <ItemGroup>
     <Folder Include="Resources\Classes\ProgramClasses\_Graphics\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\PresentationCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\PresentationFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\PresentationFramework.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero2">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\PresentationFramework.Aero2.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsFormsIntegration">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\WindowsFormsIntegration.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

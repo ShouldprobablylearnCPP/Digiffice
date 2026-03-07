@@ -508,10 +508,8 @@ namespace Digiffice
                 page.pageTitle = pageTitle.Text;
                 if (currentSelectedPage_Lbl != null)
                 {
+                    // Set Background image
                     currentSelectedPage_Lbl.Text = page.pageNum + ". " + page.pageTitle;
-                    currentSelectedPage_Lbl.Refresh();
-                    PaintEventArgs pe = new PaintEventArgs(currentSelectedPage_Lbl.CreateGraphics(), currentSelectedPage_Lbl.ClientRectangle);
-                    SelectedPageLabel_Paint(currentSelectedPage_Lbl, pe);
                 }
             };
             pageTitle.GotFocus += (s, e) =>
@@ -564,41 +562,32 @@ namespace Digiffice
                 inspector_PageLabel.Text = pageToShow.pageNum + ". " + pageToShow.pageTitle;
                 inspector_PageLabel.TextAlign = ContentAlignment.MiddleCenter;
                 inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Regular);
-                inspector_PageLabel.Size = new Size(SectionBG_Pages.Width - 1, 35);
-                inspector_PageLabel.BackColor = Color.White;
+                inspector_PageLabel.Size = new Size(SectionBG_Pages.Width, 36);
+                inspector_PageLabel.Image = Properties.Resources.DeselectedPageLabel_Allnote;
+                inspector_PageLabel.ImageAlign = ContentAlignment.MiddleCenter;
+                inspector_PageLabel.BackColor = Color.Transparent;
                 inspector_PageLabel.ForeColor = Color.Black;
                 inspector_PageLabel.BorderStyle = BorderStyle.None;
-                inspector_PageLabel.Location = new Point(0, 1 + (i * 36));
+                inspector_PageLabel.Location = new Point(0, (i * 35));
                 inspector_PageLabel.Cursor = Cursors.Hand;
                 inspector_PageLabel.Click += (s, e) =>
                 {
                     // Deselect previous selected page
                     if (currentSelectedPage_Lbl != null)
                     {
-                        currentSelectedPage_Lbl.BackColor = Color.White;
-                        currentSelectedPage_Lbl.Refresh();
+                        currentSelectedPage_Lbl.Image = Properties.Resources.DeselectedPageLabel_Allnote;
                     }
                     currentSelectedPage_Lbl = inspector_PageLabel;
                     currentPage = pageToShow;
 
                     // Show selected page
                     DigifficeAllnote_ShowEditablePageBackground(pageToShow);
+                    currentSelectedPage_Lbl.Image = Properties.Resources.SelectedPageLabel_Allnote;
 
-                    // Paint selected page label
-                    PaintEventArgs pe = new PaintEventArgs(inspector_PageLabel.CreateGraphics(), inspector_PageLabel.ClientRectangle);
-                    SelectedPageLabel_Paint(inspector_PageLabel, pe);
                     // Todo: Paint when selected but not clicked (eg. when chapter is selected, first page is automatically selected but not clicked so it doesn't get painted) (Also applies to chapter labels in chapter inspector)
                 };
 
                 SectionBG_Pages.Controls.Add(inspector_PageLabel);
-
-                // Instantiate Border Panel and add to SectionBG_Pages
-                Panel inspector_PageLabel_Border = new Panel();
-                inspector_PageLabel_Border.Name = "Inspector_PageLabel_Border_" + chapter.chapterPages[i].pageNum;
-                inspector_PageLabel_Border.Size = new Size(inspector_PageLabel.Width + 2, inspector_PageLabel.Height + 2);
-                inspector_PageLabel_Border.Location = new Point(inspector_PageLabel.Location.X - 1, inspector_PageLabel.Location.Y - 1);
-                inspector_PageLabel_Border.BackColor = Color.Navy;
-                SectionBG_Pages.Controls.Add(inspector_PageLabel_Border);
                 i++;
             }
         }
@@ -713,6 +702,9 @@ namespace Digiffice
             // Instantiate Insert Tab Contents
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            insertTabContents.Prerequisities_InitialiseUI(InsertImageBtn_Click);
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             insertTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = InsertTab;
         }
@@ -822,7 +814,6 @@ namespace Digiffice
         private void SectionBG_Paint(object sender, PaintEventArgs e)
         {
             this.SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 60);
-            this.SectionBG.Size = new Size((this.Width - SectionBG.Location.X) - 20, (this.Height - SectionBG.Location.Y) - 20);
 
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             Point fixedClientRectLocation = new Point(SectionBG.ClientRectangle.Location.X - 1, SectionBG.ClientRectangle.Location.Y - 1);
@@ -880,6 +871,7 @@ namespace Digiffice
             TextRenderer.DrawText(e.Graphics, inspector_PageLabel.Text, inspector_PageLabel.Font, inspector_PageLabel.ClientRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
 
+        // Events for DigifficeAllnoteFileTab
         private void NewAllnoteFileBtn_Click(object sender, EventArgs e)
         {
             // Create continue boolean
@@ -934,6 +926,53 @@ namespace Digiffice
         private void SaveNotebookBtn_Click(object sender, EventArgs e)
         {
             DigifficeAllnote_SaveFile(editorNotebook, openFilePath);
+        }
+
+        // Events for DigifficeAllnoteInsertTab
+        private void InsertImageBtn_Click(object sender, EventArgs e)
+        {
+            if (currentPage != null)
+            {
+                // Show Dialog to choose image
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Title = "Insert Image";
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                DialogResult result = openFileDialog.ShowDialog();
+                // Handle Dialog Result
+                if (result == DialogResult.OK)
+                {
+
+                    string chosenImagePath = openFileDialog.FileName;
+
+                    // Create PictureBox
+
+                    PictureBox newPictureBox = new PictureBox();
+                    newPictureBox.BackColor = Color.Transparent;
+                    newPictureBox.Image = Image.FromFile(chosenImagePath);
+                    newPictureBox.BackgroundImageLayout = ImageLayout.Stretch;
+                    newPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
+                    newPictureBox.Location = new Point(250, 250); // Default location, can be changed by user
+
+                    // Create ResizeFrame on click
+                    newPictureBox.MouseClick += (s, e) =>
+                    {
+                        if (e.Button == MouseButtons.Left)
+                        {
+                            ResizeFrame resizeFrame = new ResizeFrame();
+                            resizeFrame.bindedControl = newPictureBox;
+                            resizeFrame.InitialiseResizeFrame();
+                        }
+                    };
+
+                    // Add PictureBox to current page
+                    Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+                    pagebg.Controls.Add(newPictureBox);
+
+                    // Add PictureBox to currentPage's pageElements for saving/loading purposes
+                    currentPage.pageElements.Add(newPictureBox);
+                    newPictureBox.BringToFront();
+                }
+            }
         }
 
         // Other Functions

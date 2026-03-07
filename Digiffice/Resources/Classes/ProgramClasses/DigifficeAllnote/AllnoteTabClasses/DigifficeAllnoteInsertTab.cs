@@ -45,5 +45,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
 
             rbnPnl.Controls.Add(InsertImageBtn);
         }
+
+        public void Prerequisities_InitialiseUI(EventHandler insertImgBtnClick)
+        {
+            InsertImageBtn_Click = insertImgBtnClick;
+        }
     }
 }

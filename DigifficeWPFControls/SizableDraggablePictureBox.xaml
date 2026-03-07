@@ -1,0 +1,21 @@
+<UserControl x:Class="DigifficeWPFControls.SizableDraggablePictureBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DigifficeWPFControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <Grid>
+        <Image x:Name="Img" HorizontalAlignment="Stretch" Height="500" Margin="0,0,0,0" VerticalAlignment="Stretch" Width="500"/>
+        <Button x:Name="TopLeftResizer"  Content="" HorizontalAlignment="Left" Margin="-10,-10,0,0" VerticalAlignment="Top" Cursor="Hand" Width="20" Height="20" Padding="0,0,0,0"/>
+        <Button x:Name="MiddleLeftResizer" Content="" HorizontalAlignment="Left" Margin="-10,0,0,0" VerticalAlignment="Center" Cursor="Hand" Width="20" Height="20" Padding="0,0,0,0"/>
+        <Button x:Name="BottomLeftResizer" Content="" HorizontalAlignment="Left" Margin="-10,0,0,-10" VerticalAlignment="Bottom" Cursor="Hand" Width="20" Height="20" Padding="0,0,0,0"/>
+        <Button x:Name="TopRightResizer" Content="" HorizontalAlignment="Right" Margin="0,-10,-10,0" VerticalAlignment="Top" Cursor="Hand" Width="20" Height="20" Padding="0,0,0,0"/>
+        <Button x:Name="BottomRightResizer" Content="" HorizontalAlignment="Right" Margin="0,0,-10,-10" VerticalAlignment="Bottom" Cursor="Hand" Width="20" Height="20" Padding="0,0,0,0"/>
+        <Button x:Name="MiddleRightResizer" Content="" HorizontalAlignment="Right" Margin="0,0,-10,0" VerticalAlignment="Center" Cursor="Hand" Width="20" Height="20" Padding="0,0,0,0"/>
+        <Button x:Name="TopMiddleResizer" Content="" HorizontalAlignment="Center" Margin="0,-10,0,0" VerticalAlignment="Top" Cursor="Hand" Width="20" Height="20" Padding="0,0,0,0"/>
+        <Button x:Name="BottomMiddleResizer" Content="" HorizontalAlignment="Center" Margin="0,0,0,-10" VerticalAlignment="Bottom" Cursor="Hand" Width="20" Height="20" Padding="0,0,0,0"/>
+
+    </Grid>
+</UserControl>

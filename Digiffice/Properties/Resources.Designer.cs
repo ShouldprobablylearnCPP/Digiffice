@@ -63,6 +63,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AllnoteSplashscreen {
+            get {
+                object obj = ResourceManager.GetObject("AllnoteSplashscreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Background_JPG {
             get {
                 object obj = ResourceManager.GetObject("Background_JPG", resourceCulture);
@@ -113,6 +123,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DeselectedPageLabel_Allnote {
+            get {
+                object obj = ResourceManager.GetObject("DeselectedPageLabel_Allnote", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DeselectedRibbontab {
             get {
                 object obj = ResourceManager.GetObject("DeselectedRibbontab", resourceCulture);
@@ -123,19 +143,9 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DigifficeAllnoteIcon {
+        internal static System.Drawing.Bitmap DigifficeAllnoteLogo {
             get {
-                object obj = ResourceManager.GetObject("DigifficeAllnoteIcon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap DigifficeAllnoteSplashscreen {
-            get {
-                object obj = ResourceManager.GetObject("DigifficeAllnoteSplashscreen", resourceCulture);
+                object obj = ResourceManager.GetObject("DigifficeAllnoteLogo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -146,6 +156,16 @@ namespace Digiffice.Properties {
         internal static System.Drawing.Bitmap DigifficeAppBG {
             get {
                 object obj = ResourceManager.GetObject("DigifficeAppBG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DigifficePeerspaceLogo {
+            get {
+                object obj = ResourceManager.GetObject("DigifficePeerspaceLogo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -246,6 +266,16 @@ namespace Digiffice.Properties {
         internal static System.Drawing.Bitmap SaveNotebookBtn {
             get {
                 object obj = ResourceManager.GetObject("SaveNotebookBtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectedPageLabel_Allnote {
+            get {
+                object obj = ResourceManager.GetObject("SelectedPageLabel_Allnote", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

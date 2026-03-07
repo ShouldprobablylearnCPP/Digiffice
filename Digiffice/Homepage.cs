@@ -10,16 +10,15 @@ namespace Digiffice
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         string username = "";
-        int DigifficeProgramsNum = 1;
 
         // Program Open Button Lists
-        EventHandler[] ProgramClickEventHandlers = new EventHandler[1];
-        EventHandler[] ProgramMouseEnterEventHandlers = new EventHandler[1];
-        EventHandler[] ProgramMouseLeaveEventHandlers = new EventHandler[1];
-        Image[] ProgramIcons = new Image[1];
-        string[] programNames = new string[1];
-        string[] programInfos = new string[1];
-        string[] programVersions = new string[1];
+        EventHandler[] ProgramClickEventHandlers = new EventHandler[2];
+        EventHandler[] ProgramMouseEnterEventHandlers = new EventHandler[2];
+        EventHandler[] ProgramMouseLeaveEventHandlers = new EventHandler[2];
+        Image[] ProgramIcons = new Image[2];
+        string[] programNames = new string[2];
+        string[] programInfos = new string[2];
+        string[] programVersions = new string[2];
 
         // Program Button Group
         Panel programOpen_Button = new Panel();
@@ -39,7 +38,7 @@ namespace Digiffice
 
             // Call Custom Prerequesite Functions
             Fill_Lists();
-            Homepage_ProgramButtons_Setup(DigifficeProgramsNum);
+            Homepage_ProgramButtons_Setup(programNames.Length);
         }
 
         // Fill Event Handler List
@@ -49,18 +48,25 @@ namespace Digiffice
             ProgramClickEventHandlers[0] = new EventHandler(DigifficeAllnote_Open);
             ProgramMouseEnterEventHandlers[0] = new EventHandler(DigifficeAllnote_MouseEnter);
             ProgramMouseLeaveEventHandlers[0] = new EventHandler(DigifficeAllnote_MouseLeave);
+            ProgramClickEventHandlers[1] = new EventHandler(DigifficePeerspace_Open);
+            ProgramMouseEnterEventHandlers[1] = new EventHandler(DigifficePeerspace_MouseEnter);
+            ProgramMouseLeaveEventHandlers[1] = new EventHandler(DigifficePeerspace_MouseLeave);
 
             // Program Icons
-            ProgramIcons[0] = Properties.Resources.DigifficeAllnoteIcon;
+            ProgramIcons[0] = Properties.Resources.DigifficeAllnoteLogo;
+            ProgramIcons[1] = Properties.Resources.DigifficePeerspaceLogo;
 
             // Program Names
             programNames[0] = "DigifficeAllnote";
+            programNames[1] = "DigifficePeerspace";
 
             // Program Infos
             programInfos[0] = "Digiffice Allnote - A digital note-taking program for organising and editing all your notes.";
+            programInfos[1] = "Digiffice Peerspace - A collaborative workspace for team projects and communication.";
 
             // Program Versions
-            programVersions[0] = "0.2.0";
+            programVersions[0] = "0.3.0";
+            programVersions[1] = "0.1.0";
         }
 
         // Exit Button Events
@@ -169,6 +175,38 @@ namespace Digiffice
         }
 
         private void DigifficeAllnote_MouseLeave(object sender, EventArgs e)
+        {
+            // sender
+            Panel btn = (Panel)sender;
+
+            // set back colour
+            btn.BackColor = Color.WhiteSmoke;
+        }
+
+        // Digiffice Peerspace Events
+
+        private void DigifficePeerspace_Open(object sender, EventArgs e)
+        {
+            DigifficePeerspace_Splashscreen splashscreen = new DigifficePeerspace_Splashscreen(programVersions[1]);
+            splashscreen.Show();
+
+            nonprotected_AccountData transfer_npac = new nonprotected_AccountData();
+            transfer_npac.ac_username = this.username;
+            string username = this.username;
+            DigifficePeerspace DigifficePeerspace = new DigifficePeerspace(transfer_npac, splashscreen);
+            DigifficePeerspace.Show();
+        }
+
+        private void DigifficePeerspace_MouseEnter(object sender, EventArgs e)
+        {
+            // sender
+            Panel btn = (Panel)sender;
+
+            // set back colour
+            btn.BackColor = Color.LightGray;
+        }
+
+        private void DigifficePeerspace_MouseLeave(object sender, EventArgs e)
         {
             // sender
             Panel btn = (Panel)sender;
