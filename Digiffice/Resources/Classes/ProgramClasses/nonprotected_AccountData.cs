@@ -10,5 +10,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses
     public class nonprotected_AccountData
     {
         public string ac_username;
+        public bool ac_offline;
     }
 }

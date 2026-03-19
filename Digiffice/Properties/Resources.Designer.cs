@@ -253,6 +253,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap PeerspaceSplashscreen {
+            get {
+                object obj = ResourceManager.GetObject("PeerspaceSplashscreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ResizeXArrowsIcon {
             get {
                 object obj = ResourceManager.GetObject("ResizeXArrowsIcon", resourceCulture);

@@ -31,6 +31,7 @@
             Welcomemsg = new Label();
             Homepanel = new Panel();
             ExitButton = new Button();
+            Offlinemsg = new Label();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ProgramsPanel = new Panel();
             ProgramsLabel = new Label();
@@ -60,7 +61,7 @@
             Homepanel.Controls.Add(Welcomemsg);
             Homepanel.Location = new Point(0, 0);
             Homepanel.Name = "Homepanel";
-            Homepanel.Size = new Size(1978, 59);
+            Homepanel.Size = new Size(1904, 59);
             Homepanel.TabIndex = 0;
             // 
             // ExitButton
@@ -82,6 +83,18 @@
             ExitButton.Click += ExitButton_Click;
             ExitButton.MouseEnter += ExitButton_MouseEnter;
             ExitButton.MouseLeave += ExitButton_MouseLeave;
+            // 
+            // Offlinemsg
+            // 
+            Offlinemsg.AutoSize = true;
+            Offlinemsg.BackColor = Color.Transparent;
+            Offlinemsg.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Offlinemsg.ForeColor = SystemColors.ControlLight;
+            Offlinemsg.Location = new Point(0, 1024);
+            Offlinemsg.Name = "Offlinemsg";
+            Offlinemsg.Size = new Size(459, 17);
+            Offlinemsg.TabIndex = 2;
+            Offlinemsg.Text = "You are currently using offline mode. Some features may be unavailable.";
             // 
             // ProgramsPanel
             // 
@@ -112,6 +125,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.HotTrack;
             ClientSize = new Size(1904, 1041);
+            Controls.Add(Offlinemsg);
             Controls.Add(ProgramsPanel);
             Controls.Add(Homepanel);
             ForeColor = SystemColors.ControlText;
@@ -136,5 +150,6 @@
         private Button ExitButton;
         private Panel ProgramsPanel;
         private Label ProgramsLabel;
+        private Label Offlinemsg;
     }
 }

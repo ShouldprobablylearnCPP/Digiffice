@@ -38,15 +38,15 @@
             // 
             // Homepanel
             // 
-            Homepanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             Homepanel.BackColor = SystemColors.ControlLight;
             Homepanel.BackgroundImage = Properties.Resources.Panel;
             Homepanel.BackgroundImageLayout = ImageLayout.Stretch;
             Homepanel.Controls.Add(ExitButton);
             Homepanel.Controls.Add(Windowmsg);
+            Homepanel.Dock = DockStyle.Top;
             Homepanel.Location = new Point(0, 0);
             Homepanel.Name = "Homepanel";
-            Homepanel.Size = new Size(2010, 59);
+            Homepanel.Size = new Size(1920, 59);
             Homepanel.TabIndex = 2;
             // 
             // ExitButton
@@ -98,9 +98,10 @@
             // 
             // PeerspacesPanel
             // 
-            PeerspacesPanel.Location = new Point(12, 129);
+            PeerspacesPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            PeerspacesPanel.Location = new Point(12, 99);
             PeerspacesPanel.Name = "PeerspacesPanel";
-            PeerspacesPanel.Size = new Size(370, 939);
+            PeerspacesPanel.Size = new Size(370, 969);
             PeerspacesPanel.TabIndex = 5;
             // 
             // DigifficePeerspace

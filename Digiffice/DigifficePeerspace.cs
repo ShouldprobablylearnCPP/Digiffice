@@ -20,15 +20,6 @@ namespace Digiffice
 
         public DigifficePeerspace(nonprotected_AccountData nonprotected_AccountData, DigifficePeerspace_Splashscreen splashscreen)
         {
-            // Set dimensions
-            this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-
-            // Initialize components
-            InitializeComponent();
-
-            // Call Custom/Prerequesite Functions
-            DigifficePeerspace_Prerequisite();
-
             // Hide form until fully loaded to prevent flickering
             this.Opacity = 0;
             this.Shown += (s, e) =>
@@ -36,6 +27,16 @@ namespace Digiffice
                 this.Opacity = 1;
                 splashscreen.Close();
             };
+
+            // Set dimensions
+            this.ClientSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            this.Size = ClientSize;
+
+            // Initialize components
+            InitializeComponent();
+
+            // Call Custom/Prerequesite Functions
+            DigifficePeerspace_Prerequisite();
         }
 
         // Exit Button Events

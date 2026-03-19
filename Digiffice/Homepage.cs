@@ -10,6 +10,7 @@ namespace Digiffice
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         string username = "";
+        bool offline = false;
 
         // Program Open Button Lists
         EventHandler[] ProgramClickEventHandlers = new EventHandler[2];
@@ -33,8 +34,19 @@ namespace Digiffice
             InitializeComponent();
 
             // Declare variable values
+            offline = nonprotected_AccData.ac_offline;
             username = nonprotected_AccData.ac_username;
-            Welcomemsg.Text = "Welcome to Digiffice, " + username + "!";
+            if (offline)
+            {
+                Welcomemsg.Text = "Welcome to Digiffice!";
+                Offlinemsg.Text = "You are currently in offline mode. Certain features may be unavailable.";
+            }
+            else
+            {
+                Welcomemsg.Text = "Welcome to Digiffice, " + username + "!";
+                Offlinemsg.Text = "";
+            }
+            Offlinemsg.Location = new Point(0, Screen.PrimaryScreen.Bounds.Height - Offlinemsg.Height);
 
             // Call Custom Prerequesite Functions
             Fill_Lists();
@@ -156,6 +168,7 @@ namespace Digiffice
         private void DigifficeAllnote_Open(object sender, EventArgs e)
         {
             DigifficeAllnote_Splashscreen splashscreen = new DigifficeAllnote_Splashscreen(programVersions[0]);
+            splashscreen.BringToFront();
             splashscreen.Show();
 
             nonprotected_AccountData transfer_npac = new nonprotected_AccountData();
@@ -188,6 +201,7 @@ namespace Digiffice
         private void DigifficePeerspace_Open(object sender, EventArgs e)
         {
             DigifficePeerspace_Splashscreen splashscreen = new DigifficePeerspace_Splashscreen(programVersions[1]);
+            splashscreen.BringToFront();
             splashscreen.Show();
 
             nonprotected_AccountData transfer_npac = new nonprotected_AccountData();

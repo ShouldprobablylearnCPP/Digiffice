@@ -34,9 +34,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackgroundImage = Properties.Resources.PeerspaceSplashscreen;
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(600, 400);
+            DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             Name = "DigifficePeerspace_Splashscreen";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "DigifficePeerspace_Splashscreen";
             ResumeLayout(false);
         }

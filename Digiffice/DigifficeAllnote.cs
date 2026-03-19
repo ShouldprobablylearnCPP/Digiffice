@@ -72,8 +72,18 @@ namespace Digiffice
         // Form
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
+            // Hide form until fully loaded to prevent flickering
+            this.Opacity = 0;
+            this.Shown += (s, e) =>
+            {
+                this.Opacity = 1;
+                splashscreen.Close();
+            };
+
+
             // Set dimensions
-            this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            this.ClientSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            this.Size = ClientSize;
 
             // Initialize components
             InitializeComponent();
@@ -83,14 +93,6 @@ namespace Digiffice
             SetupBorderPanels();
             DigifficeAllnote_EditorPrerequisite();
             DigifficeAllnote_NewFile("NewNotebook");
-
-            // Hide form until fully loaded to prevent flickering
-            this.Opacity = 0;
-            this.Shown += (s, e) =>
-            {
-                this.Opacity = 1;
-                splashscreen.Close();
-            };
         }
 
         // Form Events
@@ -501,6 +503,7 @@ namespace Digiffice
             pageTitle.TextAlign = HorizontalAlignment.Left;
             pageTitle.Font = new Font("Roboto", 14, FontStyle.Bold);
             pageTitle.Text = page.pageTitle;
+            pageTitle.Size = new Size(TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font).Width + 10, pageTitle.Height);
             pageTitle.TextChanged += (s, e) =>
             {
                 SizeF size = TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font);
@@ -518,12 +521,13 @@ namespace Digiffice
             };
 
             Label PageCreatedDateTime = new Label();
-            PageCreatedDateTime.Location = new Point(20, 50);
+            PageCreatedDateTime.Location = new Point(20, pageTitle.Location.Y + pageTitle.Height + 10);
             PageCreatedDateTime.Size = new Size(300, 20);
             //PageCreatedDateTime.BackColor = Color.FromArgb(0, 0, 0, 0);
             PageCreatedDateTime.ForeColor = Color.Black;
             PageCreatedDateTime.Font = new Font("Roboto", 10, FontStyle.Regular);
             PageCreatedDateTime.Text = page.CreatedDateTime.ToString("g");
+            PageCreatedDateTime.Size = new Size(TextRenderer.MeasureText(PageCreatedDateTime.Text, PageCreatedDateTime.Font).Width + 10, PageCreatedDateTime.Height);
 
             // Add controls to PageBg
             Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];

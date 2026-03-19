@@ -68,9 +68,10 @@
             Homepanel.BackgroundImageLayout = ImageLayout.Stretch;
             Homepanel.Controls.Add(ExitButton);
             Homepanel.Controls.Add(Windowmsg);
+            Homepanel.Dock = DockStyle.Top;
             Homepanel.Location = new Point(0, 0);
             Homepanel.Name = "Homepanel";
-            Homepanel.Size = new Size(2010, 59);
+            Homepanel.Size = new Size(1920, 59);
             Homepanel.TabIndex = 1;
             // 
             // ExitButton
@@ -441,7 +442,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
-            ClientSize = new Size(1920, 1080);
+            ClientSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             Controls.Add(SectionBG_Chapters_BorderCover);
             Controls.Add(SectionBG_Chapters);
             Controls.Add(NewChapterBtn);

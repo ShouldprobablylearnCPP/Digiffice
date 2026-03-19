@@ -39,6 +39,8 @@
             UsernameLabel = new Label();
             LoginHeader = new Label();
             label1 = new Label();
+            labelLoginOffline = new Label();
+            labelLoginOfflineClick = new Label();
             SuspendLayout();
             // 
             // labelCreateAccount
@@ -181,6 +183,31 @@
             label1.TabIndex = 24;
             label1.Text = "Welcome!";
             // 
+            // labelLoginOffline
+            // 
+            labelLoginOffline.AutoSize = true;
+            labelLoginOffline.BackColor = Color.Transparent;
+            labelLoginOffline.Font = new Font("Arial", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            labelLoginOffline.Location = new Point(32, 471);
+            labelLoginOffline.Name = "labelLoginOffline";
+            labelLoginOffline.Size = new Size(24, 16);
+            labelLoginOffline.TabIndex = 25;
+            labelLoginOffline.Text = "Or";
+            // 
+            // labelLoginOfflineClick
+            // 
+            labelLoginOfflineClick.AutoSize = true;
+            labelLoginOfflineClick.BackColor = Color.Transparent;
+            labelLoginOfflineClick.Cursor = Cursors.Hand;
+            labelLoginOfflineClick.Font = new Font("Arial Black", 9F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
+            labelLoginOfflineClick.ForeColor = Color.FromArgb(0, 146, 214);
+            labelLoginOfflineClick.Location = new Point(62, 471);
+            labelLoginOfflineClick.Name = "labelLoginOfflineClick";
+            labelLoginOfflineClick.Size = new Size(120, 17);
+            labelLoginOfflineClick.TabIndex = 26;
+            labelLoginOfflineClick.Text = "Use Offline Mode";
+            labelLoginOfflineClick.Click += labelLoginOfflineClick_Click;
+            // 
             // Login
             // 
             AutoScaleDimensions = new SizeF(8F, 17F);
@@ -188,6 +215,8 @@
             BackColor = Color.White;
             BackgroundImage = Properties.Resources.LoginBackground_PNG_resized;
             ClientSize = new Size(285, 508);
+            Controls.Add(labelLoginOfflineClick);
+            Controls.Add(labelLoginOffline);
             Controls.Add(label1);
             Controls.Add(labelCreateAccount);
             Controls.Add(labelDontHaveAnAccount);
@@ -222,5 +251,7 @@
         private Label UsernameLabel;
         private Label LoginHeader;
         private Label label1;
+        private Label labelLoginOffline;
+        private Label labelLoginOfflineClick;
     }
 }

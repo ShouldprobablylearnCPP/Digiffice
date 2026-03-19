@@ -16,6 +16,10 @@ namespace Digiffice
     {
         public Register()
         {
+            // Enable visual styles for the application
+            Application.EnableVisualStyles();
+
+            // Initialize Form
             InitializeComponent();
 
             // Hide form until fully loaded to prevent flickering

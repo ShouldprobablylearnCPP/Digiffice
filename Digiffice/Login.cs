@@ -44,6 +44,7 @@ namespace Digiffice
                 con.Close();
                 nonprotected_AccountData nonprotected_Account = new nonprotected_AccountData();
                 nonprotected_Account.ac_username = txtUsernamelogin.Text;
+                nonprotected_Account.ac_offline = false;
                 new Homepage(nonprotected_Account).Show();
                 this.Hide();
             }
@@ -80,6 +81,16 @@ namespace Digiffice
         {
             con.Close();
             new Register().Show();
+            this.Hide();
+        }
+
+        private void labelLoginOfflineClick_Click(object sender, EventArgs e)
+        {
+            con.Close();
+            nonprotected_AccountData nonprotected_Account = new nonprotected_AccountData();
+            nonprotected_Account.ac_username = "";
+            nonprotected_Account.ac_offline = true;
+            new Homepage(nonprotected_Account).Show();
             this.Hide();
         }
     }
