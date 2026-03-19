@@ -193,6 +193,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NavyTab_100x40_1080p {
+            get {
+                object obj = ResourceManager.GetObject("NavyTab_100x40_1080p", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewChapterBtn {
             get {
                 object obj = ResourceManager.GetObject("NewChapterBtn", resourceCulture);

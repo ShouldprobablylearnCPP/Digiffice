@@ -76,17 +76,37 @@ namespace Digiffice
             this.Close();
         }
 
+        // Form Events
+        private void DigifficePeerspace_Resize(object sender, EventArgs e)
+        {
+            PeerspacesPanel.Size = new Size(PeerspacesContainerPanel.Width - 1, PeerspacesContainerPanel.Height - 42);
+        }
+
+        // Other Events
+        private void PeerspacesTabLabel_Paint(object sender, EventArgs e)
+        {
+            PeerspacesTabLabel.Size = TextRenderer.MeasureText(PeerspacesTabLabel.Text, PeerspacesTabLabel.Font);
+            PeerspacesTabLabel.Location = new Point((PeerspacesTab.Width - PeerspacesTabLabel.Width) / 2, (PeerspacesTab.Height - PeerspacesTabLabel.Height) / 2);
+        }
+
         // Prerequisite Functions
         private void DigifficePeerspace_Prerequisite()
         {
             // Create Scrollbar
-            CustomVScrollBar scrollbarV = new CustomVScrollBar(new Point(PeerspacesPanel.Right, PeerspacesPanel.Top), new Size(30, PeerspacesPanel.Height),
+            CustomVScrollBar scrollbarV = new CustomVScrollBar(new Point(PeerspacesContainerPanel.Right, PeerspacesContainerPanel.Top + (PeerspacesContainerPanel.Height - PeerspacesPanel.Height) - 1), new Size(30, PeerspacesPanel.Height),
                 Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
                 null, Properties.Resources.VScrollBar_UpScrollBtn, Properties.Resources.VScrollBar_DownScrollBtn, Properties.Resources.CustomVScrollBar_1);
             // Todo: Set scrollbar range based on number of peerspaces and their heights
             scrollbarV.setMinMaxRange(0, 0);
             scrollbarV.addControlstoControl(this);
 
+            // Create Scrollbar Border
+            Panel scrollbarBorder = new Panel();
+            scrollbarBorder.Size = new Size(31, PeerspacesPanelBorder.Height);
+            scrollbarBorder.Location = new Point(PeerspacesContainerPanel.Right, PeerspacesContainerPanel.Top + (PeerspacesContainerPanel.Height - PeerspacesPanel.Height) - 2);
+            scrollbarBorder.BackColor = Color.Navy;
+            this.Controls.Add(scrollbarBorder);
+            scrollbarBorder.SendToBack();
         }
     }
 }
