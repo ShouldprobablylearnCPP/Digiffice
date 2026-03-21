@@ -61,13 +61,11 @@ namespace Digiffice
             if (keyData == (Keys.Control | Keys.S))
             {
                 // Ctrl + S pressed - Save file
-                MessageBox.Show("saving file...");
                 DigifficeAllnote_SaveFile(editorNotebook, openFilePath);
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
-
 
         // Form
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
@@ -123,7 +121,7 @@ namespace Digiffice
             DigifficeAllnoteEditorFile.Chapter? firstChapter = FindChapterByName(editorFile, "Unnamed Chapter");
             if (firstChapter == null)
             {
-                MessageBox.Show("Error creating new notebook: first chapter not found. Closing Digiffice Allpad...");
+                MessageBox.Show("Error creating new notebook: first chapter not found. Closing Digiffice Allnote...");
                 this.Close();
             }
             DigifficeAllnote_ShowNote(editorFile);
@@ -451,7 +449,7 @@ namespace Digiffice
                     currentPage.pageElements.Add(newPanel);
 
                     // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
-                    DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange);
+                    DigifficeAllnote_ChangeEditingVariables(false, false);
                 }
                 else
                 {
@@ -1034,7 +1032,6 @@ namespace Digiffice
 
         private void DigifficeAllnote_SaveFile(DigifficeAllnoteEditorFile fileToSave, string filePath)
         {
-            notebookAtLastSave = editorNotebook;
 
             // Check to see if filePath is empty
             if (filePath == null)
@@ -1050,15 +1047,24 @@ namespace Digiffice
                 {
                     // Save path to variable
                     string chosenFilePath = saveFileDialog.FileName;
-                    openFilePath = chosenFilePath;
 
                     // Check if .dgan extension. If so, save file using DigifficeFileWriterDGAN.
                     if (Path.GetExtension(chosenFilePath) == ".dgan")
                     {
                         DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
                         fileWriter.WriteDGANFile(fileToSave, chosenFilePath);
+                        notebookAtLastSave = editorNotebook;
+                        openFilePath = chosenFilePath;
+                        allnoteFile_SavedAfterLatestChange = true;
                     }
                 }
+            }
+            else
+            {
+                DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
+                fileWriter.WriteDGANFile(fileToSave, filePath);
+                notebookAtLastSave = editorNotebook;
+                allnoteFile_SavedAfterLatestChange = true;
             }
         }
     }

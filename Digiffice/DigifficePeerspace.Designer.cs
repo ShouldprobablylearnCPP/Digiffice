@@ -32,13 +32,13 @@
             ExitButton = new Button();
             Windowmsg = new Label();
             DigifficeButton = new Button();
-            PeerspacesContainerPanel = new Panel();
-            PeerspacesPanel = new Panel();
+            PeerspaceLeftBarContainerPanel = new Panel();
+            PeerspaceLeftBarPanel = new Panel();
             PeerspacesPanelBorder = new Panel();
             PeerspacesTab = new Panel();
             PeerspacesTabLabel = new Label();
             Homepanel.SuspendLayout();
-            PeerspacesContainerPanel.SuspendLayout();
+            PeerspaceLeftBarContainerPanel.SuspendLayout();
             PeerspacesTab.SuspendLayout();
             SuspendLayout();
             // 
@@ -102,25 +102,25 @@
             DigifficeButton.UseVisualStyleBackColor = true;
             DigifficeButton.Click += DigifficeButton_Click;
             // 
-            // PeerspacesContainerPanel
+            // PeerspaceLeftBarContainerPanel
             // 
-            PeerspacesContainerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            PeerspacesContainerPanel.BackColor = Color.Transparent;
-            PeerspacesContainerPanel.Controls.Add(PeerspacesPanel);
-            PeerspacesContainerPanel.Controls.Add(PeerspacesPanelBorder);
-            PeerspacesContainerPanel.Controls.Add(PeerspacesTab);
-            PeerspacesContainerPanel.Location = new Point(12, 99);
-            PeerspacesContainerPanel.Name = "PeerspacesContainerPanel";
-            PeerspacesContainerPanel.Size = new Size(370, 969);
-            PeerspacesContainerPanel.TabIndex = 5;
+            PeerspaceLeftBarContainerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            PeerspaceLeftBarContainerPanel.BackColor = Color.Transparent;
+            PeerspaceLeftBarContainerPanel.Controls.Add(PeerspaceLeftBarPanel);
+            PeerspaceLeftBarContainerPanel.Controls.Add(PeerspacesPanelBorder);
+            PeerspaceLeftBarContainerPanel.Controls.Add(PeerspacesTab);
+            PeerspaceLeftBarContainerPanel.Location = new Point(12, 99);
+            PeerspaceLeftBarContainerPanel.Name = "PeerspaceLeftBarContainerPanel";
+            PeerspaceLeftBarContainerPanel.Size = new Size(370, 969);
+            PeerspaceLeftBarContainerPanel.TabIndex = 5;
             // 
-            // PeerspacesPanel
+            // PeerspaceLeftBarPanel
             // 
-            PeerspacesPanel.BackColor = SystemColors.Control;
-            PeerspacesPanel.Location = new Point(1, 41);
-            PeerspacesPanel.Name = "PeerspacesPanel";
-            PeerspacesPanel.Size = new Size(369, 927);
-            PeerspacesPanel.TabIndex = 0;
+            PeerspaceLeftBarPanel.BackColor = SystemColors.Control;
+            PeerspaceLeftBarPanel.Location = new Point(1, 41);
+            PeerspaceLeftBarPanel.Name = "PeerspaceLeftBarPanel";
+            PeerspaceLeftBarPanel.Size = new Size(369, 927);
+            PeerspaceLeftBarPanel.TabIndex = 0;
             // 
             // PeerspacesPanelBorder
             // 
@@ -132,12 +132,15 @@
             // 
             // PeerspacesTab
             // 
-            PeerspacesTab.BackColor = Color.Navy;
+            PeerspacesTab.BackColor = Color.Transparent;
+            PeerspacesTab.BackgroundImage = Properties.Resources.NavyTab_100x40_1080p;
             PeerspacesTab.Controls.Add(PeerspacesTabLabel);
+            PeerspacesTab.Cursor = Cursors.Hand;
             PeerspacesTab.Location = new Point(0, 10);
             PeerspacesTab.Name = "PeerspacesTab";
             PeerspacesTab.Size = new Size(100, 40);
             PeerspacesTab.TabIndex = 2;
+            PeerspacesTab.Click += PeerspacesTab_Click;
             // 
             // PeerspacesTabLabel
             // 
@@ -149,6 +152,7 @@
             PeerspacesTabLabel.Size = new Size(79, 14);
             PeerspacesTabLabel.TabIndex = 0;
             PeerspacesTabLabel.Text = "Peerspaces";
+            PeerspacesTabLabel.Click += PeerspacesTab_Click;
             PeerspacesTabLabel.Paint += PeerspacesTabLabel_Paint;
             // 
             // DigifficePeerspace
@@ -157,7 +161,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
-            Controls.Add(PeerspacesContainerPanel);
+            Controls.Add(PeerspaceLeftBarContainerPanel);
             Controls.Add(DigifficeButton);
             Controls.Add(Homepanel);
             FormBorderStyle = FormBorderStyle.None;
@@ -166,7 +170,7 @@
             Resize += DigifficePeerspace_Resize;
             Homepanel.ResumeLayout(false);
             Homepanel.PerformLayout();
-            PeerspacesContainerPanel.ResumeLayout(false);
+            PeerspaceLeftBarContainerPanel.ResumeLayout(false);
             PeerspacesTab.ResumeLayout(false);
             PeerspacesTab.PerformLayout();
             ResumeLayout(false);
@@ -178,8 +182,8 @@
         private Button ExitButton;
         private Label Windowmsg;
         private Button DigifficeButton;
-        private Panel PeerspacesContainerPanel;
-        private Panel PeerspacesPanel;
+        private Panel PeerspaceLeftBarContainerPanel;
+        private Panel PeerspaceLeftBarPanel;
         private Panel PeerspacesPanelBorder;
         private Panel PeerspacesTab;
         private Label PeerspacesTabLabel;

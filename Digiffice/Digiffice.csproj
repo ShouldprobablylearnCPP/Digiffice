@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Resources\Classes\ProgramClasses\DigifficePeerspace\ClientServerNode\" />
     <Folder Include="Resources\Classes\ProgramClasses\_Graphics\" />
   </ItemGroup>
 

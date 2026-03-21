@@ -173,7 +173,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                 writer.WriteLine("|PARENTPAGENUM: -1"); // RTB is not in subpage, set to -1
                                 writer.WriteLine("|PAGEPOS: " + pnl.Location);
                                 writer.WriteLine("|SIZE: " + pnl.Size);
-                                MessageBox.Show("Saving compressed rtf...");
                                 writer.WriteLine("|RTF: " + rtb.Rtf);
                                 writer.WriteLine("\\");
                                 writer.WriteLine("");
