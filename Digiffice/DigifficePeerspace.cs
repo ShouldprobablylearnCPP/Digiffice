@@ -15,6 +15,7 @@ namespace Digiffice
     public partial class DigifficePeerspace : Form
     {
         // Class Variables
+        GlobalVar digifficeGlobalVariables = new GlobalVar();
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         Panel selectedLeftbarTab;
@@ -39,6 +40,45 @@ namespace Digiffice
             // Call Custom/Prerequesite Functions
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             DigifficePeerspace_Prerequisite();
+        }
+
+        // Show Methods
+        private void DigifficePeerspace_ShowPeerspacesList()
+        {
+            // Access list of peerspace directories from the user's Digiffice folder and display them in the left bar
+            // Todo: Make the labels look like intended, and add functionality to open the peerspace when clicked (add cursor = cursors.hand and click event)
+            // Todo: Make images based on the peerspace type (p2p/client-server) and display them next to the label
+
+            // Check if Digiffice Peerspace folder exists
+            if (Directory.Exists(digifficeGlobalVariables.globalDigifficePeerspaceDataPath))
+            {
+                // Clear existing controls in the left bar panel
+                PeerspaceLeftBarPanel.Controls.Clear();
+
+                // Get list of peerspace directories
+                string[] peerspaceDirectories = Directory.GetDirectories(digifficeGlobalVariables.globalDigifficePeerspaceDataPath);
+
+                // Clear existing controls in the left bar panel
+                PeerspaceLeftBarPanel.Controls.Clear();
+
+                // Loop through each directory and create a label for it in the left bar panel
+                int yOffset = 0;
+                foreach (string directory in peerspaceDirectories)
+                {
+                    Label peerspaceLabel = new Label();
+                    peerspaceLabel.Text = Path.GetFileName(directory);
+                    peerspaceLabel.Location = new Point(10, yOffset);
+                    peerspaceLabel.Size = new Size(PeerspaceLeftBarPanel.Width - 20, 30);
+                    peerspaceLabel.BackColor = Color.Black;
+                    peerspaceLabel.ForeColor = Color.White;
+                    PeerspaceLeftBarPanel.Controls.Add(peerspaceLabel);
+                    yOffset += 40; // Adjust vertical spacing between labels
+                }
+            }
+            else
+            {
+                throw new DirectoryNotFoundException("Digiffice data folder not found. Please ensure the directory exists: " + digifficeGlobalVariables.globalDigifficeFilePath);
+            }
         }
 
         // Exit Button Events
@@ -107,6 +147,7 @@ namespace Digiffice
 
             selectedLeftbarTab = PeerspacesTab;
             PeerspacesTab.Location = new Point(PeerspacesTab.Location.X, PeerspacesTab.Location.Y - 10);
+            DigifficePeerspace_ShowPeerspacesList();
         }
 
         // Prerequisite Functions
