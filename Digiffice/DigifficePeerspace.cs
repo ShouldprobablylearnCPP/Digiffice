@@ -77,7 +77,7 @@ namespace Digiffice
             }
             else
             {
-                throw new DirectoryNotFoundException("Digiffice data folder not found. Please ensure the directory exists: " + digifficeGlobalVariables.globalDigifficeFilePath);
+                throw new DirectoryNotFoundException("Digiffice data folder not found. Please ensure the directory exists: " + digifficeGlobalVariables.globalDigifficeDataPath);
             }
         }
 
