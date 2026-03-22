@@ -494,14 +494,13 @@ namespace Digiffice
             // Create Page Title and Created DateTime Controls
             TextBox pageTitle = new TextBox();
             pageTitle.Location = new Point(20, 20);
-            pageTitle.Size = new Size(300, 20);
             pageTitle.BackColor = Color.White;
             pageTitle.ForeColor = Color.Black;
             pageTitle.BorderStyle = BorderStyle.None;
             pageTitle.TextAlign = HorizontalAlignment.Left;
             pageTitle.Font = new Font("Roboto", 14, FontStyle.Bold);
             pageTitle.Text = page.pageTitle;
-            pageTitle.Size = new Size(TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font).Width + 10, pageTitle.Height);
+            pageTitle.Size = TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font);
             pageTitle.TextChanged += (s, e) =>
             {
                 SizeF size = TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font);

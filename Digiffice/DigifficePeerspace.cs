@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Digiffice.Resources.Classes.ProgramClasses;
 using Digiffice.Resources.Classes.ProgramClasses.CustomControls;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace;
 
 namespace Digiffice
 {
@@ -16,6 +17,7 @@ namespace Digiffice
     {
         // Class Variables
         GlobalVar digifficeGlobalVariables = new GlobalVar();
+        PeerspaceManager digifficePeerspaceManager = new PeerspaceManager();
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         Panel selectedLeftbarTab;
@@ -46,7 +48,6 @@ namespace Digiffice
         private void DigifficePeerspace_ShowPeerspacesList()
         {
             // Access list of peerspace directories from the user's Digiffice folder and display them in the left bar
-            // Todo: Make the labels look like intended, and add functionality to open the peerspace when clicked (add cursor = cursors.hand and click event)
             // Todo: Make images based on the peerspace type (p2p/client-server) and display them next to the label
 
             // Check if Digiffice Peerspace folder exists
@@ -65,13 +66,42 @@ namespace Digiffice
                 int yOffset = 0;
                 foreach (string directory in peerspaceDirectories)
                 {
-                    Label peerspaceLabel = new Label();
-                    peerspaceLabel.Text = Path.GetFileName(directory);
-                    peerspaceLabel.Location = new Point(10, yOffset);
-                    peerspaceLabel.Size = new Size(PeerspaceLeftBarPanel.Width - 20, 30);
-                    peerspaceLabel.BackColor = Color.Black;
-                    peerspaceLabel.ForeColor = Color.White;
-                    PeerspaceLeftBarPanel.Controls.Add(peerspaceLabel);
+
+                    // Create image identifier for peerspace type (p2p/client-server)
+                    PictureBox peerspacePictureBox = new PictureBox();
+                    peerspacePictureBox.Location = new Point(5, yOffset);
+                    peerspacePictureBox.Size = new Size(30, 30); // Set size for the picture box
+                    peerspacePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                    peerspacePictureBox.BackColor = Color.Transparent;
+
+                    // Get Peerspace Type
+                    string peerspaceType = digifficePeerspaceManager.GetPeerspaceType(directory);
+                    if (peerspaceType == "P2P")
+                    {
+                        peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_P2PIcon;
+                    }
+                    else if (peerspaceType == "CLIENTSERVER")
+                    {
+                        //peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_ClientServerIcon;
+                    }
+                    else
+                    {
+                        throw new InvalidDataException("Invalid peerspace type found in data file in peerspace directory: " + directory + " Invalid data: " + peerspaceType);
+                    }
+
+                    // Add to form
+                    PeerspaceLeftBarPanel.Controls.Add(peerspacePictureBox);
+
+                    // Create name label
+                    Label peerspaceNameLabel = new Label();
+                    peerspaceNameLabel.Font = new Font("Roboto", 10, FontStyle.Bold);
+                    peerspaceNameLabel.Text = Path.GetFileName(directory);
+                    peerspaceNameLabel.TextAlign = ContentAlignment.MiddleLeft;
+                    peerspaceNameLabel.Location = new Point(peerspacePictureBox.Right + 5, yOffset);
+                    peerspaceNameLabel.Size = new Size(PeerspaceLeftBarPanel.Width - peerspacePictureBox.Width - 10, 30);
+                    peerspaceNameLabel.BackColor = SystemColors.Control;
+                    peerspaceNameLabel.ForeColor = Color.Black;
+                    PeerspaceLeftBarPanel.Controls.Add(peerspaceNameLabel);
                     yOffset += 40; // Adjust vertical spacing between labels
                 }
             }

@@ -163,6 +163,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DigifficePeerspace_P2PIcon {
+            get {
+                object obj = ResourceManager.GetObject("DigifficePeerspace_P2PIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DigifficePeerspaceLogo {
             get {
                 object obj = ResourceManager.GetObject("DigifficePeerspaceLogo", resourceCulture);
