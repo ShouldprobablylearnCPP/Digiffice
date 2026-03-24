@@ -6,10 +6,11 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>False</UseWPF>
+    <UseWPF>True</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.MixedReality.WebRTC" Version="2.0.2" />
     <PackageReference Include="System.Data.OleDb" Version="9.0.10" />
   </ItemGroup>
 
@@ -29,27 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Classes\ProgramClasses\DigifficePeerspace\ClientServerNode\" />
-    <Folder Include="Resources\Classes\ProgramClasses\DigifficePeerspace\_File\" />
+	<ProjectReference Include="..\DigifficeWPFControls\DigifficeWPFControls.csproj" />
+	<Folder Include="Resources\Classes\ProgramClasses\DigifficePeerspace\_File\" />
     <Folder Include="Resources\Classes\ProgramClasses\_Graphics\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationCore">
-      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\PresentationCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationFramework">
-      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\PresentationFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationFramework.Aero">
-      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\PresentationFramework.Aero.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationFramework.Aero2">
-      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\PresentationFramework.Aero2.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsFormsIntegration">
-      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\7.0.20\ref\net7.0\WindowsFormsIntegration.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

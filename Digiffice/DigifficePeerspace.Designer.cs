@@ -37,9 +37,16 @@
             PeerspacesPanelBorder = new Panel();
             PeerspacesTab = new Panel();
             PeerspacesTabLabel = new Label();
+            CurrentPeerspaceContainerPanel = new Panel();
+            CurrentPeerspaceBorderPanel = new Panel();
+            CurrentPeerspaceBackgroundPanel = new Panel();
+            CurrentPeerspaceFilesPanel = new Panel();
             Homepanel.SuspendLayout();
             PeerspaceLeftBarContainerPanel.SuspendLayout();
             PeerspacesTab.SuspendLayout();
+            CurrentPeerspaceContainerPanel.SuspendLayout();
+            CurrentPeerspaceBorderPanel.SuspendLayout();
+            CurrentPeerspaceBackgroundPanel.SuspendLayout();
             SuspendLayout();
             // 
             // Homepanel
@@ -155,12 +162,51 @@
             PeerspacesTabLabel.Click += PeerspacesTab_Click;
             PeerspacesTabLabel.Paint += PeerspacesTabLabel_Paint;
             // 
+            // CurrentPeerspaceContainerPanel
+            // 
+            CurrentPeerspaceContainerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            CurrentPeerspaceContainerPanel.BackColor = Color.Transparent;
+            CurrentPeerspaceContainerPanel.Controls.Add(CurrentPeerspaceBorderPanel);
+            CurrentPeerspaceContainerPanel.Location = new Point(425, 139);
+            CurrentPeerspaceContainerPanel.Name = "CurrentPeerspaceContainerPanel";
+            CurrentPeerspaceContainerPanel.RightToLeft = RightToLeft.No;
+            CurrentPeerspaceContainerPanel.Size = new Size(1483, 669);
+            CurrentPeerspaceContainerPanel.TabIndex = 6;
+            // 
+            // CurrentPeerspaceBorderPanel
+            // 
+            CurrentPeerspaceBorderPanel.BackColor = Color.Navy;
+            CurrentPeerspaceBorderPanel.Controls.Add(CurrentPeerspaceBackgroundPanel);
+            CurrentPeerspaceBorderPanel.Dock = DockStyle.Fill;
+            CurrentPeerspaceBorderPanel.Location = new Point(0, 0);
+            CurrentPeerspaceBorderPanel.Name = "CurrentPeerspaceBorderPanel";
+            CurrentPeerspaceBorderPanel.Size = new Size(1483, 669);
+            CurrentPeerspaceBorderPanel.TabIndex = 0;
+            // 
+            // CurrentPeerspaceBackgroundPanel
+            // 
+            CurrentPeerspaceBackgroundPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            CurrentPeerspaceBackgroundPanel.BackColor = SystemColors.Control;
+            CurrentPeerspaceBackgroundPanel.Controls.Add(CurrentPeerspaceFilesPanel);
+            CurrentPeerspaceBackgroundPanel.Location = new Point(1, 1);
+            CurrentPeerspaceBackgroundPanel.Name = "CurrentPeerspaceBackgroundPanel";
+            CurrentPeerspaceBackgroundPanel.Size = new Size(1481, 667);
+            CurrentPeerspaceBackgroundPanel.TabIndex = 0;
+            // 
+            // CurrentPeerspaceFilesPanel
+            // 
+            CurrentPeerspaceFilesPanel.Location = new Point(12, 54);
+            CurrentPeerspaceFilesPanel.Name = "CurrentPeerspaceFilesPanel";
+            CurrentPeerspaceFilesPanel.Size = new Size(1457, 601);
+            CurrentPeerspaceFilesPanel.TabIndex = 0;
+            // 
             // DigifficePeerspace
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
+            Controls.Add(CurrentPeerspaceContainerPanel);
             Controls.Add(PeerspaceLeftBarContainerPanel);
             Controls.Add(DigifficeButton);
             Controls.Add(Homepanel);
@@ -173,6 +219,9 @@
             PeerspaceLeftBarContainerPanel.ResumeLayout(false);
             PeerspacesTab.ResumeLayout(false);
             PeerspacesTab.PerformLayout();
+            CurrentPeerspaceContainerPanel.ResumeLayout(false);
+            CurrentPeerspaceBorderPanel.ResumeLayout(false);
+            CurrentPeerspaceBackgroundPanel.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -187,5 +236,9 @@
         private Panel PeerspacesPanelBorder;
         private Panel PeerspacesTab;
         private Label PeerspacesTabLabel;
+        private Panel CurrentPeerspaceContainerPanel;
+        private Panel CurrentPeerspaceBorderPanel;
+        private Panel CurrentPeerspaceBackgroundPanel;
+        private Panel CurrentPeerspaceFilesPanel;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ using System.Windows.Forms;
 using Digiffice.Resources.Classes.ProgramClasses;
 using Digiffice.Resources.Classes.ProgramClasses.CustomControls;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace.ClientServerNode;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace.P2PNode;
 
 namespace Digiffice
 {
@@ -21,7 +24,14 @@ namespace Digiffice
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         Panel selectedLeftbarTab;
-         
+        Panel selectedPeerspaceEntry;
+
+        // Peersapce variables
+        // NOTE: These classes are only initialised if a Peerspace is opened with the corresponding type.
+        P2PNode _P2PNode;
+        ClientServerClient _ClientServerClient;
+        ClientServerServer _ClientServerHost;
+
         public DigifficePeerspace(nonprotected_AccountData nonprotected_AccountData, DigifficePeerspace_Splashscreen splashscreen)
         {
             // Hide form until fully loaded to prevent flickering
@@ -65,49 +75,8 @@ namespace Digiffice
                 int yOffset = 0;
                 foreach (string directory in peerspaceDirectories)
                 {
-
-                    // Create image identifier for peerspace type (p2p/client-server)
-                    PictureBox peerspacePictureBox = new PictureBox();
-                    peerspacePictureBox.Location = new Point(5, yOffset);
-                    peerspacePictureBox.Size = new Size(30, 30); // Set size for the picture box
-                    peerspacePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-                    peerspacePictureBox.BackColor = Color.Transparent;
-                    peerspacePictureBox.Cursor = Cursors.Hand;
-
-                    // Create name label
-                    Label peerspaceNameLabel = new Label();
-                    peerspaceNameLabel.Font = new Font("Roboto", 10, FontStyle.Bold);
-                    peerspaceNameLabel.Text = Path.GetFileName(directory);
-                    peerspaceNameLabel.TextAlign = ContentAlignment.MiddleLeft;
-                    peerspaceNameLabel.Location = new Point(peerspacePictureBox.Right + 5, yOffset);
-                    peerspaceNameLabel.Size = new Size(PeerspaceLeftBarPanel.Width - peerspacePictureBox.Width - 10, 30);
-                    peerspaceNameLabel.BackColor = SystemColors.Control;
-                    peerspaceNameLabel.ForeColor = Color.Black;
-                    peerspaceNameLabel.Cursor = Cursors.Hand;
-                    PeerspaceLeftBarPanel.Controls.Add(peerspaceNameLabel);
+                    DigifficePeerspace_CreatePeerspaceEntryControl(0, yOffset, directory, PeerspaceLeftBarPanel, true, false);
                     yOffset += 40; // Adjust vertical spacing between labels
-
-                    // Get Peerspace Type
-                    string peerspaceType = digifficePeerspaceManager.GetPeerspaceType(directory);
-                    if (peerspaceType == "P2P")
-                    {
-                        peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_P2PIcon;
-                        peerspaceNameLabel.Tag = "P2P";
-                        peerspacePictureBox.Tag = "P2P";
-                    }
-                    else if (peerspaceType == "CLIENTSERVER")
-                    {
-                        peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_ClientServerIcon;
-                        peerspaceNameLabel.Tag = "CLIENTSERVER";
-                        peerspacePictureBox.Tag = "CLIENTSERVER";
-                    }
-                    else
-                    {
-                        throw new InvalidDataException("Invalid peerspace type found in data file in peerspace directory: " + directory + " Invalid data: " + peerspaceType);
-                    }
-
-                    // Add Picture Box to form
-                    PeerspaceLeftBarPanel.Controls.Add(peerspacePictureBox);
                 }
             }
             else
@@ -160,9 +129,39 @@ namespace Digiffice
         }
 
         // Peerspace label (Left Bar) Events
-        private void DigifficePeerspace_PeerspaceLabelLeftBarClick(object sender, EventArgs e)
+        private void DigifficePeerspace_PeerspaceEntryControlClick(object sender, EventArgs e, string peerspaceDirectory)
         {
-            
+            Control senderControl = (Control)sender;
+
+            // Show Current Peerspace in Peerspace Panel
+            // Delete Current (Now Previous) Peerspace in Peerspace Panel
+            foreach (Control item in CurrentPeerspaceBackgroundPanel.Controls)
+            {
+                if (item == selectedPeerspaceEntry)
+                {
+                    CurrentPeerspaceBackgroundPanel.Controls.Remove(item);
+                    item.Dispose();
+                }
+            }
+
+            // Create EntryControl and add it to Peerspace Panel
+            DigifficePeerspace_CreatePeerspaceEntryControl(7, 12, peerspaceDirectory, CurrentPeerspaceBackgroundPanel, false, true);
+
+            // Initialise Peerspace
+            string peerspaceType = senderControl.Tag.ToString();
+            if (peerspaceType == "P2P")
+            {
+                _P2PNode = new P2PNode();
+                _P2PNode.initP2PNode();
+            }
+            else if (peerspaceType == "CLIENTSERVER")
+            {
+
+            }
+            else
+            {
+                throw new InvalidDataException("Invalid peerspace type found in label tag: " + peerspaceType);
+            }
         }
 
         // Other Events
@@ -189,6 +188,81 @@ namespace Digiffice
             selectedLeftbarTab = PeerspacesTab;
             PeerspacesTab.Location = new Point(PeerspacesTab.Location.X, PeerspacesTab.Location.Y - 10);
             DigifficePeerspace_ShowPeerspacesList();
+        }
+
+        // Control Creation Methods
+        private void DigifficePeerspace_CreatePeerspaceEntryControl(int _xOffset, int _yOffset, string directory, Control parentControl, bool clickable, bool setAsCurrentlySelected)
+        {
+            // Create Parent container panel for each peerspace entry (to allow for better formatting and click events)
+            Panel peerspaceEntryPanel = new Panel();
+            peerspaceEntryPanel.Tag = "PeerspaceEntryParentPanel";
+            peerspaceEntryPanel.Location = new Point(_xOffset, _yOffset);
+            if (setAsCurrentlySelected)
+            {
+                selectedPeerspaceEntry = peerspaceEntryPanel;
+            }
+            peerspaceEntryPanel.Size = new Size(parentControl.Width, 30);
+            peerspaceEntryPanel.BackColor = Color.Transparent;
+            parentControl.Controls.Add(peerspaceEntryPanel);
+
+            // Create image identifier for peerspace type (p2p/client-server)
+            PictureBox peerspacePictureBox = new PictureBox();
+            peerspacePictureBox.Location = new Point(5 + _xOffset, 0);
+            peerspacePictureBox.Size = new Size(30, 30); // Set size for the picture box
+            peerspacePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            peerspacePictureBox.BackColor = Color.Transparent;
+
+
+            // Create name label
+            Label peerspaceNameLabel = new Label();
+            peerspaceNameLabel.Font = new Font("Roboto", 10, FontStyle.Bold);
+            peerspaceNameLabel.Text = Path.GetFileName(directory);
+            peerspaceNameLabel.TextAlign = ContentAlignment.MiddleLeft;
+            peerspaceNameLabel.Location = new Point(peerspacePictureBox.Right + 5 + _xOffset, 0);
+            peerspaceNameLabel.Size = new Size(parentControl.Width - peerspacePictureBox.Width - 10, 30);
+            peerspaceNameLabel.BackColor = SystemColors.Control;
+            peerspaceNameLabel.ForeColor = Color.Black;
+            peerspaceEntryPanel.Controls.Add(peerspaceNameLabel);
+
+            if (clickable)
+            {
+                peerspaceEntryPanel.Cursor = Cursors.Hand;
+                peerspaceEntryPanel.Click += (s, e) => DigifficePeerspace_PeerspaceEntryControlClick(s, e, directory);
+                peerspacePictureBox.Cursor = Cursors.Hand;
+                peerspacePictureBox.Click += (s, e) => DigifficePeerspace_PeerspaceEntryControlClick(s, e, directory);
+                peerspaceNameLabel.Cursor = Cursors.Hand;
+                peerspaceNameLabel.Click += (s, e) => DigifficePeerspace_PeerspaceEntryControlClick(s, e, directory);
+            }
+
+            // Get Peerspace Type
+            string peerspaceType = digifficePeerspaceManager.GetPeerspaceType(directory);
+            if (peerspaceType == "P2P")
+            {
+                peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_P2PIcon;
+                peerspaceEntryPanel.Tag = "P2P";
+                peerspaceNameLabel.Tag = "P2P";
+                peerspacePictureBox.Tag = "P2P";
+            }
+            else if (peerspaceType == "CLIENTSERVER")
+            {
+                peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_ClientServerIcon;
+                peerspaceEntryPanel.Tag = "CLIENTSERVER";
+                peerspaceNameLabel.Tag = "CLIENTSERVER";
+                peerspacePictureBox.Tag = "CLIENTSERVER";
+            }
+            else
+            {
+                throw new InvalidDataException("Invalid peerspace type found in data file in peerspace directory: " + directory + " Invalid data: " + peerspaceType);
+            }
+
+            // Add Picture Box to form
+            peerspaceEntryPanel.Controls.Add(peerspacePictureBox);
+        }
+
+        // Events For Scrollbar
+        private void CustomVScrollBar_Scroll(object sender, EventArgs e)
+        {
+            
         }
 
         // Prerequisite Functions

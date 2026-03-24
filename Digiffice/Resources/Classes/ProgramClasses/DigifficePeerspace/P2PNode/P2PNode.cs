@@ -8,6 +8,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace.P2PNode
 {
     public class P2PNode
     {
+        // Class Variables
 
+        public void initP2PNode()
+        {
+
+        }
     }
 }

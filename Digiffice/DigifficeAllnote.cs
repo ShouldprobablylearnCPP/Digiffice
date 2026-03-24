@@ -21,6 +21,7 @@ using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClas
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
 using static Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad.DigifficeAllnoteEditorFile;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File;
+using System.IO;
 
 namespace Digiffice
 {
@@ -178,7 +179,7 @@ namespace Digiffice
             newChapter.chapterNum = parentNotebook.chapters.Count + 1;
 
             // Create first page in chapter
-            Vector2 defaultPageSize_cm = new Vector2(21.00f, 29.70f);
+            Vector2 defaultPageSize_cm = new Vector2(42.00f, 29.70f);
             DigifficeAllnote_NewPage("Unnamed Page", defaultPageSize_cm, parentNotebook, newChapter, true);
 
             parentNotebook.chapters.Add(newChapter);
@@ -220,14 +221,14 @@ namespace Digiffice
             pagebg.BackColor = Color.FromArgb(255, 249, 251, 255);
             int sizex = Convertcm_pixels(currentPage.pageSize.X);
             int sizey = Convertcm_pixels(currentPage.pageSize.Y);
-            pagebg.Size = new Size(SectionBG.Width - 20, SectionBG.Height - 70);
+            pagebg.Size = new Size(sizex, sizey);
             Point pagebgPos = new Point(0, 0);
             pagebg.Location = pagebgPos;
             nonPageBg.Controls.Add(pagebg);
 
             // Edit Scrollbar Ranges and Sizes
-            vScrollBar.setMinMaxRange(0, sizey - pagebg.Height);
-            hScrollBar.setMinMaxRange(0, sizex - pagebg.Width);
+            vScrollBar.setMinMaxRange(0, sizey - nonPageBg.Height);
+            hScrollBar.setMinMaxRange(0, sizex - nonPageBg.Width);
 
             // Setup/Reconfigure nonPageBG_Borderpnl
             nonPageBG_Borderpnl.Location = new Point(nonPageBg.Location.X - 1, nonPageBg.Location.Y - 1);
@@ -644,7 +645,7 @@ namespace Digiffice
         // NewPageBtn Events
         private void NewPage_Click(object sender, EventArgs e)
         {
-            DigifficeAllnote_NewPage("Unnamed Page", new Vector2(21.00f, 29.70f), editorNotebook, currentChapter, false);
+            DigifficeAllnote_NewPage("Unnamed Page", new Vector2(42.00f, 29.70f), editorNotebook, currentChapter, false);
         }
 
         // NewChapterBtn Events
