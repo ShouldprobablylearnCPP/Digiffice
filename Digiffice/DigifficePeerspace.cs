@@ -48,7 +48,6 @@ namespace Digiffice
         private void DigifficePeerspace_ShowPeerspacesList()
         {
             // Access list of peerspace directories from the user's Digiffice folder and display them in the left bar
-            // Todo: Make images based on the peerspace type (p2p/client-server) and display them next to the label
 
             // Check if Digiffice Peerspace folder exists
             if (Directory.Exists(digifficeGlobalVariables.globalDigifficePeerspaceDataPath))
@@ -73,24 +72,7 @@ namespace Digiffice
                     peerspacePictureBox.Size = new Size(30, 30); // Set size for the picture box
                     peerspacePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     peerspacePictureBox.BackColor = Color.Transparent;
-
-                    // Get Peerspace Type
-                    string peerspaceType = digifficePeerspaceManager.GetPeerspaceType(directory);
-                    if (peerspaceType == "P2P")
-                    {
-                        peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_P2PIcon;
-                    }
-                    else if (peerspaceType == "CLIENTSERVER")
-                    {
-                        //peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_ClientServerIcon;
-                    }
-                    else
-                    {
-                        throw new InvalidDataException("Invalid peerspace type found in data file in peerspace directory: " + directory + " Invalid data: " + peerspaceType);
-                    }
-
-                    // Add to form
-                    PeerspaceLeftBarPanel.Controls.Add(peerspacePictureBox);
+                    peerspacePictureBox.Cursor = Cursors.Hand;
 
                     // Create name label
                     Label peerspaceNameLabel = new Label();
@@ -101,8 +83,31 @@ namespace Digiffice
                     peerspaceNameLabel.Size = new Size(PeerspaceLeftBarPanel.Width - peerspacePictureBox.Width - 10, 30);
                     peerspaceNameLabel.BackColor = SystemColors.Control;
                     peerspaceNameLabel.ForeColor = Color.Black;
+                    peerspaceNameLabel.Cursor = Cursors.Hand;
                     PeerspaceLeftBarPanel.Controls.Add(peerspaceNameLabel);
                     yOffset += 40; // Adjust vertical spacing between labels
+
+                    // Get Peerspace Type
+                    string peerspaceType = digifficePeerspaceManager.GetPeerspaceType(directory);
+                    if (peerspaceType == "P2P")
+                    {
+                        peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_P2PIcon;
+                        peerspaceNameLabel.Tag = "P2P";
+                        peerspacePictureBox.Tag = "P2P";
+                    }
+                    else if (peerspaceType == "CLIENTSERVER")
+                    {
+                        peerspacePictureBox.Image = Properties.Resources.DigifficePeerspace_ClientServerIcon;
+                        peerspaceNameLabel.Tag = "CLIENTSERVER";
+                        peerspacePictureBox.Tag = "CLIENTSERVER";
+                    }
+                    else
+                    {
+                        throw new InvalidDataException("Invalid peerspace type found in data file in peerspace directory: " + directory + " Invalid data: " + peerspaceType);
+                    }
+
+                    // Add Picture Box to form
+                    PeerspaceLeftBarPanel.Controls.Add(peerspacePictureBox);
                 }
             }
             else
@@ -152,6 +157,12 @@ namespace Digiffice
         private void DigifficePeerspace_Resize(object sender, EventArgs e)
         {
             PeerspaceLeftBarPanel.Size = new Size(PeerspaceLeftBarContainerPanel.Width - 1, PeerspaceLeftBarContainerPanel.Height - 42);
+        }
+
+        // Peerspace label (Left Bar) Events
+        private void DigifficePeerspace_PeerspaceLabelLeftBarClick(object sender, EventArgs e)
+        {
+            
         }
 
         // Other Events

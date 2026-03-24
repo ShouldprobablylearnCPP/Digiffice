@@ -163,6 +163,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DigifficePeerspace_ClientServerIcon {
+            get {
+                object obj = ResourceManager.GetObject("DigifficePeerspace_ClientServerIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DigifficePeerspace_P2PIcon {
             get {
                 object obj = ResourceManager.GetObject("DigifficePeerspace_P2PIcon", resourceCulture);
@@ -177,6 +187,15 @@ namespace Digiffice.Properties {
             get {
                 object obj = ResourceManager.GetObject("DigifficePeerspaceLogo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream DigifficeStartup {
+            get {
+                return ResourceManager.GetStream("DigifficeStartup", resourceCulture);
             }
         }
         

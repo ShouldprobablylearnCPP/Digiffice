@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Drawing.Text;
+using System.Media;
 using Digiffice.Resources.Classes.ProgramClasses;
 
 namespace Digiffice
@@ -26,6 +27,13 @@ namespace Digiffice
 
         public Homepage(nonprotected_AccountData nonprotected_AccData)
         {
+            // Hide form until fully loaded to prevent flickering
+            this.Opacity = 0;
+            this.Shown += (s, e) =>
+            {
+                this.Opacity = 1;
+            };
+
             // Initialise form dimensions
             nonprotected_AccountData transferrable_nonprotectedaccdata = nonprotected_AccData;
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
@@ -51,6 +59,7 @@ namespace Digiffice
             // Call Custom Prerequesite Functions
             Fill_Lists();
             Homepage_ProgramButtons_Setup(programNames.Length);
+            Homepage_PlayStartupSound();
         }
 
         // Fill Event Handler List
@@ -78,7 +87,7 @@ namespace Digiffice
 
             // Program Versions
             programVersions[0] = "0.3.0";
-            programVersions[1] = "0.1.0";
+            programVersions[1] = "0.1.1";
         }
 
         // Exit Button Events
@@ -104,6 +113,12 @@ namespace Digiffice
             {
                 ProgramOpen_Button_PrepaintProperties(i);
             }
+        }
+
+        private void Homepage_PlayStartupSound()
+        {
+            SoundPlayer player = new SoundPlayer(Properties.Resources.DigifficeStartup);
+            player.Play();
         }
 
         // Program Button Group Functions
