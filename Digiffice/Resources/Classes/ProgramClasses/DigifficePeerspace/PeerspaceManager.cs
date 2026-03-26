@@ -52,8 +52,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
             // Map data onto a grid control (WPF Grid using ElementHost)
             // Todo: Finish this method to actually read the data and map it onto the grid control
             ElementHost elementHost = new ElementHost();
-            elementHost.Dock = DockStyle.Fill;
-            elementHost.Child = new WPFDataGrid();
+            WPFDataGrid dataGrid = new WPFDataGrid();
+            elementHost.Child = dataGrid;
+            parentControl.Controls.Add(elementHost);
         }
     }
 }

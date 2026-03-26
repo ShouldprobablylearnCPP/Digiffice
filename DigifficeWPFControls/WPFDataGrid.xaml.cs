@@ -24,5 +24,7 @@ namespace DigifficeWPFControls
         {
             InitializeComponent();
         }
+
+        public DataGrid dataGridControl => dataGrid;
     }
 }

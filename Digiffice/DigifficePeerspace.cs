@@ -13,6 +13,7 @@ using Digiffice.Resources.Classes.ProgramClasses.CustomControls;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace.ClientServerNode;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace.P2PNode;
+using DigifficeWPFControls;
 
 namespace Digiffice
 {
