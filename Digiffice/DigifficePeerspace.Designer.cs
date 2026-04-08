@@ -40,7 +40,7 @@
             CurrentPeerspaceContainerPanel = new Panel();
             CurrentPeerspaceBorderPanel = new Panel();
             CurrentPeerspaceBackgroundPanel = new Panel();
-            CurrentPeerspaceFilesPanel = new Panel();
+            CurrentPeerspaceDataPanel = new Panel();
             Homepanel.SuspendLayout();
             PeerspaceLeftBarContainerPanel.SuspendLayout();
             PeerspacesTab.SuspendLayout();
@@ -187,18 +187,18 @@
             // 
             CurrentPeerspaceBackgroundPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             CurrentPeerspaceBackgroundPanel.BackColor = SystemColors.Control;
-            CurrentPeerspaceBackgroundPanel.Controls.Add(CurrentPeerspaceFilesPanel);
+            CurrentPeerspaceBackgroundPanel.Controls.Add(CurrentPeerspaceDataPanel);
             CurrentPeerspaceBackgroundPanel.Location = new Point(1, 1);
             CurrentPeerspaceBackgroundPanel.Name = "CurrentPeerspaceBackgroundPanel";
             CurrentPeerspaceBackgroundPanel.Size = new Size(1481, 667);
             CurrentPeerspaceBackgroundPanel.TabIndex = 0;
             // 
-            // CurrentPeerspaceFilesPanel
+            // CurrentPeerspaceDataPanel
             // 
-            CurrentPeerspaceFilesPanel.Location = new Point(12, 54);
-            CurrentPeerspaceFilesPanel.Name = "CurrentPeerspaceFilesPanel";
-            CurrentPeerspaceFilesPanel.Size = new Size(1457, 601);
-            CurrentPeerspaceFilesPanel.TabIndex = 0;
+            CurrentPeerspaceDataPanel.Location = new Point(12, 54);
+            CurrentPeerspaceDataPanel.Name = "CurrentPeerspaceDataPanel";
+            CurrentPeerspaceDataPanel.Size = new Size(1457, 601);
+            CurrentPeerspaceDataPanel.TabIndex = 0;
             // 
             // DigifficePeerspace
             // 
@@ -239,6 +239,6 @@
         private Panel CurrentPeerspaceContainerPanel;
         private Panel CurrentPeerspaceBorderPanel;
         private Panel CurrentPeerspaceBackgroundPanel;
-        private Panel CurrentPeerspaceFilesPanel;
+        private Panel CurrentPeerspaceDataPanel;
     }
 }

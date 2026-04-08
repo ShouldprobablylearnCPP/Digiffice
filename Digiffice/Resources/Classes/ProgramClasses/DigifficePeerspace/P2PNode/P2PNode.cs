@@ -12,7 +12,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace.P2PNode
 
         public void initP2PNode()
         {
-
+            
         }
     }
 }

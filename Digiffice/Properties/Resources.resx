@@ -220,4 +220,19 @@
   <data name="DigifficeStartup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DigifficeStartup.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="_30x30_DirClosedIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_DirClosedIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="_30x30_DirOpenIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_DirOpenIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="_30x30_TextFileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_TextFileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="_30x30_DigifficePeerspaceDataFileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_DigifficePeerspaceDataFileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="_30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_DigifficePeerspaceUserlistFileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

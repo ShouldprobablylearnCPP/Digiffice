@@ -152,12 +152,20 @@ namespace Digiffice
             string peerspaceType = senderControl.Tag.ToString();
             if (peerspaceType == "P2P")
             {
+                // Remove controls from parent control
+                CurrentPeerspaceDataPanel.Controls.Clear();
+
+                // Map P2P Peerspace Data onto a grid using PeerspaceManager
+                digifficePeerspaceManager.MapP2PPeerspace(peerspaceDirectory, CurrentPeerspaceDataPanel);
+
+                // Initialise P2P Node
                 _P2PNode = new P2PNode();
                 _P2PNode.initP2PNode();
             }
             else if (peerspaceType == "CLIENTSERVER")
             {
-
+                // Remove controls from parent control
+                CurrentPeerspaceDataPanel.Controls.Clear();
             }
             else
             {

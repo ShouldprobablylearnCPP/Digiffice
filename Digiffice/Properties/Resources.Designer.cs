@@ -61,6 +61,56 @@ namespace Digiffice.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _30x30_DigifficePeerspaceDataFileIcon_WPFCompat {
+            get {
+                object obj = ResourceManager.GetObject("_30x30_DigifficePeerspaceDataFileIcon_WPFCompat", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat {
+            get {
+                object obj = ResourceManager.GetObject("_30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _30x30_DirClosedIcon_WPFCompat {
+            get {
+                object obj = ResourceManager.GetObject("_30x30_DirClosedIcon_WPFCompat", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _30x30_DirOpenIcon_WPFCompat {
+            get {
+                object obj = ResourceManager.GetObject("_30x30_DirOpenIcon_WPFCompat", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] _30x30_TextFileIcon_WPFCompat {
+            get {
+                object obj = ResourceManager.GetObject("_30x30_TextFileIcon_WPFCompat", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap AllnoteSplashscreen {
