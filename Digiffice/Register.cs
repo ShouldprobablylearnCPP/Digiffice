@@ -32,6 +32,7 @@ namespace Digiffice
 
         OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
         OleDbCommand cmd = new OleDbCommand();
+        OleDbCommand checkCMD = new OleDbCommand();
         OleDbDataAdapter da = new OleDbDataAdapter();
 
         private void btnRegister_Click(object sender, EventArgs e)
@@ -42,7 +43,25 @@ namespace Digiffice
             }
             else if (txtPassword.Text == txtConfirmPassword.Text)
             {
+                // Open Database
                 con.Open();
+
+                string checkUsername = "SELECT * FROM Digiffice_Accounts WHERE username= '" + txtUsername.Text + "'";
+                checkCMD = new OleDbCommand(checkUsername, con);
+                OleDbDataReader checkDR = checkCMD.ExecuteReader();
+
+                if (checkDR.HasRows)
+                {
+                    MessageBox.Show("Username already exists, Please choose a different username", "Registration failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtUsername.Text = "";
+                    txtPassword.Text = "";
+                    txtConfirmPassword.Text = "";
+                    txtUsername.Focus();
+                    con.Close();
+                    return;
+                }
+
+                // Execute Insert Command to add new account to database
                 string register = "INSERT INTO Digiffice_Accounts VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "')";
                 cmd = new OleDbCommand(register, con);
                 cmd.ExecuteNonQuery();
