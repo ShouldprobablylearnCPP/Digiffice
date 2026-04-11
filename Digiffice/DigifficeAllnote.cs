@@ -22,6 +22,12 @@ using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
 using static Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad.DigifficeAllnoteEditorFile;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File;
 using System.IO;
+using System.Windows.Forms.Integration;
+using DigifficeWPFControls;
+using System.Windows.Media;
+using Color = System.Drawing.Color;
+using LinearGradientBrush = System.Drawing.Drawing2D.LinearGradientBrush;
+using System.Windows.Media.Imaging;
 
 namespace Digiffice
 {
@@ -943,36 +949,35 @@ namespace Digiffice
                 // Handle Dialog Result
                 if (result == DialogResult.OK)
                 {
-
+                    // Get image
                     string chosenImagePath = openFileDialog.FileName;
+                    BitmapImage bmpImg = new BitmapImage();
+                    bmpImg.BeginInit();
+                    bmpImg.UriSource = new Uri(chosenImagePath);
 
-                    // Create PictureBox
+                    bmpImg.CacheOption = BitmapCacheOption.OnLoad; // Load the image immediately to prevent file locking issues
+                    bmpImg.CreateOptions = BitmapCreateOptions.IgnoreImageCache; // Ignore the image cache to ensure the latest version of the image is loaded
 
-                    PictureBox newPictureBox = new PictureBox();
-                    newPictureBox.BackColor = Color.Transparent;
-                    newPictureBox.Image = Image.FromFile(chosenImagePath);
-                    newPictureBox.BackgroundImageLayout = ImageLayout.Stretch;
-                    newPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
-                    newPictureBox.Location = new Point(250, 250); // Default location, can be changed by user
+                    bmpImg.EndInit();
 
-                    // Create ResizeFrame on click
-                    newPictureBox.MouseClick += (s, e) =>
-                    {
-                        if (e.Button == MouseButtons.Left)
-                        {
-                            ResizeFrame resizeFrame = new ResizeFrame();
-                            resizeFrame.bindedControl = newPictureBox;
-                            resizeFrame.InitialiseResizeFrame();
-                        }
-                    };
+                    // Create DraggableSizablePicturebox
+                    ElementHost elementHost = new ElementHost();
+                    elementHost.Location = new Point(0, 0);
+                    elementHost.Size = new Size(bmpImg.PixelWidth, bmpImg.PixelHeight);
+                    elementHost.BackColorTransparent = false;
+                    elementHost.BackColor = Color.White;
+
+                    DraggableSizablePicturebox draggableSizablePicturebox = new DraggableSizablePicturebox();
+                    draggableSizablePicturebox.baseImg.Source = bmpImg;
+                    draggableSizablePicturebox.UpdateLayout();
 
                     // Add PictureBox to current page
                     Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
-                    pagebg.Controls.Add(newPictureBox);
+                    pagebg.Controls.Add(elementHost);
 
                     // Add PictureBox to currentPage's pageElements for saving/loading purposes
-                    currentPage.pageElements.Add(newPictureBox);
-                    newPictureBox.BringToFront();
+                    currentPage.pageElements.Add(elementHost);
+                    elementHost.BringToFront();
                 }
             }
         }

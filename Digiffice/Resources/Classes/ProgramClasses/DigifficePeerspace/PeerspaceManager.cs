@@ -72,6 +72,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
             dataGrid.dataGridControl.CanUserResizeRows = false;
             dataGrid.dataGridControl.CanUserReorderColumns = false;
             dataGrid.dataGridControl.CanUserSortColumns = false;
+            dataGrid.dataGridControl.IsReadOnly = true;
             dataGrid.dataGridControl.HeadersVisibility = DataGridHeadersVisibility.None;
 
             // Autogenerate Collums
@@ -120,7 +121,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
             {
                 // Instantiate new row
                 DataGridRow newRow = new DataGridRow();
-                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item) };
+                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item), Open = false };
 
                 // Set alignment of the row to center for both horizontal and vertical alignment
                 newRow.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
@@ -162,7 +163,16 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
         // Events
         public void PeerspaceMap_DirectoryDoubleClicked(object sender, EventArgs e)
         {
+            DataGridRow senderRow = (DataGridRow)sender;
 
+            if (((dynamic)senderRow.Item).Open)
+            {
+                senderRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = false };
+            }
+            else
+            {
+                senderRow.Item = new { Type = Properties.Resources._30x30_DirOpenIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = true };
+            }
         }
     }
 }

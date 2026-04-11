@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="DigifficeWPFControls.DraggableSizablePicturebox"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                 xmlns:local="clr-namespace:DigifficeWPFControls"
+                 mc:Ignorable="d" 
+                 d:DesignHeight="500" d:DesignWidth="500"
+                 Background="White">
+    <Viewbox Stretch="Uniform">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image x:Name="BaseImg" HorizontalAlignment="Left" VerticalAlignment="Top" Height="500" Margin="0,0,0,0" Width="500" Stretch="Fill"/>
+            <Button x:Name="TopLeftResizer" Content="Button" HorizontalAlignment="Left" Margin="-5,-5,0,0" VerticalAlignment="Top" Height="10" Width="10"/>
+            <Button x:Name="TopResizer" Content="Button" HorizontalAlignment="Center" Margin="0,-5,0,0" VerticalAlignment="Top" Height="10" Width="10"/>
+            <Button x:Name="TopRightResizer" Content="Button" HorizontalAlignment="Right" Margin="0,-5,-5,0" VerticalAlignment="Top" Height="10" Width="10"/>
+            <Button x:Name="BottomLeftResizer" Content="Button" HorizontalAlignment="Left" Margin="-5,0,0,-5" VerticalAlignment="Bottom" Height="10" Width="10"/>
+            <Button x:Name="BottomResizer" Content="Button" HorizontalAlignment="Center" Margin="0,0,0,-5" VerticalAlignment="Bottom" Height="10" Width="10"/>
+            <Button x:Name="BottomRightResizer" Content="Button" HorizontalAlignment="Right" Margin="0,0,-5,-5" VerticalAlignment="Bottom" Height="10" Width="10"/>
+            <Button x:Name="LeftResizer" Content="Button" HorizontalAlignment="Left" Margin="-5,0,0,0" VerticalAlignment="Center" Height="10" Width="10"/>
+            <Button x:Name="RightResizer" Content="Button" HorizontalAlignment="Right" Margin="0,0,-5,0" VerticalAlignment="Center" Height="10" Width="10"/>
+        </Grid>
+    </Viewbox>
+</UserControl>
