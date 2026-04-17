@@ -107,7 +107,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
                 DataGridRow newRow = new DataGridRow();
 
                 // Check for type of file and set icon. Any unrecognised file types will get a default file icon
-                string fileType = Path.GetExtension(item).ToString();
+                string fileType = Path.GetExtension(item).ToString().ToLower();
                 switch (fileType)
                 {
                     case ".txt":
@@ -120,6 +120,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
 
                     case ".dgpu":
                         newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        break;
+
+                    case ".mp3":
+                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item) };
                         break;
 
                     default:
@@ -195,7 +199,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
                 DataGridRow newRow = new DataGridRow();
     
                 // Check for type of file and set icon. Any unrecognised file types will get a default file icon
-                string fileType = Path.GetExtension(item).ToString();
+                string fileType = Path.GetExtension(item).ToString().ToLower(); // Convert to lowercase to ensure case-insensitive comparison
                 switch (fileType)
                 {
                     case ".txt":
@@ -209,7 +213,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
                     case ".dgpu":
                         newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item) };
                         break;
-    
+
+                    case ".mp3":
+                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        break;
+
                     default:
                         newRow.Item = new { Type = "File", Name = Path.GetFileName(item) };
                         break;
@@ -264,7 +272,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
                 // 1 = P2P | 2 = Client-Server (Not yet implemented)
                 if (PeerspaceType == 1)
                 {
-                    // Todo: Get nest level
                     MapP2PPeerspaceSubdirectory(globalDataGrid, ((dynamic)senderRow.Item).ParentDir + "\\" + ((dynamic)senderRow.Item).Name, ((dynamic)senderRow.Item).Nest + 1);
                 }
                 else if (PeerspaceType == 2)

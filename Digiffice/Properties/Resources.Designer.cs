@@ -103,6 +103,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] _30x30_MP3FileIcon_WPFCompat {
+            get {
+                object obj = ResourceManager.GetObject("_30x30_MP3FileIcon_WPFCompat", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] _30x30_TextFileIcon_WPFCompat {
             get {
                 object obj = ResourceManager.GetObject("_30x30_TextFileIcon_WPFCompat", resourceCulture);
