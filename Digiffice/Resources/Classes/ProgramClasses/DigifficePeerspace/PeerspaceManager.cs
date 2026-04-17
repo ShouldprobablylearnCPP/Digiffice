@@ -8,16 +8,24 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
+using System.Windows.Media;
 using DigifficeWPFControls;
 using Control = System.Windows.Forms.Control;
 using MessageBox = System.Windows.Forms.MessageBox;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
+using SystemColors = System.Drawing.SystemColors;
 
 namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
 {
     public class PeerspaceManager
     {
+        // Class Variables (P2P)
+
+        // Class Variables (General)
+        int PeerspaceType = 0; // 0 = None (Will cause error) | 1 = P2P | 2 = Client-Server (Not yet implemented)
+        WPFDataGrid globalDataGrid;
+
         public string GetPeerspaceType(string peerspaceDirPath)
         {
             // Find data file in directory
@@ -43,6 +51,13 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
         public void MapPeerspace(string peerspaceDirectory, Control parentControl)
         {
             string peerspaceType = GetPeerspaceType(peerspaceDirectory);
+            PeerspaceType = peerspaceType switch
+            {
+                "P2P" => 1,
+                "Client-Server" => 2,
+                _ => throw new InvalidDataException("Invalid peerspace type in data file in peerspace directory: " + peerspaceDirectory)
+            };
+
             if (peerspaceType == "P2P")
             {
                 MapP2PPeerspace(peerspaceDirectory, parentControl);
@@ -79,8 +94,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
             dataGrid.dataGridControl.AutoGenerateColumns = false;
 
             // Set properties of the grid control
+            dataGrid.dataGridControl.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(SystemColors.Control.A, SystemColors.Control.R, SystemColors.Control.G, SystemColors.Control.B));
+            dataGrid.dataGridControl.RowBackground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(SystemColors.Control.A, SystemColors.Control.R, SystemColors.Control.G, SystemColors.Control.B));
             dataGrid.dataGridControl.ColumnWidth = DataGridLength.Auto;
             dataGrid.dataGridControl.RowHeight = 30;
+            dataGrid.dataGridControl.GridLinesVisibility = DataGridGridLinesVisibility.None;
 
             // Add the files and directories to the grid control as rows with two columns: Name and Type (File or Directory)
             foreach (var item in files)
@@ -115,13 +133,16 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
 
                 // Add the row to the grid control
                 dataGrid.dataGridControl.Items.Add(newRow);
+
+                // Set datagrid to global grid for future use
+                globalDataGrid = dataGrid;
             }
 
             foreach (var item in directories)
             {
                 // Instantiate new row
                 DataGridRow newRow = new DataGridRow();
-                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item), Open = false };
+                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item), Open = false, Nest = 0, ParentDir = Path.GetDirectoryName(item) };
 
                 // Set alignment of the row to center for both horizontal and vertical alignment
                 newRow.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
@@ -160,6 +181,72 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
             parentControl.Controls.Add(elementHost);
         }
 
+        // Real-Time Peerspace Functions
+        public void MapP2PPeerspaceSubdirectory(WPFDataGrid dataGrid, string subdirectoryPath, int nestLevel)
+        {
+            // Get List of Files and Directories in the subdirectory
+            string[] files = Directory.GetFiles(subdirectoryPath);
+            string[] directories = Directory.GetDirectories(subdirectoryPath);
+    
+            // Map the new data onto the grid control
+            foreach (var item in files)
+            {
+                // Instantiate new row
+                DataGridRow newRow = new DataGridRow();
+    
+                // Check for type of file and set icon. Any unrecognised file types will get a default file icon
+                string fileType = Path.GetExtension(item).ToString();
+                switch (fileType)
+                {
+                    case ".txt":
+                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        break;
+    
+                    case ".dgpd":
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceDataFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        break;
+    
+                    case ".dgpu":
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        break;
+    
+                    default:
+                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item) };
+                        break;
+                }
+    
+                // Set alignment of the row to center for both horizontal and vertical alignment
+                newRow.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
+                newRow.VerticalContentAlignment = VerticalAlignment.Center;
+
+                // Set left margin of the row based on the nest level (to create an indented effect for subdirectories)
+                newRow.Margin = new Thickness(nestLevel * 30, 0, 0, 0);
+
+                // Add the row to the grid control
+                dataGrid.dataGridControl.Items.Add(newRow);
+            }
+
+            foreach (var item in directories)
+            {
+                // Instantiate new row
+                DataGridRow newRow = new DataGridRow();
+                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item), Open = false, Nest = nestLevel, ParentDir = Path.GetDirectoryName(item) };
+
+                // Set alignment of the row to center for both horizontal and vertical alignment
+                newRow.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
+                newRow.VerticalContentAlignment = VerticalAlignment.Center;
+
+                // Add directory clicked event
+                newRow.MouseDoubleClick += PeerspaceMap_DirectoryDoubleClicked;
+
+                // Set left margin of the row based on the nest level (to create an indented effect for subdirectories)
+                newRow.Margin = new Thickness(nestLevel * 30, 0, 0, 0);
+
+                // Add the row to the grid control
+                dataGrid.dataGridControl.Items.Add(newRow);
+            }
+        }
+         
         // Events
         public void PeerspaceMap_DirectoryDoubleClicked(object sender, EventArgs e)
         {
@@ -167,11 +254,27 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
 
             if (((dynamic)senderRow.Item).Open)
             {
-                senderRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = false };
+                senderRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = false, Nest = ((dynamic)senderRow.Item).Nest, ParentDir = ((dynamic)senderRow.Item).ParentDir };
             }
             else
             {
-                senderRow.Item = new { Type = Properties.Resources._30x30_DirOpenIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = true };
+                senderRow.Item = new { Type = Properties.Resources._30x30_DirOpenIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = true, Nest = ((dynamic)senderRow.Item).Nest, ParentDir = ((dynamic)senderRow.Item).ParentDir };
+                MessageBox.Show("Directory double-clicked: " + ((dynamic)senderRow.Item).Name);
+
+                // 1 = P2P | 2 = Client-Server (Not yet implemented)
+                if (PeerspaceType == 1)
+                {
+                    // Todo: Get nest level
+                    MapP2PPeerspaceSubdirectory(globalDataGrid, ((dynamic)senderRow.Item).ParentDir + "\\" + ((dynamic)senderRow.Item).Name, ((dynamic)senderRow.Item).Nest + 1);
+                }
+                else if (PeerspaceType == 2)
+                {
+                    // Not yet implemented
+                }
+                else
+                {
+                    throw new InvalidDataException("Invalid peerspace type: " + PeerspaceType);
+                }
             }
         }
     }

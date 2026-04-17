@@ -12,7 +12,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace.P2PNode
 
         public void initP2PNode()
         {
-            
+            // Todo: Implement. Implementation should include: Attempt to connect to P2P network. If successful, store necessary information for future use. If unsuccessful, handle the error - let them retry, exit, and let them know to check if anyone in the network is online.
         }
     }
 }

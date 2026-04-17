@@ -156,7 +156,7 @@ namespace Digiffice
                 CurrentPeerspaceDataPanel.Controls.Clear();
 
                 // Map P2P Peerspace Data onto a grid using PeerspaceManager
-                digifficePeerspaceManager.MapP2PPeerspace(peerspaceDirectory, CurrentPeerspaceDataPanel);
+                digifficePeerspaceManager.MapPeerspace(peerspaceDirectory, CurrentPeerspaceDataPanel);
 
                 // Initialise P2P Node
                 _P2PNode = new P2PNode();
