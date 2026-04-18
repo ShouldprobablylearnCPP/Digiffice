@@ -69,21 +69,21 @@ namespace Digiffice
             ProgramClickEventHandlers[0] = new EventHandler(DigifficeAllnote_Open);
             ProgramMouseEnterEventHandlers[0] = new EventHandler(DigifficeAllnote_MouseEnter);
             ProgramMouseLeaveEventHandlers[0] = new EventHandler(DigifficeAllnote_MouseLeave);
-            ProgramClickEventHandlers[1] = new EventHandler(DigifficePeerspace_Open);
-            ProgramMouseEnterEventHandlers[1] = new EventHandler(DigifficePeerspace_MouseEnter);
-            ProgramMouseLeaveEventHandlers[1] = new EventHandler(DigifficePeerspace_MouseLeave);
+            ProgramClickEventHandlers[1] = new EventHandler(DigifficePeercompute_Open);
+            ProgramMouseEnterEventHandlers[1] = new EventHandler(DigifficePeercompute_MouseEnter);
+            ProgramMouseLeaveEventHandlers[1] = new EventHandler(DigifficePeercompute_MouseLeave);
 
             // Program Icons
             ProgramIcons[0] = Properties.Resources.DigifficeAllnoteLogo;
-            ProgramIcons[1] = Properties.Resources.DigifficePeerspaceLogo;
+            ProgramIcons[1] = Properties.Resources.DigifficePeercomputeLogo;
 
             // Program Names
             programNames[0] = "DigifficeAllnote";
-            programNames[1] = "DigifficePeerspace";
+            programNames[1] = "DigifficePeercompute";
 
             // Program Infos
             programInfos[0] = "Digiffice Allnote - A digital note-taking program for organising and editing all your notes.";
-            programInfos[1] = "Digiffice Peerspace - A collaborative workspace for team projects and communication.";
+            programInfos[1] = "Digiffice Peercompute - A collaborative workspace for team projects and communication.";
 
             // Program Versions
             programVersions[0] = "0.3.0";
@@ -213,20 +213,20 @@ namespace Digiffice
 
         // Digiffice Peerspace Events
 
-        private void DigifficePeerspace_Open(object sender, EventArgs e)
+        private void DigifficePeercompute_Open(object sender, EventArgs e)
         {
-            DigifficePeerspace_Splashscreen splashscreen = new DigifficePeerspace_Splashscreen(programVersions[1]);
+            DigifficePeercompute_Splashscreen splashscreen = new DigifficePeercompute_Splashscreen(programVersions[1]);
             splashscreen.BringToFront();
             splashscreen.Show();
 
             nonprotected_AccountData transfer_npac = new nonprotected_AccountData();
             transfer_npac.ac_username = this.username;
             string username = this.username;
-            DigifficePeerspace DigifficePeerspace = new DigifficePeerspace(transfer_npac, splashscreen);
-            DigifficePeerspace.Show();
+            DigifficePeercompute DigifficePeercompute = new DigifficePeercompute(transfer_npac, splashscreen);
+            DigifficePeercompute.Show();
         }
 
-        private void DigifficePeerspace_MouseEnter(object sender, EventArgs e)
+        private void DigifficePeercompute_MouseEnter(object sender, EventArgs e)
         {
             // sender
             Panel btn = (Panel)sender;
@@ -235,7 +235,7 @@ namespace Digiffice
             btn.BackColor = Color.LightGray;
         }
 
-        private void DigifficePeerspace_MouseLeave(object sender, EventArgs e)
+        private void DigifficePeercompute_MouseLeave(object sender, EventArgs e)
         {
             // sender
             Panel btn = (Panel)sender;

@@ -1,6 +1,6 @@
 ﻿namespace Digiffice
 {
-    partial class DigifficePeerspace_Splashscreen
+    partial class DigifficePeercompute_Splashscreen
     {
         /// <summary>
         /// Required designer variable.
@@ -28,23 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DigifficePeerspace_Splashscreen));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DigifficePeercompute_Splashscreen));
             SuspendLayout();
             // 
-            // DigifficePeerspace_Splashscreen
+            // DigifficePeercompute_Splashscreen
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackgroundImage = Properties.Resources.PeerspaceSplashscreen;
+            BackgroundImage = Properties.Resources.PeercomputeSplashscreen;
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(600, 400);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "DigifficePeerspace_Splashscreen";
+            Name = "DigifficePeercompute_Splashscreen";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "DigifficePeerspace_Splashscreen";
+            Text = "DigifficePeercompute_Splashscreen";
             ResumeLayout(false);
         }
 

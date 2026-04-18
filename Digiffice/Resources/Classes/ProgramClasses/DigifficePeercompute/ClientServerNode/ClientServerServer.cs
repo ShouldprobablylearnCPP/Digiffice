@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace.ClientServerNode
+namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.ClientServerNode
 {
     public class ClientServerServer
     {

@@ -63,9 +63,9 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] _30x30_DigifficePeerspaceDataFileIcon_WPFCompat {
+        internal static byte[] _30x30_DigifficePeercomputeDataFileIcon_WPFCompat {
             get {
-                object obj = ResourceManager.GetObject("_30x30_DigifficePeerspaceDataFileIcon_WPFCompat", resourceCulture);
+                object obj = ResourceManager.GetObject("_30x30_DigifficePeercomputeDataFileIcon_WPFCompat", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] _30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat {
+        internal static byte[] _30x30_DigifficePeercomputeUserlistFileIcon_WPFCompat {
             get {
-                object obj = ResourceManager.GetObject("_30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat", resourceCulture);
+                object obj = ResourceManager.GetObject("_30x30_DigifficePeercomputeUserlistFileIcon_WPFCompat", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -233,9 +233,9 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DigifficePeerspace_ClientServerIcon {
+        internal static System.Drawing.Bitmap DigifficePeercompute_ClientServerIcon {
             get {
-                object obj = ResourceManager.GetObject("DigifficePeerspace_ClientServerIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("DigifficePeercompute_ClientServerIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -243,9 +243,9 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DigifficePeerspace_P2PIcon {
+        internal static System.Drawing.Bitmap DigifficePeercompute_P2PIcon {
             get {
-                object obj = ResourceManager.GetObject("DigifficePeerspace_P2PIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("DigifficePeercompute_P2PIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -253,9 +253,9 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DigifficePeerspaceLogo {
+        internal static System.Drawing.Bitmap DigifficePeercomputeLogo {
             get {
-                object obj = ResourceManager.GetObject("DigifficePeerspaceLogo", resourceCulture);
+                object obj = ResourceManager.GetObject("DigifficePeercomputeLogo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -362,9 +362,9 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap PeerspaceSplashscreen {
+        internal static System.Drawing.Bitmap PeercomputeSplashscreen {
             get {
-                object obj = ResourceManager.GetObject("PeerspaceSplashscreen", resourceCulture);
+                object obj = ResourceManager.GetObject("PeercomputeSplashscreen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

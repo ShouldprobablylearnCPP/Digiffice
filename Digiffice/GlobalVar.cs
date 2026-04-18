@@ -15,6 +15,6 @@ namespace Digiffice
                                                                                                                                              // We will set it to a default value, being a specific folder in the default documents library, until the setup project is made.
                                                                                                                                              // If testing, recommend creating the directory before running the program.
 
-        public string globalDigifficePeerspaceDataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/DIGIFFICE_DATA_FOLDER/Digiffice_Peerspace";
+        public string globalDigifficePeercomputeDataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/DIGIFFICE_DATA_FOLDER/Digiffice_Peercompute";
     }
 }
