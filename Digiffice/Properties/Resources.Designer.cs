@@ -223,6 +223,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DigifficeLogo {
+            get {
+                object obj = ResourceManager.GetObject("DigifficeLogo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DigifficePeerspace_ClientServerIcon {
             get {
                 object obj = ResourceManager.GetObject("DigifficePeerspace_ClientServerIcon", resourceCulture);

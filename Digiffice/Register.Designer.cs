@@ -231,6 +231,7 @@
             Font = new Font("Nirmala UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ForeColor = Color.FromArgb(164, 165, 169);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Register";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Login";

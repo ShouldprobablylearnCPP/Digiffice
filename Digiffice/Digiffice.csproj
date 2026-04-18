@@ -7,6 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>True</UseWPF>
+    <ApplicationIcon>Digiffice1.0Logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

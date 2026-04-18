@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Homepage));
             Welcomemsg = new Label();
             Homepanel = new Panel();
             ExitButton = new Button();
@@ -130,6 +131,7 @@
             Controls.Add(Homepanel);
             ForeColor = SystemColors.ControlText;
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "Homepage";
             Text = "Digiffice Homepage - Version 0.1";

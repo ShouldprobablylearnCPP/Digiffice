@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
         // Class Variables (General)
         int PeerspaceType = 0; // 0 = None (Will cause error) | 1 = P2P | 2 = Client-Server (Not yet implemented)
         WPFDataGrid globalDataGrid;
+        string txtFileDescription = "Plain Text Document";
+        string dgpdFileDescription = "Digiffice Peerspace Data File";
+        string dgpuFileDescription = "Digiffice Peerspace Userlist File";
+        string mp3FileDescription = "MP3 Audio File";
+        string unkownFileDescription = "Unknown File Type";
+        string directoryDescription = "Folder";
 
         public string GetPeerspaceType(string peerspaceDirPath)
         {
@@ -111,23 +118,23 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
                 switch (fileType)
                 {
                     case ".txt":
-                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = txtFileDescription };
                         break;
 
                     case ".dgpd":
-                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceDataFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceDataFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpdFileDescription };
                         break;
 
                     case ".dgpu":
-                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpuFileDescription };
                         break;
 
                     case ".mp3":
-                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = mp3FileDescription };
                         break;
 
                     default:
-                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item), FileDesc = unkownFileDescription };
                         break;
                 }
 
@@ -146,7 +153,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
             {
                 // Instantiate new row
                 DataGridRow newRow = new DataGridRow();
-                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item), Open = false, Nest = 0, ParentDir = Path.GetDirectoryName(item) };
+                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item), Open = false, Nest = 0, ParentDir = Path.GetDirectoryName(item), FileDesc = directoryDescription };
 
                 // Set alignment of the row to center for both horizontal and vertical alignment
                 newRow.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
@@ -181,6 +188,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
             // Add Name column to the grid control
             dataGrid.dataGridControl.Columns.Add(new DataGridTextColumn { Header = "Name", Binding = new System.Windows.Data.Binding("Name") });
 
+            // Add File Description column to the grid control
+            dataGrid.dataGridControl.Columns.Add(new DataGridTextColumn { Header = "Description", Binding = new System.Windows.Data.Binding("FileDesc") });
+
             elementHost.Child = dataGrid;
             parentControl.Controls.Add(elementHost);
         }
@@ -203,23 +213,23 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
                 switch (fileType)
                 {
                     case ".txt":
-                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = txtFileDescription };
                         break;
     
                     case ".dgpd":
-                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceDataFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceDataFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpdFileDescription };
                         break;
     
                     case ".dgpu":
-                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeerspaceUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpuFileDescription };
                         break;
 
                     case ".mp3":
-                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = mp3FileDescription };
                         break;
 
                     default:
-                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item) };
+                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item), FileDesc = unkownFileDescription };
                         break;
                 }
     
@@ -238,7 +248,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
             {
                 // Instantiate new row
                 DataGridRow newRow = new DataGridRow();
-                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item), Open = false, Nest = nestLevel, ParentDir = Path.GetDirectoryName(item) };
+                newRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = Path.GetFileName(item), Open = false, Nest = nestLevel, ParentDir = Path.GetDirectoryName(item), FileDesc = directoryDescription };
 
                 // Set alignment of the row to center for both horizontal and vertical alignment
                 newRow.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
@@ -262,11 +272,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeerspace
 
             if (((dynamic)senderRow.Item).Open)
             {
-                senderRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = false, Nest = ((dynamic)senderRow.Item).Nest, ParentDir = ((dynamic)senderRow.Item).ParentDir };
+                senderRow.Item = new { Type = Properties.Resources._30x30_DirClosedIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = false, Nest = ((dynamic)senderRow.Item).Nest, ParentDir = ((dynamic)senderRow.Item).ParentDir, FileDesc = ((dynamic)senderRow.Item).FileDesc };
             }
             else
             {
-                senderRow.Item = new { Type = Properties.Resources._30x30_DirOpenIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = true, Nest = ((dynamic)senderRow.Item).Nest, ParentDir = ((dynamic)senderRow.Item).ParentDir };
+                senderRow.Item = new { Type = Properties.Resources._30x30_DirOpenIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = true, Nest = ((dynamic)senderRow.Item).Nest, ParentDir = ((dynamic)senderRow.Item).ParentDir, FileDesc = ((dynamic)senderRow.Item).FileDesc };
                 MessageBox.Show("Directory double-clicked: " + ((dynamic)senderRow.Item).Name);
 
                 // 1 = P2P | 2 = Client-Server (Not yet implemented)

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DigifficePeerspace));
             Homepanel = new Panel();
             ExitButton = new Button();
             Windowmsg = new Label();
@@ -211,6 +212,7 @@
             Controls.Add(DigifficeButton);
             Controls.Add(Homepanel);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DigifficePeerspace";
             Text = "DigifficePeerspace";
             Resize += DigifficePeerspace_Resize;

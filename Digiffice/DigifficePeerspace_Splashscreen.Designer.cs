@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DigifficePeerspace_Splashscreen));
             SuspendLayout();
             // 
             // DigifficePeerspace_Splashscreen
@@ -39,6 +40,7 @@
             ClientSize = new Size(600, 400);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DigifficePeerspace_Splashscreen";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DigifficeAllnote));
             Homepanel = new Panel();
             ExitButton = new Button();
             Windowmsg = new Label();
@@ -62,7 +63,6 @@
             // 
             // Homepanel
             // 
-            Homepanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             Homepanel.BackColor = SystemColors.ControlLight;
             Homepanel.BackgroundImage = Properties.Resources.Panel;
             Homepanel.BackgroundImageLayout = ImageLayout.Stretch;
@@ -442,7 +442,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
-            ClientSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            ClientSize = new Size(1920, 1080);
             Controls.Add(SectionBG_Chapters_BorderCover);
             Controls.Add(SectionBG_Chapters);
             Controls.Add(NewChapterBtn);
@@ -452,6 +452,7 @@
             Controls.Add(TabSelectionPanel);
             Controls.Add(Homepanel);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DigifficeAllnote";
             Text = "DigifficeAllnote";
             Homepanel.ResumeLayout(false);

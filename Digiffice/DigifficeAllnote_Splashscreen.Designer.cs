@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DigifficeAllnote_Splashscreen));
             SuspendLayout();
             // 
             // DigifficeAllnote_Splashscreen
@@ -37,6 +38,7 @@
             BackgroundImage = Properties.Resources.AllnoteSplashscreen;
             ClientSize = new Size(600, 400);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DigifficeAllnote_Splashscreen";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
