@@ -58,6 +58,7 @@ NOTE: These goals are not in any order (except for short vs long term)
 
 === Long-Term (1.0) ===
 - Full suite of tools (Slideshow editor, Spreadsheet engine, etc)
+- Full Customisation
 - Compatibility with ODF (Open Document Format) and XAML Formats (.docx, .pptx etc).
 
 There are likely goals that have been missed - the point here is to give you an idea of what Digiffice will include at 1.0 ans what the focus is right now.
