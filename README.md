@@ -9,14 +9,16 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 === 3 - Personal Reasons ===
 - As a solo developer, I am also creating Digiffice to refine my skills, learn new things, and overall become a better programmer and developer.
 
-# DISCLAIMERS
+# DISCLAIMERS ‼️
 
 === 1 - Accounts are NOT secure as of the last update ===
 - Until this project reaches a stable state, the account system will not be secure. Vulnerabilities include:
 - SQL Injection
 - Plaintext storage
 
-- These vulnerabilities will be patched before the first version of Digiffice is released.
+- If you want to test the account system: edit the path in Register.cs and Login.cs to a .accdb database on your computer. Have a column for usernames and passwords. THIS IS ONLY FOR TESTING PURPOSES - DO NOT USE PROPERLY UNTIL THE ALL-CLEAR IS GIVEN!
+
+- These vulnerabilities will be patched long before the first version of Digiffice is released.
 
 === 2 - This is a long term project ===
 - I will be supporting this project for a very long time, hopefully many years. However, it may also take quite a while to develop, as I am a solo developer with other projects alongside it.
@@ -42,6 +44,8 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 === 4 - UI ===
 - The Interface of Digiffice will be similar to that of other office software suites, however there will be mostly slight differences. Despite this, it should still be easy to use.
 
+# CURRENT TESTING RESULTS
+
 # ROADMAP 🛠️
 
 Current Version: 0.x (alpha/pre-release)
@@ -62,8 +66,6 @@ NOTE: These goals are not in any order (except for short vs long term)
 - Compatibility with ODF (Open Document Format) and XAML Formats (.docx, .pptx etc).
 
 There are likely goals that have been missed - the point here is to give you an idea of what Digiffice will include at 1.0 ans what the focus is right now.
-
-# CURRENT RESULTS
 
 # FAQs
 
