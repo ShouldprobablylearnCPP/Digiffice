@@ -9,7 +9,7 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 === 3 - Personal Reasons ===
 - As a solo developer, I am also creating Digiffice to refine my skills, learn new things, and overall become a better programmer and developer.
 
-DISCLAIMERS:
+# DISCLAIMERS
 
 === 1 - Accounts are NOT secure as of the last update ===
 - Until this project reaches a stable state, the account system will not be secure. Vulnerabilities include:
