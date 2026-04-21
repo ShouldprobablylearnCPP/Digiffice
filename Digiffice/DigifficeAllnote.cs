@@ -92,6 +92,7 @@ namespace Digiffice
             this.Shown += (s, e) =>
             {
                 this.Opacity = 1;
+                this.ResumeLayout(); // Resume layout after form is shown to prevent flickering, and to improve load time.
                 splashscreen.Close();
             };
 

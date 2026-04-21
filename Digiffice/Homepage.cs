@@ -190,6 +190,7 @@ namespace Digiffice
             transfer_npac.ac_username = this.username;
             string username = this.username;
             DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(transfer_npac, splashscreen);
+            DigifficeAllnote.SuspendLayout(); // Suspend layout to prevent rendering issues during load
             DigifficeAllnote.Show();
         }
 
@@ -223,6 +224,7 @@ namespace Digiffice
             transfer_npac.ac_username = this.username;
             string username = this.username;
             DigifficePeercompute DigifficePeercompute = new DigifficePeercompute(transfer_npac, splashscreen);
+            DigifficePeercompute.SuspendLayout(); // Suspend layout to prevent rendering issues during load
             DigifficePeercompute.Show();
         }
 
