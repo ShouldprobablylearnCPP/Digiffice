@@ -52,7 +52,7 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 | :--- | :--- | :--- |
 | **Boot from Search Bar** | < 0.5 seconds | ~1.5 seconds - 3.0 seconds |
 | **RAM Usage (idle)** | ~30MB | ~80-90MB |
-| **RAM Usage (imported image)** | ~90MB | ~100MB |
+| **RAM Usage (imported image)** | ~65-70MB (~90MB if also including homepage RAM usage) | ~100MB |
 | **Install Size** | ~20MB | 500MB - 2GB |
 | **File size (~100 words text)** | ~0.9KB (.dgan) | ~4.2KB (.onepkg) |
 | **File size (1080p image)** | ~420KB (.dgan) | ~640KB (.onepkg) |
