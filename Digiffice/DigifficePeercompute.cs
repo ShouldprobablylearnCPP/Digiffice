@@ -51,7 +51,7 @@ namespace Digiffice
             InitializeComponent();
 
             // Call Custom/Prerequesite Functions
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             DigifficePeercompute_Prerequisite();
         }
 

@@ -74,6 +74,16 @@ namespace Digiffice
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x00000020; // WS_EX_TRANSPARENT
+                return cp;
+            }
+        }
+
         // Form
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
@@ -94,7 +104,7 @@ namespace Digiffice
             InitializeComponent();
 
             // Call Custom/Prerequesite Functions
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             SetupBorderPanels();
             DigifficeAllnote_EditorPrerequisite();
             DigifficeAllnote_NewFile("NewNotebook");
@@ -962,14 +972,27 @@ namespace Digiffice
 
                     // Create DraggableSizablePicturebox
                     ElementHost elementHost = new ElementHost();
-                    elementHost.Location = new Point(0, 0);
-                    elementHost.Size = new Size(bmpImg.PixelWidth, bmpImg.PixelHeight);
-                    elementHost.BackColorTransparent = false;
-                    elementHost.BackColor = Color.White;
+                    elementHost.Location = new Point(200, 200);
+                    elementHost.Size = new Size(200, 200);
+                    elementHost.AutoSize = true;
+                    elementHost.BackColorTransparent = true;
+                    elementHost.BackColor = Color.Transparent;
 
                     DraggableSizablePicturebox draggableSizablePicturebox = new DraggableSizablePicturebox();
+                    draggableSizablePicturebox.Tag = Path.GetExtension(chosenImagePath).ToLower();
                     draggableSizablePicturebox.baseImg.Source = bmpImg;
+                    draggableSizablePicturebox.baseImg.Width = bmpImg.PixelWidth;
+                    draggableSizablePicturebox.baseImg.Height = bmpImg.PixelHeight;
                     draggableSizablePicturebox.UpdateLayout();
+
+                    // Add drag functionality to DraggableSizablePicturebox
+                    draggableSizablePicturebox.baseImg.MouseMove += (s, e) =>
+                    {
+                        // 
+                    };
+
+                    // Set ElementHost child
+                    elementHost.Child = draggableSizablePicturebox;
 
                     // Add PictureBox to current page
                     Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];

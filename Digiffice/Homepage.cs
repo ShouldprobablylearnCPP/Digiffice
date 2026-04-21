@@ -87,7 +87,7 @@ namespace Digiffice
 
             // Program Versions
             programVersions[0] = "0.3.0";
-            programVersions[1] = "0.1.1";
+            programVersions[1] = "0.1.2";
         }
 
         // Exit Button Events

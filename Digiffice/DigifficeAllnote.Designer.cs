@@ -76,6 +76,7 @@
             // 
             // ExitButton
             // 
+            ExitButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             ExitButton.BackColor = Color.Transparent;
             ExitButton.BackgroundImageLayout = ImageLayout.Stretch;
             ExitButton.FlatAppearance.BorderSize = 0;
@@ -109,15 +110,18 @@
             // 
             // DigifficeButton
             // 
+            DigifficeButton.BackColor = Color.Transparent;
+            DigifficeButton.BackgroundImage = Properties.Resources.ReturnToDigifficeButtonIcon;
             DigifficeButton.Cursor = Cursors.Hand;
             DigifficeButton.FlatAppearance.BorderSize = 0;
+            DigifficeButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            DigifficeButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
             DigifficeButton.FlatStyle = FlatStyle.Flat;
             DigifficeButton.Location = new Point(12, 12);
             DigifficeButton.Name = "DigifficeButton";
             DigifficeButton.Size = new Size(75, 75);
             DigifficeButton.TabIndex = 3;
-            DigifficeButton.Text = "Return to Digiffice";
-            DigifficeButton.UseVisualStyleBackColor = true;
+            DigifficeButton.UseVisualStyleBackColor = false;
             DigifficeButton.Click += DigifficeButton_Click;
             // 
             // TabSelectionPanel

@@ -65,6 +65,7 @@
             // 
             // ExitButton
             // 
+            ExitButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             ExitButton.BackColor = Color.Transparent;
             ExitButton.BackgroundImageLayout = ImageLayout.Stretch;
             ExitButton.Cursor = Cursors.Hand;
@@ -90,7 +91,7 @@
             Windowmsg.Font = new Font("Roboto", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Windowmsg.Location = new Point(852, 15);
             Windowmsg.Name = "Windowmsg";
-            Windowmsg.Size = new Size(219, 29);
+            Windowmsg.Size = new Size(250, 29);
             Windowmsg.TabIndex = 0;
             Windowmsg.Text = "Digiffice Peercompute";
             Windowmsg.TextAlign = ContentAlignment.MiddleCenter;
@@ -99,15 +100,18 @@
             // 
             // DigifficeButton
             // 
+            DigifficeButton.BackColor = Color.Transparent;
             DigifficeButton.Cursor = Cursors.Hand;
             DigifficeButton.FlatAppearance.BorderSize = 0;
+            DigifficeButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            DigifficeButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
             DigifficeButton.FlatStyle = FlatStyle.Flat;
+            DigifficeButton.Image = Properties.Resources.ReturnToDigifficeButtonIcon;
             DigifficeButton.Location = new Point(12, 12);
             DigifficeButton.Name = "DigifficeButton";
             DigifficeButton.Size = new Size(75, 75);
             DigifficeButton.TabIndex = 4;
-            DigifficeButton.Text = "Return to Digiffice";
-            DigifficeButton.UseVisualStyleBackColor = true;
+            DigifficeButton.UseVisualStyleBackColor = false;
             DigifficeButton.Click += DigifficeButton_Click;
             // 
             // PeercomputeLeftBarContainerPanel
@@ -157,7 +161,7 @@
             PeercomputesTabLabel.ForeColor = Color.White;
             PeercomputesTabLabel.Location = new Point(10, 2);
             PeercomputesTabLabel.Name = "PeercomputesTabLabel";
-            PeercomputesTabLabel.Size = new Size(79, 14);
+            PeercomputesTabLabel.Size = new Size(97, 14);
             PeercomputesTabLabel.TabIndex = 0;
             PeercomputesTabLabel.Text = "Peercomputes";
             PeercomputesTabLabel.Click += PeercomputesTab_Click;
