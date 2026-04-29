@@ -19,6 +19,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
         // Prerequisite variables
         public EventHandler NewAllnoteFileBtn_Click;
         public EventHandler SaveFileBtn_Click;
+        public EventHandler OpenAllnoteFileButton_Click;
 
         public void InitialiseUI(Panel rbnPnl)
         {
@@ -106,16 +107,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             rbnPnl.Controls.Add(SaveFileBtn);
         }
 
-        public void Prerequisites_InitialiseUI(EventHandler NewAllnoteFileBtn_ClickEventHandler, EventHandler SaveFileBtn_ClickEventHandler)
+        public void Prerequisites_InitialiseUI(EventHandler NewAllnoteFileBtn_ClickEventHandler, EventHandler SaveFileBtn_ClickEventHandler, EventHandler OpenAllnoteFileButton_ClickEventHandler)
         {
             NewAllnoteFileBtn_Click = NewAllnoteFileBtn_ClickEventHandler;
             SaveFileBtn_Click = SaveFileBtn_ClickEventHandler;
-        }
-
-        public void OpenAllnoteFileButton_Click(object sender, EventArgs e)
-        {
-            // insert functionality here
-            MessageBox.Show("Open Notebook button clicked!", "", MessageBoxButtons.OK);
+            OpenAllnoteFileButton_Click = OpenAllnoteFileButton_ClickEventHandler;
         }
     }
 }

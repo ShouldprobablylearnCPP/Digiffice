@@ -688,7 +688,7 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            fileTabContents.Prerequisites_InitialiseUI(NewAllnoteFileBtn_Click, SaveNotebookBtn_Click);
+            fileTabContents.Prerequisites_InitialiseUI(NewAllnoteFileBtn_Click, SaveNotebookBtn_Click, OpenNotebookBtn_Click);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             fileTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = FileTab;
@@ -947,6 +947,37 @@ namespace Digiffice
             DigifficeAllnote_SaveFile(editorNotebook, openFilePath);
         }
 
+        private void OpenNotebookBtn_Click(object sender, EventArgs e)
+        {
+            // Create continue boolean
+            bool continueBool = false;
+            // Show Messagebox if !allnoteFile_SavedAfterLatestChange
+            if (!allnoteFile_SavedAfterLatestChange)
+            {
+                DialogResult resultSave = MessageBox.Show("Would you like to save before opening a new file? Any Unsaved Changes will be lost.", "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (resultSave)
+                {
+                    case DialogResult.Yes:
+                        SaveNotebookBtn_Click(sender, e);
+                        // Continue on with opening Notebook
+                        continueBool = true;
+                        break;
+                    case DialogResult.No:
+                        // Continue on with opening Notebook
+                        continueBool = true;
+                        break;
+                    case DialogResult.Cancel:
+                        continueBool = false;
+                        break;
+                }
+            }
+            // Continue with Function if continueBool
+            if (continueBool)
+            {
+                DigifficeAllnote_OpenFile(openFilePath);
+            }
+        }
+
         // Events for DigifficeAllnoteInsertTab
         private void InsertImageBtn_Click(object sender, EventArgs e)
         {
@@ -1095,6 +1126,45 @@ namespace Digiffice
                 notebookAtLastSave = editorNotebook;
                 allnoteFile_SavedAfterLatestChange = true;
             }
+        }
+
+        // Reading and Reading Related Functions/Events
+
+        private void DigifficeAllnote_OpenFile(string filePath)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Open Digiffice Allnote Notebook";
+            openFileDialog.Filter = "Digiffice Allnote Notebook (*.dgan)|*.dgan";
+            DialogResult result = openFileDialog.ShowDialog();
+
+            // Handle Dialog Result
+            if (result == DialogResult.OK)
+            {
+                string chosenFilePath = openFileDialog.FileName;
+                if (Path.GetExtension(chosenFilePath) == ".dgan")
+                {
+                    filePath = chosenFilePath;
+                }
+                else
+                {
+                    MessageBox.Show("Invalid file type. Please select a .dgan file.");
+                    return;
+                }
+            }
+
+            DigifficeFileReaderDGAN fileReader = new DigifficeFileReaderDGAN();
+            DigifficeAllnoteEditorFile openedFile = fileReader.ReadDGANFile(filePath);
+            openFilePath = filePath;
+
+            // Show name of file
+
+            if (openedFile == null || openedFile.chapters.Count == 0)
+            {
+                throw new Exception("Error loading file. File may be corrupted or in an invalid format.");
+            }
+
+            DigifficeAllnote_CloseNotebook();
+            DigifficeAllnote_ShowNote(openedFile);
         }
     }
 }

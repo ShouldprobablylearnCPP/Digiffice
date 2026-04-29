@@ -131,7 +131,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                         }
                         pageSubPageNumbers += "]";
                         writer.Write("|PAGESUBPAGES: " + pageSubPageNumbers + Environment.NewLine);
-                        writer.Write("\\\\\\\\" + Environment.NewLine);
+                        writer.Write("\\\\\\" + Environment.NewLine);
                     }
 
                     // Write Structure for SubPages
