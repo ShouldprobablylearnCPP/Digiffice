@@ -59,6 +59,12 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 
 Specs of tested computer: Ryzen 7 5800X (8 cores, 16 threads), 32GB DDR4 Memory, Nvidia RTX 3060, Tested on Windows 11
 
+29/04/2026:
+
+Partial file reading - reads header and structure of default file (1 chapter, 1 page) in 0.1-0.2 seconds. File size ~0.8KB.
+
+Specs of tested computer: Ryzen 7 5800X (8 cores, 16 threads), 32GB DDR4 Memory, Nvidia RTX 3060, Tested on Windows 11
+
 # ROADMAP 🛠️
 
 Current Version: 0.x (alpha/pre-release)
@@ -72,6 +78,7 @@ NOTE: These goals are not in any order (except for short vs long term)
 - P2P Collaboration
 - Client-Server Networking/Collaboration
 - Fully functional DPI scaling
+- More homepage features
 
 === Long-Term (1.0) ===
 - Full suite of tools (Slideshow editor, Spreadsheet engine, etc)
