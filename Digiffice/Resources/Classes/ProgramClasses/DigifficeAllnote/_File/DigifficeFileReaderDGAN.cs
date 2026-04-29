@@ -309,7 +309,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                             while (readingPage)
                             {
                                 string pageLine = br.ReadString().Trim();
-                                if (pageLine == "\\\\\\\\") // for testing purposes, due to a bug in the writing code where page endings were marked by 4 backslashes instead of 3. If you are testing, this issue has been fixed. This is only to be used on files created before this was commited.
+                                if (pageLine == "\\\\\\")
                                 {
                                     pages.Add(page); // Will be updated when Elements are added. If anything goes wrong, this will still serve as a backup for when the editor processes the file (Data may be lost in that case).
                                     readingPage = false;
