@@ -24,7 +24,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
         public void InitialiseUI(Panel rbnPnl)
         {
             // Check prerequisites
-            if (NewAllnoteFileBtn_Click == null || SaveFileBtn_Click == null)
+            if (NewAllnoteFileBtn_Click == null || SaveFileBtn_Click == null || OpenAllnoteFileButton_Click == null)
             {
                 // Show user error
                 MessageBox.Show("Digiffice Allnote Error - Code 1. Returning from DigifficeAllnoteFileTab.InitialiseUI()", "", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -33,7 +33,6 @@
             Homepanel = new Panel();
             ExitButton = new Button();
             Offlinemsg = new Label();
-            backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ProgramsPanel = new Panel();
             ProgramsLabel = new Label();
             Homepanel.SuspendLayout();
@@ -148,7 +147,6 @@
 
         private Label Welcomemsg;
         private Panel Homepanel;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private Button ExitButton;
         private Panel ProgramsPanel;
         private Label ProgramsLabel;

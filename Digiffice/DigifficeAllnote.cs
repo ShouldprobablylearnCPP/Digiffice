@@ -60,6 +60,7 @@ namespace Digiffice
         // Editing variables
         bool allowedToCreateTextBoxOnPage = true;
         bool allnoteFile_SavedAfterLatestChange = false;
+        bool isInDrawingMode = true;
 
         // Override Functions
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -175,7 +176,7 @@ namespace Digiffice
 
             DigifficeAllnote_ShowPagesInInspector(parentChapter);
 
-            DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false);
+            DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
         }
 
         private void DigifficeAllnote_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
@@ -327,7 +328,7 @@ namespace Digiffice
                     {
                         // Removes active control and allows a new RichTextBox to be created on the page
                         this.ActiveControl = null;
-                        DigifficeAllnote_ChangeEditingVariables(true, false);
+                        DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
 
                         // Remove newPanel
                         currentPage.pageElements.Remove(newPanel);
@@ -435,6 +436,8 @@ namespace Digiffice
                         {
                             HomeTab_Click(HomeTab, new EventArgs());
                         }
+
+                        DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
                     };
                     newRichTextBox.KeyDown += (s, e) =>
                     {
@@ -442,7 +445,7 @@ namespace Digiffice
                         {
                             // Removes newPanel
                             this.ActiveControl = null;
-                            DigifficeAllnote_ChangeEditingVariables(true, false);
+                            DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
                             pagebg.Controls.Remove(newPanel);
                             newPanel.Dispose();
                         }
@@ -451,7 +454,7 @@ namespace Digiffice
                         {
                             // Defocuses RichTextBox
                             this.ActiveControl = null;
-                            DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange);
+                            DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
                         }
                     };
                     // Add RichTextBox to Parent Panel
@@ -467,7 +470,7 @@ namespace Digiffice
                     currentPage.pageElements.Add(newPanel);
 
                     // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
-                    DigifficeAllnote_ChangeEditingVariables(false, false);
+                    DigifficeAllnote_ChangeEditingVariables(false, false, isInDrawingMode);
                 }
                 else
                 {
@@ -478,7 +481,7 @@ namespace Digiffice
                     }
 
                     // Allow textbox creation on next click
-                    DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange);
+                    DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
                 }
             };
         }
@@ -532,7 +535,7 @@ namespace Digiffice
             };
             pageTitle.GotFocus += (s, e) =>
             {
-                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange);
+                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
             };
 
             Label PageCreatedDateTime = new Label();
@@ -581,6 +584,7 @@ namespace Digiffice
                 inspector_PageLabel.Text = pageToShow.pageNum + ". " + pageToShow.pageTitle;
                 inspector_PageLabel.TextAlign = ContentAlignment.MiddleCenter;
                 inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Regular);
+                inspector_PageLabel.AutoEllipsis = true;
                 inspector_PageLabel.Size = new Size(SectionBG_Pages.Width, 36);
                 inspector_PageLabel.Image = Properties.Resources.DeselectedPageLabel_Allnote;
                 inspector_PageLabel.ImageAlign = ContentAlignment.MiddleCenter;
@@ -739,6 +743,9 @@ namespace Digiffice
             // Instantiate Draw Tab Contents
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteDrawTab drawTabContents = new DigifficeAllnoteDrawTab();
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            drawTabContents.Prerequisities_InitialiseUI(EnterExitDrawingModeBtn_Click);
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             drawTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = DrawTab;
         }
@@ -950,7 +957,7 @@ namespace Digiffice
         private void OpenNotebookBtn_Click(object sender, EventArgs e)
         {
             // Create continue boolean
-            bool continueBool = false;
+            bool continueBool = true;
             // Show Messagebox if !allnoteFile_SavedAfterLatestChange
             if (!allnoteFile_SavedAfterLatestChange)
             {
@@ -1037,6 +1044,21 @@ namespace Digiffice
             }
         }
 
+        // Events for DigifficeAllnoteHomeTab
+
+        // Events for DigifficeAllnoteDrawTab
+        private void EnterExitDrawingModeBtn_Click(object sender, EventArgs e)
+        {
+            if (!isInDrawingMode)
+            {
+                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, true);
+            }
+            else
+            {
+                DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, false);
+            }
+        }
+
         // Other Functions
 
         private void SetupBorderPanels()
@@ -1056,10 +1078,11 @@ namespace Digiffice
             richTextBox.Height = newHeight;
         }
 
-        private void DigifficeAllnote_ChangeEditingVariables(bool allowedToCreateTextBoxOnPageLocal, bool allnoteFile_SavedAfterLatestChangeLocal)
+        private void DigifficeAllnote_ChangeEditingVariables(bool allowedToCreateTextBoxOnPageLocal, bool allnoteFile_SavedAfterLatestChangeLocal, bool isInDrawingModeLocal)
         {
             allowedToCreateTextBoxOnPage = allowedToCreateTextBoxOnPageLocal;
             allnoteFile_SavedAfterLatestChange = allnoteFile_SavedAfterLatestChangeLocal;
+            isInDrawingMode = isInDrawingModeLocal;
         }
 
         // Prerequisite Functions
@@ -1111,6 +1134,16 @@ namespace Digiffice
                     // Check if .dgan extension. If so, save file using DigifficeFileWriterDGAN.
                     if (Path.GetExtension(chosenFilePath) == ".dgan")
                     {
+                        // Create extension-removed string
+                        string extensionRemovedFileName = Path.GetFileNameWithoutExtension(chosenFilePath);
+
+                        if (fileToSave == editorNotebook)
+                        {
+                            editorNotebook.fileName = extensionRemovedFileName;
+                        }
+
+                        fileToSave.fileName = extensionRemovedFileName;
+
                         DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
                         fileWriter.WriteDGANFile(fileToSave, chosenFilePath);
                         notebookAtLastSave = editorNotebook;
