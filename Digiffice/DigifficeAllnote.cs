@@ -28,6 +28,22 @@ using System.Windows.Media;
 using Color = System.Drawing.Color;
 using LinearGradientBrush = System.Drawing.Drawing2D.LinearGradientBrush;
 using System.Windows.Media.Imaging;
+using DigifficeWPFControls;
+using System.Windows.Controls;
+using System.Windows;
+using Image = System.Drawing.Image;
+using Control = System.Windows.Forms.Control;
+using Panel = System.Windows.Forms.Panel;
+using Label = System.Windows.Forms.Label;
+using Size = System.Drawing.Size;
+using Application = System.Windows.Forms.Application;
+using MessageBox = System.Windows.Forms.MessageBox;
+using Point = System.Drawing.Point;
+using Button = System.Windows.Forms.Button;
+using RichTextBox = System.Windows.Forms.RichTextBox;
+using TextBox = System.Windows.Forms.TextBox;
+using FontStyle = System.Drawing.FontStyle;
+using HorizontalAlignment = System.Windows.Forms.HorizontalAlignment;
 
 namespace Digiffice
 {
@@ -36,6 +52,7 @@ namespace Digiffice
     {
 
         // Class Variables
+        WPFDigifficeAllnoteInkCanvas globalInkCanvas;
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         Control currentSelectedTab = null;
@@ -60,7 +77,7 @@ namespace Digiffice
         // Editing variables
         bool allowedToCreateTextBoxOnPage = true;
         bool allnoteFile_SavedAfterLatestChange = false;
-        bool isInDrawingMode = true;
+        bool isInDrawingMode = false;
 
         // Override Functions
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -257,6 +274,47 @@ namespace Digiffice
 
             // Show Page Title and Created DateTime
             DigifficeAllnote_ShowPageTitleAndDatetime(currentPage);
+
+            // Create InkCanvas
+            ElementHost inkCanvasHost = new ElementHost();
+            inkCanvasHost.Name = "InkCanvasHost";
+            inkCanvasHost.Dock = DockStyle.Fill;
+            inkCanvasHost.BackColorTransparent = true;
+
+            WPFDigifficeAllnoteInkCanvas inkCanvas = new WPFDigifficeAllnoteInkCanvas();
+
+            // Set Background to pagebg col for seamless look.
+            inkCanvas.inkCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0));
+
+            // Set Default Drawing Attributes
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.Color = System.Windows.Media.Color.FromArgb(255, 0, 0, 0);
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.Width = 2;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.Height = 2;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.FitToCurve = true;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.StylusTip = System.Windows.Ink.StylusTip.Ellipse;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.StylusTipTransform = new System.Windows.Media.Matrix();
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.IgnorePressure = false;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.IsHighlighter = false;
+
+            // Add InkCanvas to PageBG
+            inkCanvasHost.Child = inkCanvas;
+            pagebg.Controls.Add(inkCanvasHost);
+
+            // Set InkCanvas Editing Mode
+            if (isInDrawingMode)
+            {
+                inkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.Ink;
+                inkCanvasHost.Show();
+            }
+            else
+            {
+                inkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.None;
+                inkCanvas.IsHitTestVisible = false;
+                inkCanvasHost.Enabled = false;
+            }
+
+            // Store reference to global InkCanvas
+            globalInkCanvas = inkCanvas;
 
             // Load page elements
             foreach (var item in currentPage.pageElements)
@@ -1015,7 +1073,6 @@ namespace Digiffice
                     elementHost.Size = new Size(200, 200);
                     elementHost.AutoSize = true;
                     elementHost.BackColorTransparent = true;
-                    elementHost.BackColor = Color.Transparent;
 
                     DraggableSizablePicturebox draggableSizablePicturebox = new DraggableSizablePicturebox();
                     draggableSizablePicturebox.Tag = Path.GetExtension(chosenImagePath).ToLower();
@@ -1052,10 +1109,35 @@ namespace Digiffice
             if (!isInDrawingMode)
             {
                 DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, true);
+
+                // Enable InkCanvas Editing Mode
+                InkCanvas_EditingModeChanged();
             }
             else
             {
                 DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, false);
+
+                // Disable InkCanvas Editing Mode
+                InkCanvas_EditingModeChanged();
+            }
+        }
+        
+        // InkCanvas Functions/Events
+        private void InkCanvas_EditingModeChanged()
+        {
+            ElementHost inkCanvasHost = (ElementHost)SectionBG.Controls.Find("InkCanvasHost", true)[0];
+
+            if (isInDrawingMode)
+            {
+                globalInkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.Ink;
+                inkCanvasHost.Show();
+
+            }
+            else
+            {
+                globalInkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.None;
+                globalInkCanvas.IsHitTestVisible = false;
+                inkCanvasHost.Enabled = false;
             }
         }
 
@@ -1083,6 +1165,39 @@ namespace Digiffice
             allowedToCreateTextBoxOnPage = allowedToCreateTextBoxOnPageLocal;
             allnoteFile_SavedAfterLatestChange = allnoteFile_SavedAfterLatestChangeLocal;
             isInDrawingMode = isInDrawingModeLocal;
+        }
+
+        public Bitmap CreateBitmapFromControl(Control control)
+        {
+            Bitmap bitmap = new Bitmap(control.Width, control.Height);
+            control.DrawToBitmap(bitmap, new Rectangle(Point.Empty, control.Size));
+            return bitmap;
+        }
+
+        public BitmapSource ToBitmapSource(Bitmap bitmap)
+        {
+            BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                bitmap.GetHbitmap(),
+                IntPtr.Zero,
+                System.Windows.Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+            return bitmapSource;
+        }
+
+        public Bitmap GetInkBitmap(InkCanvas canvas)
+        {
+            var rect = new Rect(0, 0, canvas.ActualWidth, canvas.ActualHeight);
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Width, (int)rect.Height, 96d, 96d, PixelFormats.Default);
+            rtb.Render(canvas);
+
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(rtb));
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                encoder.Save(ms);
+                return new Bitmap(ms);
+            }
         }
 
         // Prerequisite Functions
