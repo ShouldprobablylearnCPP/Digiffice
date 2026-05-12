@@ -309,8 +309,7 @@ namespace Digiffice
             else
             {
                 inkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.None;
-                inkCanvas.IsHitTestVisible = false;
-                inkCanvasHost.Enabled = false;
+                inkCanvasHost.Hide();
             }
 
             // Store reference to global InkCanvas
@@ -1136,8 +1135,7 @@ namespace Digiffice
             else
             {
                 globalInkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.None;
-                globalInkCanvas.IsHitTestVisible = false;
-                inkCanvasHost.Enabled = false;
+                inkCanvasHost.Hide();
             }
         }
 
