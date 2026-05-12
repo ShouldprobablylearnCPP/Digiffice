@@ -133,11 +133,11 @@
   <data name="DigifficeAllnoteLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewDigifficeAllnoteIconDigiffice1.0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DigifficePeercomputeLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DigifficePeercomputeIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ReturnToDigifficeButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ReturnToDigifficeButton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="XbtnHover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\XbtnHover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="_30x30_DigifficePeercomputeDataFileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_DigifficePeercomputeDataFileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="SaveNotebookBtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SaveBtnAllnote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -166,23 +166,56 @@
   <data name="DigifficeAppBG" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DigifficeAppBG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeselectedRibbontab" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeselectedRibbontab.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewPageBtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewPageBtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_30x30_DirOpenIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_DirOpenIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="NavyTab_100x40_1080p" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NavyTab_100x40_1080p.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Background_JPG" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Background_JPG.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="_30x30_TextFileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_TextFileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SelectedPageLabel_Allnote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectedPageLabel_Allnote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="OpenNotebookBtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenNotebook.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PeercomputeSplashscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PeercomputeSplashscreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="VScrollBar_DownScrollBtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\VScrollBar_DownScrollBtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DigifficePfpFrame150x150" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DigifficePfpFrame150x150.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DigifficeLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Digiffice1.0Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_30x30_DirClosedIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_DirClosedIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DigifficeStartup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DigifficeStartup.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DigifficePeercompute_P2PIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DigifficePeercompute_P2PIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewChapterBtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewChapterBtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="VScrollBar_RightScrollBtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\VScrollBar_RightScrollBtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="_30x30_MP3FileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30x30_MP3FileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="NewNotebookBtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewNotebook.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -190,8 +223,8 @@
   <data name="Tab" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Tab.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DeselectedRibbontab" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DeselectedRibbontab.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="VScrollBar_RightScrollBtn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VScrollBar_RightScrollBtn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CustomVScrollBar_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CustomVScrollBar_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -199,49 +232,25 @@
   <data name="ControlButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ControlButton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SelectedPageLabel_Allnote" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SelectedPageLabel_Allnote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="FullRibbon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\FullRibbon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="PeercomputeSplashscreen" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PeercomputeSplashscreen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NavyTab_100x40_1080p" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NavyTab_100x40_1080p.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DigifficePeercompute_P2PIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DigifficePeercompute_P2PIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DigifficePeercompute_ClientServerIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DigifficePeercompute_ClientServerIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DigifficeStartup" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DigifficeStartup.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_30x30_DirClosedIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\30x30_DirClosedIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_30x30_DirOpenIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\30x30_DirOpenIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_30x30_TextFileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\30x30_TextFileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_30x30_DigifficePeercomputeDataFileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\30x30_DigifficePeercomputeDataFileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="XbtnHover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XbtnHover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="_30x30_DigifficePeercomputeUserlistFileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\30x30_DigifficePeercomputeUserlistFileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="_30x30_MP3FileIcon_WPFCompat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\30x30_MP3FileIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="FullRibbon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FullRibbon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DigifficeLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Digiffice1.0Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="DigifficePeercompute_ClientServerIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DigifficePeercompute_ClientServerIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ReturnToDigifficeButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ReturnToDigifficeButton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="DigifficePeercomputeLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DigifficePeercomputeIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="150x150PfpFramePfpOutline" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\150x150PfpFramePfpOutline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_150x150OfflinePfp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\OfflinePfp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

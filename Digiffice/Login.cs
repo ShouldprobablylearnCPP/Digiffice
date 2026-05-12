@@ -45,6 +45,7 @@ namespace Digiffice
                 nonprotected_AccountData nonprotected_Account = new nonprotected_AccountData();
                 nonprotected_Account.ac_username = txtUsernamelogin.Text;
                 nonprotected_Account.ac_offline = false;
+                nonprotected_Account.ac_profilepicture = Properties.Resources._150x150OfflinePfp; // Todo: Set a default profile picture/Get the profile picture from the database if the user has one set
                 new Homepage(nonprotected_Account).Show();
                 this.Hide();
             }

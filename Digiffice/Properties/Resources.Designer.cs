@@ -61,6 +61,26 @@ namespace Digiffice.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _150x150OfflinePfp {
+            get {
+                object obj = ResourceManager.GetObject("_150x150OfflinePfp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _150x150PfpFramePfpOutline {
+            get {
+                object obj = ResourceManager.GetObject("150x150PfpFramePfpOutline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] _30x30_DigifficePeercomputeDataFileIcon_WPFCompat {
@@ -256,6 +276,16 @@ namespace Digiffice.Properties {
         internal static System.Drawing.Bitmap DigifficePeercomputeLogo {
             get {
                 object obj = ResourceManager.GetObject("DigifficePeercomputeLogo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DigifficePfpFrame150x150 {
+            get {
+                object obj = ResourceManager.GetObject("DigifficePfpFrame150x150", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

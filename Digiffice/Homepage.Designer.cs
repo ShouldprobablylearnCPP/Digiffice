@@ -35,8 +35,14 @@
             Offlinemsg = new Label();
             ProgramsPanel = new Panel();
             ProgramsLabel = new Label();
+            PfpFramePanel = new Panel();
+            PfpFramePfpOutlinePanel = new Panel();
+            PfpFramePfpPanel = new Panel();
+            ProfileNameLabel = new Label();
             Homepanel.SuspendLayout();
             ProgramsPanel.SuspendLayout();
+            PfpFramePanel.SuspendLayout();
+            PfpFramePfpOutlinePanel.SuspendLayout();
             SuspendLayout();
             // 
             // Welcomemsg
@@ -119,12 +125,55 @@
             ProgramsLabel.TabIndex = 0;
             ProgramsLabel.Text = "Programs";
             // 
+            // PfpFramePanel
+            // 
+            PfpFramePanel.BackColor = Color.Transparent;
+            PfpFramePanel.BackgroundImage = Properties.Resources.DigifficePfpFrame150x150;
+            PfpFramePanel.BackgroundImageLayout = ImageLayout.Stretch;
+            PfpFramePanel.Controls.Add(PfpFramePfpOutlinePanel);
+            PfpFramePanel.Location = new Point(20, 78);
+            PfpFramePanel.Name = "PfpFramePanel";
+            PfpFramePanel.Size = new Size(150, 150);
+            PfpFramePanel.TabIndex = 3;
+            // 
+            // PfpFramePfpOutlinePanel
+            // 
+            PfpFramePfpOutlinePanel.BackgroundImage = Properties.Resources._150x150PfpFramePfpOutline;
+            PfpFramePfpOutlinePanel.BackgroundImageLayout = ImageLayout.Stretch;
+            PfpFramePfpOutlinePanel.Controls.Add(PfpFramePfpPanel);
+            PfpFramePfpOutlinePanel.Dock = DockStyle.Fill;
+            PfpFramePfpOutlinePanel.Location = new Point(0, 0);
+            PfpFramePfpOutlinePanel.Name = "PfpFramePfpOutlinePanel";
+            PfpFramePfpOutlinePanel.Size = new Size(150, 150);
+            PfpFramePfpOutlinePanel.TabIndex = 0;
+            // 
+            // PfpFramePfpPanel
+            // 
+            PfpFramePfpPanel.BackgroundImageLayout = ImageLayout.Stretch;
+            PfpFramePfpPanel.Location = new Point(15, 15);
+            PfpFramePfpPanel.Name = "PfpFramePfpPanel";
+            PfpFramePfpPanel.Size = new Size(120, 120);
+            PfpFramePfpPanel.TabIndex = 0;
+            // 
+            // ProfileNameLabel
+            // 
+            ProfileNameLabel.AutoSize = true;
+            ProfileNameLabel.Font = new Font("Roboto", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ProfileNameLabel.ForeColor = Color.White;
+            ProfileNameLabel.Location = new Point(175, 83);
+            ProfileNameLabel.Name = "ProfileNameLabel";
+            ProfileNameLabel.Size = new Size(43, 15);
+            ProfileNameLabel.TabIndex = 4;
+            ProfileNameLabel.Text = "name";
+            // 
             // Homepage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.HotTrack;
             ClientSize = new Size(1904, 1041);
+            Controls.Add(ProfileNameLabel);
+            Controls.Add(PfpFramePanel);
             Controls.Add(Offlinemsg);
             Controls.Add(ProgramsPanel);
             Controls.Add(Homepanel);
@@ -139,6 +188,8 @@
             Homepanel.PerformLayout();
             ProgramsPanel.ResumeLayout(false);
             ProgramsPanel.PerformLayout();
+            PfpFramePanel.ResumeLayout(false);
+            PfpFramePfpOutlinePanel.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -151,5 +202,9 @@
         private Panel ProgramsPanel;
         private Label ProgramsLabel;
         private Label Offlinemsg;
+        private Panel PfpFramePanel;
+        private Panel PfpFramePfpOutlinePanel;
+        private Panel PfpFramePfpPanel;
+        private Label ProfileNameLabel;
     }
 }

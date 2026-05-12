@@ -48,11 +48,20 @@ namespace Digiffice
             {
                 Welcomemsg.Text = "Welcome to Digiffice!";
                 Offlinemsg.Text = "You are currently in offline mode. Certain features may be unavailable.";
+
+                // Set offline pfp image
+                PfpFramePfpPanel.BackgroundImage = Properties.Resources._150x150OfflinePfp;
+
+                // Visualise other profile information
+                ProfileNameLabel.Text = "Offline User";
             }
             else
             {
                 Welcomemsg.Text = "Welcome to Digiffice, " + username + "!";
                 Offlinemsg.Text = "";
+
+                // Set to user pfp (stored in nonprotected_AccData)
+                PfpFramePfpPanel.BackgroundImage = nonprotected_AccData.ac_profilepicture;
             }
             Offlinemsg.Location = new Point(0, Screen.PrimaryScreen.Bounds.Height - Offlinemsg.Height);
 

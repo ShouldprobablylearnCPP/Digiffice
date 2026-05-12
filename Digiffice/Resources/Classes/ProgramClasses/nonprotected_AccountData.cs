@@ -11,5 +11,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses
     {
         public string ac_username;
         public bool ac_offline;
+        public Image ac_profilepicture;
     }
 }
