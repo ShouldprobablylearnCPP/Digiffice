@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -106,6 +107,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
             dataGrid.dataGridControl.ColumnWidth = DataGridLength.Auto;
             dataGrid.dataGridControl.RowHeight = 30;
             dataGrid.dataGridControl.GridLinesVisibility = DataGridGridLinesVisibility.None;
+            dataGrid.dataGridControl.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 128));
 
             // Add the files and directories to the grid control as rows with two columns: Name and Type (File or Directory)
             foreach (var item in files)
@@ -118,23 +120,23 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
                 switch (fileType)
                 {
                     case ".txt":
-                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = txtFileDescription };
+                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = txtFileDescription, FilePath = item };
                         break;
 
                     case ".dgpd":
-                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeercomputeDataFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpdFileDescription };
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeercomputeDataFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpdFileDescription, FilePath = item };
                         break;
 
                     case ".dgpu":
-                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeercomputeUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpuFileDescription };
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeercomputeUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpuFileDescription, FilePath = item };
                         break;
 
                     case ".mp3":
-                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = mp3FileDescription };
+                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = mp3FileDescription, FilePath = item };
                         break;
 
                     default:
-                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item), FileDesc = unkownFileDescription };
+                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item), FileDesc = unkownFileDescription, FilePath = item };
                         break;
                 }
 
@@ -144,6 +146,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
 
                 // Add the row to the grid control
                 dataGrid.dataGridControl.Items.Add(newRow);
+
+                // Add file double-click event
+                newRow.MouseDoubleClick += PeercomputeMap_FileDoubleClicked;
 
                 // Set datagrid to global grid for future use
                 globalDataGrid = dataGrid;
@@ -201,41 +206,44 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
             // Get List of Files and Directories in the subdirectory
             string[] files = Directory.GetFiles(subdirectoryPath);
             string[] directories = Directory.GetDirectories(subdirectoryPath);
-    
+
             // Map the new data onto the grid control
             foreach (var item in files)
             {
                 // Instantiate new row
                 DataGridRow newRow = new DataGridRow();
-    
+
                 // Check for type of file and set icon. Any unrecognised file types will get a default file icon
                 string fileType = Path.GetExtension(item).ToString().ToLower(); // Convert to lowercase to ensure case-insensitive comparison
                 switch (fileType)
                 {
                     case ".txt":
-                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = txtFileDescription };
+                        newRow.Item = new { Type = Properties.Resources._30x30_TextFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = txtFileDescription, FilePath = item };
                         break;
-    
+
                     case ".dgpd":
-                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeercomputeDataFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpdFileDescription };
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeercomputeDataFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpdFileDescription, FilePath = item };
                         break;
-    
+
                     case ".dgpu":
-                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeercomputeUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpuFileDescription };
+                        newRow.Item = new { Type = Properties.Resources._30x30_DigifficePeercomputeUserlistFileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = dgpuFileDescription, FilePath = item };
                         break;
 
                     case ".mp3":
-                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = mp3FileDescription };
+                        newRow.Item = new { Type = Properties.Resources._30x30_MP3FileIcon_WPFCompat, Name = Path.GetFileName(item), FileDesc = mp3FileDescription, FilePath = item };
                         break;
 
                     default:
-                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item), FileDesc = unkownFileDescription };
+                        newRow.Item = new { Type = "File", Name = Path.GetFileName(item), FileDesc = unkownFileDescription, FilePath = item };
                         break;
                 }
-    
+
                 // Set alignment of the row to center for both horizontal and vertical alignment
                 newRow.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
                 newRow.VerticalContentAlignment = VerticalAlignment.Center;
+
+                // Add file double-click event
+                newRow.MouseDoubleClick += PeercomputeMap_FileDoubleClicked;
 
                 // Set left margin of the row based on the nest level (to create an indented effect for subdirectories)
                 newRow.Margin = new Thickness(nestLevel * 30, 0, 0, 0);
@@ -264,7 +272,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
                 dataGrid.dataGridControl.Items.Add(newRow);
             }
         }
-         
+
         // Events
         public void PeercomputeMap_DirectoryDoubleClicked(object sender, EventArgs e)
         {
@@ -277,7 +285,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
             else
             {
                 senderRow.Item = new { Type = Properties.Resources._30x30_DirOpenIcon_WPFCompat, Name = ((dynamic)senderRow.Item).Name, Open = true, Nest = ((dynamic)senderRow.Item).Nest, ParentDir = ((dynamic)senderRow.Item).ParentDir, FileDesc = ((dynamic)senderRow.Item).FileDesc };
-                MessageBox.Show("Directory double-clicked: " + ((dynamic)senderRow.Item).Name);
 
                 // 1 = P2P | 2 = Client-Server (Not yet implemented)
                 if (peercomputeType == 1)
@@ -291,6 +298,51 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
                 else
                 {
                     throw new InvalidDataException("Invalid Peercompute type: " + peercomputeType);
+                }
+            }
+        }
+
+        public void PeercomputeMap_FileDoubleClicked(object sender, EventArgs e)
+        {
+            DataGridRow senderRow = (DataGridRow)sender;
+            bool canOpen = true;
+
+            // Get file name and extension
+            string fileName = ((dynamic)senderRow.Item).Name;
+            string fileExtension = Path.GetExtension(fileName).ToLower();
+
+            switch (fileExtension)
+            {
+                case ".dgpu":
+                    canOpen = false;
+                    MessageBox.Show("You don't have permissions to open dgpu files.", "Permission Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+
+                case ".dgpd":
+                    canOpen = false;
+                    MessageBox.Show("You don't have permissions to open dgpd files.", "Permission Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+
+                default:
+                    canOpen = true;
+                    break;
+            }
+
+            if (canOpen)
+            {
+                // Open using default program for file type
+                try
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = ((dynamic)senderRow.Item).FilePath,
+                        UseShellExecute = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred while trying to open the file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
             }
         }

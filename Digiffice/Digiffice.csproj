@@ -36,7 +36,6 @@
 
   <ItemGroup>
 	<ProjectReference Include="..\DigifficeWPFControls\DigifficeWPFControls.csproj" />
-	<Folder Include="Resources\Classes\ProgramClasses\DigifficePeercompute\_File\" />
 	<Folder Include="Resources\Classes\ProgramClasses\Interop\" />
     <Folder Include="Resources\Classes\ProgramClasses\_Graphics\" />
   </ItemGroup>

@@ -26,12 +26,14 @@ namespace Digiffice
         Image xBtnHover = Properties.Resources.XbtnHover;
         Panel selectedLeftbarTab;
         Panel selectedPeercomputeEntry;
+        nonprotected_AccountData _nonprotected_AccountData;
 
-        // Peersapce variables
+        // Peercompute variables
         // NOTE: These classes are only initialised if a Peercompute is opened with the corresponding type.
         P2PNode _P2PNode;
         ClientServerClient _ClientServerClient;
         ClientServerServer _ClientServerHost;
+        string currentPeercomputeType;
 
         public DigifficePeercompute(nonprotected_AccountData nonprotected_AccountData, DigifficePeercompute_Splashscreen splashscreen)
         {
@@ -50,6 +52,9 @@ namespace Digiffice
 
             // Initialize components
             InitializeComponent();
+
+            // Store non-protected account data
+            _nonprotected_AccountData = nonprotected_AccountData;
 
             // Call Custom/Prerequesite Functions
             this.SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
@@ -156,21 +161,42 @@ namespace Digiffice
                 // Remove controls from parent control
                 CurrentPeercomputeDataPanel.Controls.Clear();
 
+                DigifficePeercompute_DisconnectFromPeercompute();
+
                 // Map P2P Peercompute Data onto a grid using PeercomputeManager
                 DigifficePeercomputeManager.MapPeercompute(PeercomputeDirectory, CurrentPeercomputeDataPanel);
 
                 // Initialise P2P Node
                 _P2PNode = new P2PNode();
-                _P2PNode.initP2PNode();
+                _P2PNode.initP2PNode(PeercomputeDirectory, _nonprotected_AccountData.ac_username);
+
+                currentPeercomputeType = "P2P";
             }
             else if (PeercomputeType == "CLIENTSERVER")
             {
                 // Remove controls from parent control
                 CurrentPeercomputeDataPanel.Controls.Clear();
+
+                DigifficePeercompute_DisconnectFromPeercompute();
+
+                currentPeercomputeType = "CLIENTSERVER";
             }
             else
             {
                 throw new InvalidDataException("Invalid Peercompute type found in label tag: " + PeercomputeType);
+            }
+        }
+
+        // Peercompute Functions
+        private void DigifficePeercompute_DisconnectFromPeercompute()
+        {
+            if (currentPeercomputeType == "P2P")
+            {
+                _P2PNode.disconnectP2PNode();
+            }
+            else if (currentPeercomputeType == "CLIENTSERVER")
+            {
+                // Disconnect from client-server.
             }
         }
 

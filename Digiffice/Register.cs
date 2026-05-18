@@ -33,7 +33,6 @@ namespace Digiffice
         OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
         OleDbCommand cmd = new OleDbCommand();
         OleDbCommand checkCMD = new OleDbCommand();
-        OleDbDataAdapter da = new OleDbDataAdapter();
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
