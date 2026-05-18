@@ -10,7 +10,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute._File
     public class DigifficeFileReaderDGPU
     {
         // Class Variables
-        public List<string> userList;
+        public List<string> userList = new List<string>();
 
         public List<string> ReadDGPUFile(string directory)
         {

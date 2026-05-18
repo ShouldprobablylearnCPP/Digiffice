@@ -12,9 +12,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
     public class P2PNode
     {
         // Class Variables
-        private List<string> userList;
-        private List<string> onlineUserList;
-        private List<string> offlineUserList;
+        private List<string> userList = new List<string>();
+        private List<string> onlineUserList = new List<string>();
+        private List<string> offlineUserList = new List<string>();
 
         public void initP2PNode(string directory, string username)
         {
