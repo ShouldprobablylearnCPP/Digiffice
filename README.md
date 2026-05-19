@@ -72,10 +72,11 @@ Current Version: 0.x (alpha/pre-release)
 NOTE: These goals are not in any order (except for short vs long term)
 
 === Short-Term ===
-- Drawing feature in Note-Taker
-- .dgan File Reading
-- P2P Networking
+- full .dgan File Reading
+- More drawing features in note-taker
+- P2P Networking via WebRTC
 - P2P Collaboration
+- Basic file editors (e.g .txt) in collaboration software
 - Client-Server Networking/Collaboration
 - Fully functional DPI scaling
 - More homepage features
