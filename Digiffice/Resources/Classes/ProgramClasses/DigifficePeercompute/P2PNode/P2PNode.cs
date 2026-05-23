@@ -31,6 +31,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT * FROM Users WHERE Username = '" + user + "'";
+                    OleDbDataReader dr = cmd.ExecuteReader();
+
+                    if (dr.Read() == true)
+                    {
+                        // Get online status, get IP based on peercompute type (ipv4 or ipv6) and attempt to connect to user.
+                    }
                 }
             }
         }

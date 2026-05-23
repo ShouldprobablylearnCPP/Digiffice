@@ -34,7 +34,6 @@ namespace Digiffice
         {
             con.Open();
             string login = "SELECT * FROM Digiffice_Accounts WHERE username= '" + txtUsernamelogin.Text + "' and password= '" + txtPasswordlogin.Text + "'";
-            Debug.WriteLine(login);
             cmd = new OleDbCommand(login, con);
             OleDbDataReader dr = cmd.ExecuteReader();
 

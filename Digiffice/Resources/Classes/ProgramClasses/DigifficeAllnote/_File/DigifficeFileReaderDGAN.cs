@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
+using static Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad.DigifficeAllnoteEditorFile;
 
 namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 {
@@ -25,7 +26,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
         List<DigifficeAllnoteEditorFile.Page> pagesToAddToChapters = new List<DigifficeAllnoteEditorFile.Page>();
         List<DigifficeAllnoteEditorFile.SubPage> subPagesToAddToPages = new List<DigifficeAllnoteEditorFile.SubPage>();
 
-        public DigifficeAllnoteEditorFile ReadDGANFile(string filePath)
+        public DigifficeAllnoteEditorFile ReadDGANFile(string filePath, Digiffice.DigifficeAllnote digifficeAllnoteForm)
         {
             using (FileStream fs = File.OpenRead(filePath))
             using (BrotliStream bs = new BrotliStream(fs, CompressionMode.Decompress))
@@ -542,13 +543,149 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                 }
 
                 // Step 5: Read (ELEMENTS)
-                
+
                 // If this point is reached, the elements header has been found, so no need to check for it.
+                bool readingElements = true;
 
-                // Todo: Implement reading of (ELEMENTS)
+                while (readingElements)
+                {
+                    string elementLine = br.ReadString().Trim();
+
+                    switch (elementLine)
+                    {
+                        case "/RICHTEXTBOX":
+
+                            bool readingRichTextBox = true;
+
+                            Panel rtbParentPnl = new Panel();
+                            rtbParentPnl.Tag = "NewPnl_RTB";
+
+                            DigifficeAllnoteEditorFile.Page parentPageForElement = null;
+                            DigifficeAllnoteEditorFile.SubPage parentSubPageForElement = null;
+
+                            string rtfContent = string.Empty;
+
+                            while (readingRichTextBox)
+                            {
+                                string richTextBoxLine = br.ReadString().Trim();
+
+                                if (richTextBoxLine == "\\")
+                                {
+                                    // End of richtextbox element, break out of the loop to move on to the next element
+
+                                    // Make a default Digiffice ALlnote form so we have access to the default rtbpnl function.
+                                    // Make a default rtbPnl and plug in our values. Then add to the page/subpage
+
+                                    Panel rtbpnl = digifficeAllnoteForm.DigifficeAllnote_DefaultRTBPnl(new Control(), false);
+                                    rtbpnl.Location = rtbParentPnl.Location;
+                                    rtbpnl.Size = rtbParentPnl.Size;
+                                    RichTextBox rtb = rtbpnl.Controls.OfType<RichTextBox>().FirstOrDefault();
+
+                                    if (rtb != null)
+                                    {
+                                        rtb.Rtf = rtfContent;
+                                    }
+
+                                    if (parentSubPageForElement != null)
+                                    {
+                                        parentSubPageForElement.subPageElements.Add(rtbParentPnl);
+                                    }
+                                    else if (parentPageForElement != null)
+                                    {
+                                        parentPageForElement.pageElements.Add(rtbParentPnl);
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Error: RichTextBox element found with no parent page or subpage.");
+                                    }
+
+                                    readingRichTextBox = false;
+                                    break;
+                                }
+
+                                if (richTextBoxLine.StartsWith("|"))
+                                {
+                                    if (richTextBoxLine.Contains("|PARENTPAGENUM: "))
+                                    {
+                                        // Check for -1 which indicates no parent chapter group
+                                        string parentPageNumStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|PARENTPAGENUM: ") + 16).Trim();
+
+                                        if (int.TryParse(parentPageNumStr, out int parentPageNum))
+                                        {
+                                            if (parentPageNum != -1)
+                                            {
+                                                parentPageForElement = pages.FirstOrDefault(p => p.pageNum == parentPageNum);
+                                            }
+                                        }
+                                    }
+
+                                    if (richTextBoxLine.Contains("|PARENTSUBPAGENUM: "))
+                                    {
+                                        // Check for -1 which indicates no parent chapter group
+                                        string parentSubpageNumStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|PARENTSUBPAGENUM: ") + 19).Trim();
+
+                                        if (int.TryParse(parentSubpageNumStr, out int parentSubpageNum))
+                                        {
+                                            if (parentSubpageNum != -1)
+                                            {
+                                                parentSubPageForElement = subPages.FirstOrDefault(sp => sp.subPageNum == parentSubpageNum);
+                                            }
+                                        }
+                                    }
+
+                                    if (richTextBoxLine.Contains("|PAGEPOS: "))
+                                    {
+                                        // Expected format: |PAGEPOS: [X, Y]
+                                        string pagePosStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|PAGEPOS: ") + 10).Trim();
+
+                                        if (pagePosStr.Contains("]"))
+                                        {
+                                            pagePosStr = pagePosStr.Replace("]", ""); // Remove the trailing ']' so we can parse the position values
+                                        }
+
+                                        string pagePosXStr = pagePosStr.Split(", ").FirstOrDefault()?.Trim();
+                                        string pagePosYStr = pagePosStr.Split(", ").Skip(1).FirstOrDefault()?.Trim();
+
+                                        if (float.TryParse(pagePosXStr, out float pagePosX) && float.TryParse(pagePosYStr, out float pagePosY))
+                                        {
+                                            rtbParentPnl.Location = new Point((int)pagePosX, (int)pagePosY);
+                                        }
+                                    }
+
+                                    if (richTextBoxLine.Contains("|SIZE: "))
+                                    {
+                                        // Expected format: |SIZE: [Width, Height]
+                                        string pageSizeStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|SIZE: [") + 8).Trim();
+                                        if (pageSizeStr.Contains("]"))
+                                        {
+                                            pageSizeStr = pageSizeStr.Replace("]", ""); // Remove the trailing ']' so we can parse the size values
+                                        }
+
+                                        string pageSizeXStr = pageSizeStr.Split(", ").FirstOrDefault()?.Trim();
+                                        string pageSizeYStr = pageSizeStr.Split(", ").Skip(1).FirstOrDefault()?.Trim();
+
+                                        if (float.TryParse(pageSizeXStr, out float pageSizeX) && float.TryParse(pageSizeYStr, out float pageSizeY))
+                                        {
+                                            rtbParentPnl.Size = new Size((int)pageSizeX, (int)pageSizeY);
+                                        }
+                                    }
+
+                                    if (richTextBoxLine.Contains("|RTF: "))
+                                    {
+                                        rtfContent = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|RTF: ") + 6).Trim();
+                                        // Since the RTF content may contain newlines and other special characters, it is stored in the file with special encoding. The file writer replaces newlines with \n, backslashes with \\, and pipes with \| to avoid conflicts with the file structure. So we need to reverse this encoding to get the original RTF content.
+                                        rtfContent = rtfContent.Replace("\\n", "\n").Replace("\\\\", "\\").Replace("\\|", "|");
+                                    }
+                                }
+                            }
+                            break;
+
+                        case "(EOF)":
+                            readingElements = false; // End of elements section, break out of the loop to finish processing the file
+                            break;
+                    }
+                }
             }
-
-            // Todo: Fetch the actual chapter groups, chapters, pages, and subpages using the numbers parsed and stored in the lists of chapters to add to chapter groups, pages to add to chapters, and subpages to add to pages. This is necessary because the chapter groups, chapters, pages, and subpages may be defined in any order in the file, so we have to first parse all of them and store their numbers before we can add them to their respective parent elements. Must be done here so all the data has been parsed, including elements
 
             foreach (DigifficeAllnoteEditorFile.Chapter chapter in chapters)
             {

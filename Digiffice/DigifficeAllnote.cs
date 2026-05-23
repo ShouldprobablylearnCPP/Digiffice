@@ -7,43 +7,44 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Digiffice.Resources.Classes.ProgramClasses;
 using Digiffice.Resources.Classes.ProgramClasses.CustomControls;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClasses;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
+using DigifficeWPFControls;
+using DigifficeWPFControls;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad.DigifficeAllnoteEditorFile;
-using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File;
-using System.IO;
-using System.Windows.Forms.Integration;
-using DigifficeWPFControls;
-using System.Windows.Media;
-using Color = System.Drawing.Color;
-using LinearGradientBrush = System.Drawing.Drawing2D.LinearGradientBrush;
-using System.Windows.Media.Imaging;
-using DigifficeWPFControls;
-using System.Windows.Controls;
-using System.Windows;
-using Image = System.Drawing.Image;
-using Control = System.Windows.Forms.Control;
-using Panel = System.Windows.Forms.Panel;
-using Label = System.Windows.Forms.Label;
-using Size = System.Drawing.Size;
 using Application = System.Windows.Forms.Application;
-using MessageBox = System.Windows.Forms.MessageBox;
-using Point = System.Drawing.Point;
 using Button = System.Windows.Forms.Button;
-using RichTextBox = System.Windows.Forms.RichTextBox;
-using TextBox = System.Windows.Forms.TextBox;
+using Color = System.Drawing.Color;
+using Control = System.Windows.Forms.Control;
 using FontStyle = System.Drawing.FontStyle;
 using HorizontalAlignment = System.Windows.Forms.HorizontalAlignment;
+using Image = System.Drawing.Image;
+using Label = System.Windows.Forms.Label;
+using LinearGradientBrush = System.Drawing.Drawing2D.LinearGradientBrush;
+using MessageBox = System.Windows.Forms.MessageBox;
+using Panel = System.Windows.Forms.Panel;
+using Point = System.Drawing.Point;
+using RichTextBox = System.Windows.Forms.RichTextBox;
+using Size = System.Drawing.Size;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace Digiffice
 {
@@ -324,6 +325,7 @@ namespace Digiffice
                 {
                     itemCtrl = (Control)item;
                     pagebg.Controls.Add(itemCtrl);
+                    itemCtrl.Show();
                 }
                 catch (InvalidCastException)
                 {
@@ -336,198 +338,7 @@ namespace Digiffice
             {
                 if (allowedToCreateTextBoxOnPage)
                 {
-                    // Creates Parent panel
-                    Point clickLocation = pagebg.PointToClient(Cursor.Position);
-                    Panel newPanel = new Panel();
-                    newPanel.Tag = "NewPnl_RTB"; // Create tag for identifying panels that contain RichTextBoxes for future reference (eg. when saving/loading file)
-                    newPanel.Location = clickLocation;
-                    newPanel.Size = new Size(200, 10);
-                    newPanel.BackColor = Color.FromArgb(255, 185, 209, 234);
-                    newPanel.BorderStyle = BorderStyle.None;
-                    pagebg.Controls.Add(newPanel);
-
-                    // Make Parent Panel Draggable
-                    bool isDragging = false;
-
-                    // newPanel events
-                    newPanel.MouseDown += (s, e) =>
-                    {
-                        isDragging = true;
-                    };
-                    newPanel.MouseUp += (s, e) =>
-                    {
-                        isDragging = false;
-                    };
-                    newPanel.MouseMove += (s, e) =>
-                    {
-                        if (isDragging)
-                        {
-                            int newX = newPanel.Location.X + e.X - (newPanel.Width / 2);
-                            int newY = newPanel.Location.Y + e.Y;
-                            newPanel.Location = new Point(newX, newY);
-                        }
-                    };
-
-                    // Create Remove Button
-                    Button removeBtn = new Button();
-                    removeBtn.Size = new Size(8, 8);
-                    removeBtn.Location = new Point(1, 1);
-                    removeBtn.FlatStyle = FlatStyle.Flat;
-                    removeBtn.FlatAppearance.BorderSize = 0;
-                    removeBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
-                    removeBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
-                    removeBtn.BackgroundImage = Properties.Resources.BinIcon1;
-                    removeBtn.BackgroundImageLayout = ImageLayout.Stretch;
-                    removeBtn.Cursor = Cursors.Hand;
-
-                    // removeBtn events
-                    removeBtn.Click += (s, e) =>
-                    {
-                        // Removes active control and allows a new RichTextBox to be created on the page
-                        this.ActiveControl = null;
-                        DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
-
-                        // Remove newPanel
-                        currentPage.pageElements.Remove(newPanel);
-                        pagebg.Controls.Remove(newPanel);
-                        newPanel.Dispose();
-                    };
-                    newPanel.Controls.Add(removeBtn);
-
-                    // Create Resize X Arrows
-                    Panel xResizeArrows = new Panel();
-                    xResizeArrows.Size = new Size(16, 8);
-                    xResizeArrows.Location = new Point(newPanel.Width - (xResizeArrows.Width + 1), 1);
-                    xResizeArrows.BorderStyle = BorderStyle.None;
-                    xResizeArrows.BackgroundImage = Properties.Resources.ResizeXArrowsIcon;
-                    xResizeArrows.BackgroundImageLayout = ImageLayout.Stretch;
-                    xResizeArrows.Cursor = Cursors.SizeWE;
-
-                    bool isXResizing = false;
-                    xResizeArrows.MouseDown += (s, e) =>
-                    {
-                        // Resizing when mouse down
-                        isXResizing = true;
-                    };
-                    xResizeArrows.MouseUp += (s, e) =>
-                    {
-                        // Not resizing when mouse up
-                        isXResizing = false;
-                    };
-                    xResizeArrows.MouseMove += (s, e) =>
-                    {
-                        // Check if mouse is down (isXResizing)
-                        if (isXResizing)
-                        {
-                            // Gets relative point and applies new width
-
-                            // Fix Issue where resizing has an offset - only occurs when a control is loaded from pageElements.
-
-                            Point relativePoint = pagebg.PointToClient(Cursor.Position);
-                            int newWidth = relativePoint.X - newPanel.Location.X;
-                            newPanel.Width = newWidth;
-
-                            // Loop gets each controls and applies new Locations/Sizes - works due to each control being a different type
-                            foreach (Control ctrl in newPanel.Controls)
-                            {
-                                // Try Catch blocks detect type of control
-                                try
-                                {
-                                    // Gets RichTextBox and does necessary size changes
-                                    RichTextBox rtb = (RichTextBox)ctrl;
-                                    rtb.Size = new Size(newPanel.Width - 2, rtb.Height);
-                                    DigifficeAllnote_EditSizeOfRichTextBox(rtb);
-                                    newPanel.Height = rtb.Height + 11;
-                                }
-                                catch (InvalidCastException)
-                                {
-
-                                }
-
-                                try
-                                {
-                                    // Gets Panel and applies new Location(s)
-                                    Panel pnl = (Panel)ctrl;
-                                    if (pnl == xResizeArrows)
-                                    {
-                                        pnl.Location = new Point(newPanel.Width - (pnl.Width + 1), 1);
-                                    }
-                                }
-                                catch (InvalidCastException)
-                                {
-
-                                }
-                            }
-                        }
-                    };
-
-                    newPanel.Controls.Add(xResizeArrows);
-
-                    // Creates RichTextBox at clicked location
-                    RichTextBox newRichTextBox = new RichTextBox();
-                    newRichTextBox.Name = "RichTextBox";
-                    newRichTextBox.Location = new Point(1, 10);
-                    newRichTextBox.Size = new Size(198, new Font("Roboto", 10, FontStyle.Regular).Height);
-                    newRichTextBox.Text = "New Text";
-                    newRichTextBox.BackColor = Color.White;
-                    newRichTextBox.ForeColor = Color.Black;
-                    newRichTextBox.Font = new Font("Roboto", 10, FontStyle.Regular);
-                    newRichTextBox.BorderStyle = BorderStyle.None;
-                    newRichTextBox.Multiline = true;
-                    newRichTextBox.ScrollBars = RichTextBoxScrollBars.None;
-
-                    // newRichTextBox events
-                    newRichTextBox.TextChanged += (s, e) =>
-                    {
-                        DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
-                        newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
-                    };
-                    newRichTextBox.SizeChanged += (s, e) =>
-                    {
-                        DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
-                    };
-                    newRichTextBox.GotFocus += (s, e) =>
-                    {
-                        // Show Home Tab
-                        if (currentSelectedTab != HomeTab)
-                        {
-                            HomeTab_Click(HomeTab, new EventArgs());
-                        }
-
-                        DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
-                    };
-                    newRichTextBox.KeyDown += (s, e) =>
-                    {
-                        if (e.KeyCode == Keys.Delete)
-                        {
-                            // Removes newPanel
-                            this.ActiveControl = null;
-                            DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
-                            pagebg.Controls.Remove(newPanel);
-                            newPanel.Dispose();
-                        }
-
-                        if (e.KeyCode == Keys.Escape)
-                        {
-                            // Defocuses RichTextBox
-                            this.ActiveControl = null;
-                            DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
-                        }
-                    };
-                    // Add RichTextBox to Parent Panel
-                    newPanel.Controls.Add(newRichTextBox);
-
-                    // Resize Parent Panel to prevent RichTextBox from being cut off
-                    newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
-
-                    // Focuses on new RichTextBox
-                    newRichTextBox.Focus();
-
-                    // Adds new RichTextBox to Page Elements
-                    currentPage.pageElements.Add(newPanel);
-
-                    // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
-                    DigifficeAllnote_ChangeEditingVariables(false, false, isInDrawingMode);
+                    Panel rtbPnl = DigifficeAllnote_DefaultRTBPnl(pagebg, true);
                 }
                 else
                 {
@@ -556,6 +367,7 @@ namespace Digiffice
             currentChapter = null;
             currentPage = null;
             currentSelectedPage_Lbl = null;
+            isInDrawingMode = false;
         }
 
         private void NewRichTextBox_SelectionChanged(object? sender, EventArgs e)
@@ -1139,6 +951,210 @@ namespace Digiffice
             }
         }
 
+        // Element Creation
+
+        public Panel DigifficeAllnote_DefaultRTBPnl(Control pagebg, bool addToCtrl)
+        {
+            // Creates Parent panel
+            Point clickLocation = pagebg.PointToClient(Cursor.Position);
+            Panel newPanel = new Panel();
+            newPanel.Tag = "NewPnl_RTB"; // Create tag for identifying panels that contain RichTextBoxes for future reference (eg. when saving/loading file)
+            newPanel.Location = clickLocation;
+            newPanel.Size = new Size(200, 10);
+            newPanel.BackColor = Color.FromArgb(255, 185, 209, 234);
+            newPanel.BorderStyle = BorderStyle.None;
+
+            if (addToCtrl)
+            {
+                pagebg.Controls.Add(newPanel);
+            }
+
+            // Make Parent Panel Draggable
+            bool isDragging = false;
+
+            // newPanel events
+            newPanel.MouseDown += (s, e) =>
+            {
+                isDragging = true;
+            };
+            newPanel.MouseUp += (s, e) =>
+            {
+                isDragging = false;
+            };
+            newPanel.MouseMove += (s, e) =>
+            {
+                if (isDragging)
+                {
+                    int newX = newPanel.Location.X + e.X - (newPanel.Width / 2);
+                    int newY = newPanel.Location.Y + e.Y;
+                    newPanel.Location = new Point(newX, newY);
+                }
+            };
+
+            // Create Remove Button
+            Button removeBtn = new Button();
+            removeBtn.Size = new Size(8, 8);
+            removeBtn.Location = new Point(1, 1);
+            removeBtn.FlatStyle = FlatStyle.Flat;
+            removeBtn.FlatAppearance.BorderSize = 0;
+            removeBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            removeBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            removeBtn.BackgroundImage = Properties.Resources.BinIcon1;
+            removeBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            removeBtn.Cursor = Cursors.Hand;
+
+            // removeBtn events
+            removeBtn.Click += (s, e) =>
+            {
+                // Removes active control and allows a new RichTextBox to be created on the page
+                this.ActiveControl = null;
+                DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
+
+                // Remove newPanel
+                currentPage.pageElements.Remove(newPanel);
+                pagebg.Controls.Remove(newPanel);
+                newPanel.Dispose();
+            };
+            newPanel.Controls.Add(removeBtn);
+
+            // Create Resize X Arrows
+            Panel xResizeArrows = new Panel();
+            xResizeArrows.Size = new Size(16, 8);
+            xResizeArrows.Location = new Point(newPanel.Width - (xResizeArrows.Width + 1), 1);
+            xResizeArrows.BorderStyle = BorderStyle.None;
+            xResizeArrows.BackgroundImage = Properties.Resources.ResizeXArrowsIcon;
+            xResizeArrows.BackgroundImageLayout = ImageLayout.Stretch;
+            xResizeArrows.Cursor = Cursors.SizeWE;
+
+            bool isXResizing = false;
+            xResizeArrows.MouseDown += (s, e) =>
+            {
+                // Resizing when mouse down
+                isXResizing = true;
+            };
+            xResizeArrows.MouseUp += (s, e) =>
+            {
+                // Not resizing when mouse up
+                isXResizing = false;
+            };
+            xResizeArrows.MouseMove += (s, e) =>
+            {
+                // Check if mouse is down (isXResizing)
+                if (isXResizing)
+                {
+                    // Gets relative point and applies new width
+
+                    // Fix Issue where resizing has an offset - only occurs when a control is loaded from pageElements.
+
+                    Point relativePoint = pagebg.PointToClient(Cursor.Position);
+                    int newWidth = relativePoint.X - newPanel.Location.X;
+                    newPanel.Width = newWidth;
+
+                    // Loop gets each controls and applies new Locations/Sizes - works due to each control being a different type
+                    foreach (Control ctrl in newPanel.Controls)
+                    {
+                        // Try Catch blocks detect type of control
+                        try
+                        {
+                            // Gets RichTextBox and does necessary size changes
+                            RichTextBox rtb = (RichTextBox)ctrl;
+                            rtb.Size = new Size(newPanel.Width - 2, rtb.Height);
+                            DigifficeAllnote_EditSizeOfRichTextBox(rtb);
+                            newPanel.Height = rtb.Height + 11;
+                        }
+                        catch (InvalidCastException)
+                        {
+
+                        }
+
+                        try
+                        {
+                            // Gets Panel and applies new Location(s)
+                            Panel pnl = (Panel)ctrl;
+                            if (pnl == xResizeArrows)
+                            {
+                                pnl.Location = new Point(newPanel.Width - (pnl.Width + 1), 1);
+                            }
+                        }
+                        catch (InvalidCastException)
+                        {
+
+                        }
+                    }
+                }
+            };
+
+            newPanel.Controls.Add(xResizeArrows);
+
+            // Creates RichTextBox at clicked location
+            RichTextBox newRichTextBox = new RichTextBox();
+            newRichTextBox.Name = "RichTextBox";
+            newRichTextBox.Location = new Point(1, 10);
+            newRichTextBox.Size = new Size(198, new Font("Roboto", 10, FontStyle.Regular).Height);
+            newRichTextBox.Text = "New Text";
+            newRichTextBox.BackColor = Color.White;
+            newRichTextBox.ForeColor = Color.Black;
+            newRichTextBox.Font = new Font("Roboto", 10, FontStyle.Regular);
+            newRichTextBox.BorderStyle = BorderStyle.None;
+            newRichTextBox.Multiline = true;
+            newRichTextBox.ScrollBars = RichTextBoxScrollBars.None;
+
+            // newRichTextBox events
+            newRichTextBox.TextChanged += (s, e) =>
+            {
+                DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
+                newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
+            };
+            newRichTextBox.SizeChanged += (s, e) =>
+            {
+                DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
+            };
+            newRichTextBox.GotFocus += (s, e) =>
+            {
+                // Show Home Tab
+                if (currentSelectedTab != HomeTab)
+                {
+                    HomeTab_Click(HomeTab, new EventArgs());
+                }
+
+                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
+            };
+            newRichTextBox.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Delete)
+                {
+                    // Removes newPanel
+                    this.ActiveControl = null;
+                    DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
+                    pagebg.Controls.Remove(newPanel);
+                    newPanel.Dispose();
+                }
+
+                if (e.KeyCode == Keys.Escape)
+                {
+                    // Defocuses RichTextBox
+                    this.ActiveControl = null;
+                    DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
+                }
+            };
+            // Add RichTextBox to Parent Panel
+            newPanel.Controls.Add(newRichTextBox);
+
+            // Resize Parent Panel to prevent RichTextBox from being cut off
+            newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
+
+            // Focuses on new RichTextBox
+            newRichTextBox.Focus();
+
+            // Adds new RichTextBox to Page Elements
+            currentPage.pageElements.Add(newPanel);
+
+            // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
+            DigifficeAllnote_ChangeEditingVariables(false, false, isInDrawingMode);
+
+            return newPanel;
+        }
+
         // Other Functions
 
         private void SetupBorderPanels()
@@ -1299,7 +1315,7 @@ namespace Digiffice
             }
 
             DigifficeFileReaderDGAN fileReader = new DigifficeFileReaderDGAN();
-            DigifficeAllnoteEditorFile openedFile = fileReader.ReadDGANFile(filePath);
+            DigifficeAllnoteEditorFile openedFile = fileReader.ReadDGANFile(filePath, this);
             openFilePath = filePath;
 
             // Show name of file

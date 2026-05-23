@@ -233,6 +233,78 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                     }
 
                     // Write elements from subpage(s)
+                    foreach (DigifficeAllnoteEditorFile.SubPage subPage in file.fileSubPages)
+                    {
+                        foreach (Panel pnl in subPage.subPageElements.OfType<Panel>())
+                        {
+                            if (pnl.Tag is not null and (object)"NewPnl_RTB")
+                            {
+                                RichTextBox rtb = pnl.Controls.OfType<RichTextBox>().FirstOrDefault();
+                                if (rtb == null)
+                                {
+                                    throw new Exception("Intended rtb Panel does not contain a RichTextBox.");
+                                }
+                                writer.Write("/RICHTEXTBOX" + Environment.NewLine);
+                                writer.Write("|PARENTPAGENUM: -1" + Environment.NewLine); // RTB is in subpage, set parent page num to -1
+                                writer.Write("|PARENTSUBPAGENUM: " + subPage.subPageNum + Environment.NewLine);
+                                writer.Write("|PAGEPOS: " + pnl.Location + Environment.NewLine);
+                                writer.Write("|SIZE: " + pnl.Size + Environment.NewLine);
+                                writer.Write("|RTF: " + rtb.Rtf + Environment.NewLine);
+                                writer.Write("\\" + Environment.NewLine);
+                                writer.Write(Environment.NewLine);
+                            }
+                        }
+                        // Elementhosts
+                        foreach (ElementHost item in subPage.subPageElements.OfType<ElementHost>())
+                        {
+                            // Write based on type of elementhost child control
+                            if (item.Child is DraggableSizablePicturebox dsp)
+                            {
+                                writer.Write("/DRAGGABLESIZABLEPICTUREBOX" + Environment.NewLine);
+                                writer.Write("|PARENTPAGENUM: -1" + Environment.NewLine); // DraggableSizablePicturebox is in subpage, set parent page num to -1
+                                writer.Write("|PARENTSUBPAGENUM: " + subPage.subPageNum + Environment.NewLine);
+                                writer.Write("|PAGEPOS: " + item.Location + Environment.NewLine);
+                                writer.Write("|SIZE: " + item.Size + Environment.NewLine);
+                                BitmapEncoder encoder = getFormatFromImageSource(dsp);
+                                string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper();
+                                var bitmapSource = dsp.baseImg.Source as BitmapSource;
+                                if (bitmapSource != null)
+                                {
+                                    encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                                }
+                                else
+                                {
+                                    throw new Exception("Unable to get BitmapSource from DraggableSizablePicturebox image.");
+                                }
+
+                                byte[] imgBytes;
+                                using (MemoryStream ms = new MemoryStream())
+                                {
+                                    encoder.Save(ms);
+                                    imgBytes = ms.ToArray();
+                                }
+
+                                writer.Write("|IMGLEN: " + imgBytes.Length + Environment.NewLine);
+                                writer.Write("|IMGFMT: " + imgFormat + Environment.NewLine);
+                                writer.Write("|IMGSRC: ".ToCharArray());
+
+                                writer.Flush(); // Ensure all text data is written before writing binary data
+
+                                writer.Write(imgBytes); // Write binary image data directly to the file
+
+                                writer.Flush(); // Ensure all binary data is written
+
+                                writer.Write(Environment.NewLine.ToCharArray());
+
+                                writer.Write("\\" + Environment.NewLine);
+                                writer.Write(Environment.NewLine);
+                            }
+                        }
+                    }
+
+                    // Step 4: Write (EOF) to indicate end of file
+                    writer.Write("(EOF)");
+
                 }
 
                 // Close File stream
