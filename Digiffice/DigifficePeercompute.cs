@@ -214,6 +214,7 @@ namespace Digiffice
             }
         }
 
+        // Tab Events
         private void PeercomputesTab_Click(object sender, EventArgs e)
         {
             if (selectedLeftbarTab != null)

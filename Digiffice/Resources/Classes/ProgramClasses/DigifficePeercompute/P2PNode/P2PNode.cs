@@ -16,6 +16,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
         private List<string> onlineUserList = new List<string>();
         private List<string> offlineUserList = new List<string>();
 
+        List<PeerConnection> peerConnections = new List<PeerConnection>();
+        PeerConnectionConfiguration peerConnectionConfig = new PeerConnectionConfiguration();
+
         public void initP2PNode(string directory, string username)
         {
             // Todo: Implement. Implementation should include: Attempt to connect to P2P network. If successful, store necessary information for future use. If unsuccessful, handle the error - let them retry, exit, and let them know to check if anyone in the network is online.
@@ -29,13 +32,55 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                     OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
                     OleDbCommand cmd = new OleDbCommand();
 
+                    con.Open();
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT * FROM Users WHERE Username = '" + user + "'";
+                    cmd.CommandText = "SELECT * FROM Digiffice_Accounts WHERE username = '" + user + "'";
                     OleDbDataReader dr = cmd.ExecuteReader();
 
                     if (dr.Read() == true)
                     {
-                        // Get online status, get IP based on peercompute type (ipv4 or ipv6) and attempt to connect to user.
+                        dr.Close();
+                        cmd.CommandText = "SELECT user_online FROM Digiffice_Accounts WHERE username = '" + user + "'";
+                        object result = cmd.ExecuteScalar();
+
+                        if (result != DBNull.Value)
+                        {
+                            bool isOnline = Convert.ToBoolean(result);
+                            if (isOnline)
+                            {
+                                onlineUserList.Add(user);
+                            }
+                            else
+                            {
+                                offlineUserList.Add(user);
+                            }
+                        }
+                    }
+
+                    con.Close();
+                }
+            }
+
+            // Attempt to connect to users on the network
+            foreach (var user in onlineUserList)
+            {
+                OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
+                OleDbCommand cmd = new OleDbCommand();
+
+                con.Open();
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT user_ipv4 FROM Digiffice_Accounts WHERE username = '" + user + "'"; // Todo: add ipv6 support
+                OleDbDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read() == true)
+                {
+                    dr.Close();
+                    cmd.CommandText = "SELECT user_port FROM Digiffice_Accounts WHERE username = '" + user + "'";
+                    dr = cmd.ExecuteReader();
+
+                    if (dr.Read() == true)
+                    {
+                        
                     }
                 }
             }
@@ -53,7 +98,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
         public void disconnectP2PNode()
         {
-            // Todo: Disconnect from the network by severing the connection.
+
         }
     }
 }
