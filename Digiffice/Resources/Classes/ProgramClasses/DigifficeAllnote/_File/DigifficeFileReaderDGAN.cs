@@ -580,6 +580,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                     rtbpnl.Location = rtbParentPnl.Location;
                                     rtbpnl.Size = rtbParentPnl.Size;
                                     RichTextBox rtb = rtbpnl.Controls.OfType<RichTextBox>().FirstOrDefault();
+                                    rtb.Size = new Size(rtbParentPnl.Size.Width - 1, rtbParentPnl.Size.Height - 1);
 
                                     if (rtb != null)
                                     {
@@ -588,11 +589,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                     if (parentSubPageForElement != null)
                                     {
-                                        parentSubPageForElement.subPageElements.Add(rtbParentPnl);
+                                        parentSubPageForElement.subPageElements.Add(rtbpnl);
                                     }
                                     else if (parentPageForElement != null)
                                     {
-                                        parentPageForElement.pageElements.Add(rtbParentPnl);
+                                        parentPageForElement.pageElements.Add(rtbpnl);
                                     }
                                     else
                                     {
@@ -636,15 +637,17 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                     if (richTextBoxLine.Contains("|PAGEPOS: "))
                                     {
                                         // Expected format: |PAGEPOS: [X, Y]
-                                        string pagePosStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|PAGEPOS: ") + 10).Trim();
+                                        string pagePosStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|PAGEPOS: {") + 11).Trim();
 
-                                        if (pagePosStr.Contains("]"))
+                                        if (pagePosStr.Contains("}"))
                                         {
-                                            pagePosStr = pagePosStr.Replace("]", ""); // Remove the trailing ']' so we can parse the position values
+                                            pagePosStr = pagePosStr.Replace("}", ""); // Remove the trailing ']' so we can parse the position values
                                         }
 
-                                        string pagePosXStr = pagePosStr.Split(", ").FirstOrDefault()?.Trim();
-                                        string pagePosYStr = pagePosStr.Split(", ").Skip(1).FirstOrDefault()?.Trim();
+                                        string pagePosXStr = pagePosStr.Split(",").FirstOrDefault()?.Trim();
+                                        string pagePosYStr = pagePosStr.Split(",").Skip(1).FirstOrDefault()?.Trim();
+                                        pagePosXStr = pagePosXStr.Replace("X=", "");
+                                        pagePosYStr = pagePosYStr.Replace("Y=", "");
 
                                         if (float.TryParse(pagePosXStr, out float pagePosX) && float.TryParse(pagePosYStr, out float pagePosY))
                                         {
@@ -655,14 +658,16 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                     if (richTextBoxLine.Contains("|SIZE: "))
                                     {
                                         // Expected format: |SIZE: [Width, Height]
-                                        string pageSizeStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|SIZE: [") + 8).Trim();
-                                        if (pageSizeStr.Contains("]"))
+                                        string pageSizeStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|SIZE: {") + 8).Trim();
+                                        if (pageSizeStr.Contains("}"))
                                         {
-                                            pageSizeStr = pageSizeStr.Replace("]", ""); // Remove the trailing ']' so we can parse the size values
+                                            pageSizeStr = pageSizeStr.Replace("}", ""); // Remove the trailing ']' so we can parse the size values
                                         }
 
-                                        string pageSizeXStr = pageSizeStr.Split(", ").FirstOrDefault()?.Trim();
-                                        string pageSizeYStr = pageSizeStr.Split(", ").Skip(1).FirstOrDefault()?.Trim();
+                                        string pageSizeXStr = pageSizeStr.Split(",").FirstOrDefault()?.Trim();
+                                        string pageSizeYStr = pageSizeStr.Split(",").Skip(1).FirstOrDefault()?.Trim();
+                                        pageSizeXStr = pageSizeXStr.Replace("Width=", "");
+                                        pageSizeYStr = pageSizeYStr.Replace("Height=", "");
 
                                         if (float.TryParse(pageSizeXStr, out float pageSizeX) && float.TryParse(pageSizeYStr, out float pageSizeY))
                                         {
@@ -673,8 +678,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                     if (richTextBoxLine.Contains("|RTF: "))
                                     {
                                         rtfContent = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|RTF: ") + 6).Trim();
-                                        // Since the RTF content may contain newlines and other special characters, it is stored in the file with special encoding. The file writer replaces newlines with \n, backslashes with \\, and pipes with \| to avoid conflicts with the file structure. So we need to reverse this encoding to get the original RTF content.
-                                        rtfContent = rtfContent.Replace("\\n", "\n").Replace("\\\\", "\\").Replace("\\|", "|");
+                                        // The rest of the line is the rtfContent
                                     }
                                 }
                             }

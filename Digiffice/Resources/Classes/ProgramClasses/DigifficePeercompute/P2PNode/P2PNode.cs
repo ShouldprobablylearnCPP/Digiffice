@@ -98,7 +98,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
         public void disconnectP2PNode()
         {
-
+            // Todo: Disconnect from the network by severing the connection.
         }
     }
 }

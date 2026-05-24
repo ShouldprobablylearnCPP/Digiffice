@@ -1021,6 +1021,7 @@ namespace Digiffice
             Panel xResizeArrows = new Panel();
             xResizeArrows.Size = new Size(16, 8);
             xResizeArrows.Location = new Point(newPanel.Width - (xResizeArrows.Width + 1), 1);
+            xResizeArrows.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             xResizeArrows.BorderStyle = BorderStyle.None;
             xResizeArrows.BackgroundImage = Properties.Resources.ResizeXArrowsIcon;
             xResizeArrows.BackgroundImageLayout = ImageLayout.Stretch;
@@ -1299,6 +1300,8 @@ namespace Digiffice
             openFileDialog.Filter = "Digiffice Allnote Notebook (*.dgan)|*.dgan";
             DialogResult result = openFileDialog.ShowDialog();
 
+            bool continueBool = false;
+
             // Handle Dialog Result
             if (result == DialogResult.OK)
             {
@@ -1306,6 +1309,7 @@ namespace Digiffice
                 if (Path.GetExtension(chosenFilePath) == ".dgan")
                 {
                     filePath = chosenFilePath;
+                    continueBool = true;
                 }
                 else
                 {
@@ -1313,20 +1317,27 @@ namespace Digiffice
                     return;
                 }
             }
-
-            DigifficeFileReaderDGAN fileReader = new DigifficeFileReaderDGAN();
-            DigifficeAllnoteEditorFile openedFile = fileReader.ReadDGANFile(filePath, this);
-            openFilePath = filePath;
-
-            // Show name of file
-
-            if (openedFile == null || openedFile.chapters.Count == 0)
+            else
             {
-                throw new Exception("Error loading file. File may be corrupted or in an invalid format.");
+                continueBool = false;
             }
 
-            DigifficeAllnote_CloseNotebook();
-            DigifficeAllnote_ShowNote(openedFile);
+            if (continueBool)
+            {
+                DigifficeFileReaderDGAN fileReader = new DigifficeFileReaderDGAN();
+                DigifficeAllnoteEditorFile openedFile = fileReader.ReadDGANFile(filePath, this);
+                openFilePath = filePath;
+
+                // Show name of file
+
+                if (openedFile == null || openedFile.chapters.Count == 0)
+                {
+                    throw new Exception("Error loading file. File may be corrupted or in an invalid format.");
+                }
+
+                DigifficeAllnote_CloseNotebook();
+                DigifficeAllnote_ShowNote(openedFile);
+            }
         }
     }
 }
