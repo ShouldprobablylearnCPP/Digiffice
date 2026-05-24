@@ -44,27 +44,6 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 === 4 - UI ===
 - The Interface of Digiffice will be similar to that of other office software suites, however there will be mostly slight differences. Despite this, it should still be easy to use.
 
-# CURRENT TESTING RESULTS
-
-21/04/2026:
-
-| Metric | Digiffice Allnote (Note-Taker) | Industry Standard |
-| :--- | :--- | :--- |
-| **Boot from Search Bar** | < 0.5 seconds | ~1.5 seconds - 3.0 seconds |
-| **RAM Usage (idle)** | ~30MB | ~80-90MB |
-| **RAM Usage (imported image)** | ~65-70MB (~90MB if also including homepage RAM usage) | ~100MB |
-| **Install Size** | ~20MB | 500MB - 2GB |
-| **File size (~100 words text)** | ~0.9KB (.dgan) | ~4.2KB (.onepkg) |
-| **File size (1080p image)** | ~420KB (.dgan) | ~640KB (.onepkg) |
-
-Specs of tested computer: Ryzen 7 5800X (8 cores, 16 threads), 32GB DDR4 Memory, Nvidia RTX 3060, Tested on Windows 11
-
-29/04/2026:
-
-Partial file reading - reads header and structure of default file (1 chapter, 1 page) in 0.1-0.2 seconds. File size ~0.8KB.
-
-Specs of tested computer: Ryzen 7 5800X (8 cores, 16 threads), 32GB DDR4 Memory, Nvidia RTX 3060, Tested on Windows 11
-
 # ROADMAP 🛠️
 
 Current Version: 0.x (alpha/pre-release)
