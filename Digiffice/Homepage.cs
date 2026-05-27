@@ -10,6 +10,7 @@ namespace Digiffice
         // Class Variables
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
+        GlobalVar globalVar = new GlobalVar();
         string username = "";
         bool offline = false;
 
@@ -62,8 +63,11 @@ namespace Digiffice
 
                 // Set to user pfp (stored in nonprotected_AccData)
                 PfpFramePfpPanel.BackgroundImage = nonprotected_AccData.ac_profilepicture;
+
+                ProfileNameLabel.Text = username;
             }
             Offlinemsg.Location = new Point(0, Screen.PrimaryScreen.Bounds.Height - Offlinemsg.Height);
+            VersionLabel.Text = "Version: " + globalVar.DigifficeVer;
 
             // Call Custom Prerequesite Functions
             Fill_Lists();
@@ -99,6 +103,11 @@ namespace Digiffice
             programVersions[1] = "0.1.2";
         }
 
+        private void Homepanel_Paint(object sender, PaintEventArgs e)
+        {
+            Homepanel.Size = new Size(Screen.PrimaryScreen.Bounds.Width, 59);
+        }
+
         // Exit Button Events
         private void ExitButton_Click(object sender, EventArgs e)
         {
@@ -128,6 +137,12 @@ namespace Digiffice
         {
             SoundPlayer player = new SoundPlayer(Properties.Resources.DigifficeStartup);
             player.Play();
+        }
+
+        // Button Events
+        private void TourDigifficeBtn_Click(object sender, EventArgs e)
+        {
+
         }
 
         // Program Button Group Functions

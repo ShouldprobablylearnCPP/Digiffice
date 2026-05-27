@@ -4,11 +4,19 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Forms.Integration;
+using System.Windows.Media.Imaging;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
+using DigifficeWPFControls;
 using static Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad.DigifficeAllnoteEditorFile;
+using Control = System.Windows.Forms.Control;
+using Panel = System.Windows.Forms.Panel;
+using RichTextBox = System.Windows.Forms.RichTextBox;
 
 namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 {
@@ -551,6 +559,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                 {
                     string elementLine = br.ReadString().Trim();
 
+                    DigifficeAllnoteEditorFile.Page parentPageForElement = null;
+                    DigifficeAllnoteEditorFile.SubPage parentSubPageForElement = null;
+
                     switch (elementLine)
                     {
                         case "/RICHTEXTBOX":
@@ -559,9 +570,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                             Panel rtbParentPnl = new Panel();
                             rtbParentPnl.Tag = "NewPnl_RTB";
-
-                            DigifficeAllnoteEditorFile.Page parentPageForElement = null;
-                            DigifficeAllnoteEditorFile.SubPage parentSubPageForElement = null;
 
                             string rtfContent = string.Empty;
 
@@ -682,6 +690,173 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                     }
                                 }
                             }
+                            break;
+
+                        case "/DRAGGABLESIZABLEPICTUREBOX":
+                            bool readingDraggableSizablePictureBox = true;
+
+                            ElementHost draggableSizablePictureBoxHost = new ElementHost();
+
+                            string imgLenStr = string.Empty;
+                            string imgFormat = string.Empty;
+
+                            while (readingDraggableSizablePictureBox)
+                            {
+                                string dspLine = br.ReadString().Trim();
+                                MessageBox.Show($"DraggableSizablePictureBox line: {dspLine}");
+
+                                if (dspLine == "\\")
+                                {
+                                    if (parentSubPageForElement != null)
+                                    {
+                                        parentSubPageForElement.subPageElements.Add(draggableSizablePictureBoxHost);
+                                    }
+                                    else if (parentPageForElement != null)
+                                    {
+                                        parentPageForElement.pageElements.Add(draggableSizablePictureBoxHost);
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Error: RichTextBox element found with no parent page or subpage.");
+                                    }
+
+                                    readingDraggableSizablePictureBox = false;
+                                    break;
+                                }
+
+                                if (dspLine.StartsWith("|"))
+                                {
+                                    if (dspLine.Contains("|PARENTPAGENUM: "))
+                                    {
+                                        // Check for -1 which indicates no parent chapter group
+                                        string parentPageNumStr = dspLine.Substring(dspLine.IndexOf("|PARENTPAGENUM: ") + 16).Trim();
+
+                                        if (int.TryParse(parentPageNumStr, out int parentPageNum))
+                                        {
+                                            if (parentPageNum != -1)
+                                            {
+                                                parentPageForElement = pages.FirstOrDefault(p => p.pageNum == parentPageNum);
+                                            }
+                                        }
+                                    }
+
+                                    if (dspLine.Contains("|PARENTSUBPAGENUM: "))
+                                    {
+                                        // Check for -1 which indicates no parent chapter group
+                                        string parentSubpageNumStr = dspLine.Substring(dspLine.IndexOf("|PARENTSUBPAGENUM: ") + 19).Trim();
+
+                                        if (int.TryParse(parentSubpageNumStr, out int parentSubpageNum))
+                                        {
+                                            if (parentSubpageNum != -1)
+                                            {
+                                                parentSubPageForElement = subPages.FirstOrDefault(sp => sp.subPageNum == parentSubpageNum);
+                                            }
+                                        }
+                                    }
+
+                                    if (dspLine.Contains("|PAGEPOS: "))
+                                    {
+                                        // Expected format: |PAGEPOS: [X, Y]
+                                        string pagePosStr = dspLine.Substring(dspLine.IndexOf("|PAGEPOS: {") + 11).Trim();
+
+                                        if (pagePosStr.Contains("}"))
+                                        {
+                                            pagePosStr = pagePosStr.Replace("}", ""); // Remove the trailing ']' so we can parse the position values
+                                        }
+
+                                        string pagePosXStr = pagePosStr.Split(",").FirstOrDefault()?.Trim();
+                                        string pagePosYStr = pagePosStr.Split(",").Skip(1).FirstOrDefault()?.Trim();
+                                        pagePosXStr = pagePosXStr.Replace("X=", "");
+                                        pagePosYStr = pagePosYStr.Replace("Y=", "");
+
+                                        if (float.TryParse(pagePosXStr, out float pagePosX) && float.TryParse(pagePosYStr, out float pagePosY))
+                                        {
+                                            draggableSizablePictureBoxHost.Location = new Point((int)pagePosX, (int)pagePosY);
+                                        }
+                                    }
+
+                                    if (dspLine.Contains("|SIZE: "))
+                                    {
+                                        // Expected format: |SIZE: [Width, Height]
+                                        string pageSizeStr = dspLine.Substring(dspLine.IndexOf("|SIZE: {") + 8).Trim();
+                                        if (pageSizeStr.Contains("}"))
+                                        {
+                                            pageSizeStr = pageSizeStr.Replace("}", ""); // Remove the trailing ']' so we can parse the size values
+                                        }
+
+                                        string pageSizeXStr = pageSizeStr.Split(",").FirstOrDefault()?.Trim();
+                                        string pageSizeYStr = pageSizeStr.Split(",").Skip(1).FirstOrDefault()?.Trim();
+                                        pageSizeXStr = pageSizeXStr.Replace("Width=", "");
+                                        pageSizeYStr = pageSizeYStr.Replace("Height=", "");
+
+                                        if (float.TryParse(pageSizeXStr, out float pageSizeX) && float.TryParse(pageSizeYStr, out float pageSizeY))
+                                        {
+                                            draggableSizablePictureBoxHost.Size = new Size((int)pageSizeX, (int)pageSizeY);
+                                        }
+                                    }
+
+                                    if (dspLine.Contains("|IMGLEN: "))
+                                    {
+                                        imgLenStr = dspLine.Substring(dspLine.IndexOf("|IMGLEN: ") + 9).Trim();
+                                    }
+
+                                    if (dspLine.Contains("|IMGFMT: "))
+                                    {
+                                        imgFormat = dspLine.Substring(dspLine.IndexOf("|IMGFMT: ") + 9).Trim().ToLower();
+                                    }
+                                }
+
+                                if (dspLine.StartsWith("IMGSRC: ")) // For some reason during testing the line doesn't include the leading '|' EVEN THOUGH THE WRITER WRITES IT!!!!!!! So we read it without the leading '|
+                                {
+                                    BitmapDecoder decoder = null;
+
+                                    using (MemoryStream imageStream = new MemoryStream())
+                                    {
+                                        imageStream.Position = 0;
+
+                                        switch (imgFormat)
+                                        {
+                                            case "png":
+                                                decoder = new PngBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                                                break;
+
+                                            case "jpeg":
+                                                decoder = new JpegBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                                                break;
+
+                                            case "bmp":
+                                                decoder = new BmpBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                                                break;
+
+                                            case "gif":
+                                                decoder = new GifBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                                                break;
+
+                                            case "tiff":
+                                                decoder = new TiffBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                                                break;
+
+                                            case "wmp":
+                                                decoder = new WmpBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                                                break;
+
+                                            default:
+                                                decoder = new PngBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default); // Default to PNG
+                                                break;
+                                        }
+                                    }
+
+                                    MessageBox.Show($"Image format: {imgFormat}\nImage length in bytes: {imgLenStr}");
+
+                                    if (decoder != null)
+                                    {
+                                        BitmapSource bitmapSource = decoder.Frames[0];
+
+                                        draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox(imgFormat, bitmapSource, true);
+                                    }
+                                }
+                            }
+
                             break;
 
                         case "(EOF)":

@@ -878,36 +878,7 @@ namespace Digiffice
 
                     bmpImg.EndInit();
 
-                    // Create DraggableSizablePicturebox
-                    ElementHost elementHost = new ElementHost();
-                    elementHost.Location = new Point(200, 200);
-                    elementHost.Size = new Size(200, 200);
-                    elementHost.AutoSize = true;
-                    elementHost.BackColorTransparent = true;
-
-                    DraggableSizablePicturebox draggableSizablePicturebox = new DraggableSizablePicturebox();
-                    draggableSizablePicturebox.Tag = Path.GetExtension(chosenImagePath).ToLower();
-                    draggableSizablePicturebox.baseImg.Source = bmpImg;
-                    draggableSizablePicturebox.baseImg.Width = bmpImg.PixelWidth;
-                    draggableSizablePicturebox.baseImg.Height = bmpImg.PixelHeight;
-                    draggableSizablePicturebox.UpdateLayout();
-
-                    // Add drag functionality to DraggableSizablePicturebox
-                    draggableSizablePicturebox.baseImg.MouseMove += (s, e) =>
-                    {
-                        // 
-                    };
-
-                    // Set ElementHost child
-                    elementHost.Child = draggableSizablePicturebox;
-
-                    // Add PictureBox to current page
-                    Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
-                    pagebg.Controls.Add(elementHost);
-
-                    // Add PictureBox to currentPage's pageElements for saving/loading purposes
-                    currentPage.pageElements.Add(elementHost);
-                    elementHost.BringToFront();
+                    ElementHost dspElementHost = DigifficeAllnote_DefaultDraggableSizablePictureBox(Path.GetExtension(chosenImagePath).ToLower(), bmpImg, true);
                 }
             }
         }
@@ -1154,6 +1125,45 @@ namespace Digiffice
             DigifficeAllnote_ChangeEditingVariables(false, false, isInDrawingMode);
 
             return newPanel;
+        }
+
+        public ElementHost DigifficeAllnote_DefaultDraggableSizablePictureBox(string fmt, BitmapSource bmpImg, bool addToCtrl)
+        {
+            // Create DraggableSizablePicturebox
+            ElementHost elementHost = new ElementHost();
+            elementHost.Location = new Point(200, 200);
+            elementHost.Size = new Size(200, 200);
+            elementHost.AutoSize = true;
+            elementHost.BackColorTransparent = true;
+
+            DraggableSizablePicturebox draggableSizablePicturebox = new DraggableSizablePicturebox();
+            draggableSizablePicturebox.Tag = fmt;
+            draggableSizablePicturebox.baseImg.Source = bmpImg;
+            draggableSizablePicturebox.baseImg.Width = bmpImg.PixelWidth;
+            draggableSizablePicturebox.baseImg.Height = bmpImg.PixelHeight;
+            draggableSizablePicturebox.UpdateLayout();
+
+            // Add drag functionality to DraggableSizablePicturebox
+            draggableSizablePicturebox.baseImg.MouseMove += (s, e) =>
+            {
+                // 
+            };
+
+            // Set ElementHost child
+            elementHost.Child = draggableSizablePicturebox;
+
+            // Add PictureBox to current page
+            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+            pagebg.Controls.Add(elementHost);
+
+            // Add PictureBox to currentPage's pageElements for saving/loading purposes
+            if (addToCtrl)
+            {
+                currentPage.pageElements.Add(elementHost);
+                elementHost.BringToFront();
+            }
+
+            return elementHost;
         }
 
         // Other Functions

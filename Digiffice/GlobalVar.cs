@@ -16,5 +16,7 @@ namespace Digiffice
                                                                                                                                              // If testing, recommend creating the directory before running the program.
 
         public string globalDigifficePeercomputeDataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/DIGIFFICE_DATA_FOLDER/Digiffice_Peercompute";
+
+        public string DigifficeVer = "0.x";
     }
 }

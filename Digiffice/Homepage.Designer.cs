@@ -39,6 +39,8 @@
             PfpFramePfpOutlinePanel = new Panel();
             PfpFramePfpPanel = new Panel();
             ProfileNameLabel = new Label();
+            VersionLabel = new Label();
+            TourDigifficeBtn = new Button();
             Homepanel.SuspendLayout();
             ProgramsPanel.SuspendLayout();
             PfpFramePanel.SuspendLayout();
@@ -58,7 +60,6 @@
             // 
             // Homepanel
             // 
-            Homepanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             Homepanel.AutoSize = true;
             Homepanel.BackColor = SystemColors.ControlLight;
             Homepanel.BackgroundImage = Properties.Resources.Panel;
@@ -69,6 +70,7 @@
             Homepanel.Name = "Homepanel";
             Homepanel.Size = new Size(1904, 59);
             Homepanel.TabIndex = 0;
+            Homepanel.Paint += Homepanel_Paint;
             // 
             // ExitButton
             // 
@@ -166,12 +168,42 @@
             ProfileNameLabel.TabIndex = 4;
             ProfileNameLabel.Text = "name";
             // 
+            // VersionLabel
+            // 
+            VersionLabel.AutoSize = true;
+            VersionLabel.Font = new Font("Roboto", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            VersionLabel.ForeColor = Color.White;
+            VersionLabel.Location = new Point(176, 98);
+            VersionLabel.Name = "VersionLabel";
+            VersionLabel.Size = new Size(57, 15);
+            VersionLabel.TabIndex = 5;
+            VersionLabel.Text = "Version";
+            // 
+            // TourDigifficeBtn
+            // 
+            TourDigifficeBtn.BackColor = Color.FromArgb(10, 255, 255, 255);
+            TourDigifficeBtn.FlatAppearance.BorderSize = 0;
+            TourDigifficeBtn.FlatAppearance.MouseDownBackColor = Color.FromArgb(50, 255, 255, 255);
+            TourDigifficeBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(25, 255, 255, 255);
+            TourDigifficeBtn.FlatStyle = FlatStyle.Flat;
+            TourDigifficeBtn.Font = new Font("Roboto", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            TourDigifficeBtn.ForeColor = Color.White;
+            TourDigifficeBtn.Location = new Point(175, 200);
+            TourDigifficeBtn.Name = "TourDigifficeBtn";
+            TourDigifficeBtn.Size = new Size(116, 28);
+            TourDigifficeBtn.TabIndex = 6;
+            TourDigifficeBtn.Text = "Tour Digiffice";
+            TourDigifficeBtn.UseVisualStyleBackColor = false;
+            TourDigifficeBtn.Click += TourDigifficeBtn_Click;
+            // 
             // Homepage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.HotTrack;
             ClientSize = new Size(1904, 1041);
+            Controls.Add(TourDigifficeBtn);
+            Controls.Add(VersionLabel);
             Controls.Add(ProfileNameLabel);
             Controls.Add(PfpFramePanel);
             Controls.Add(Offlinemsg);
@@ -206,5 +238,7 @@
         private Panel PfpFramePfpOutlinePanel;
         private Panel PfpFramePfpPanel;
         private Label ProfileNameLabel;
+        private Label VersionLabel;
+        private Button TourDigifficeBtn;
     }
 }
