@@ -286,8 +286,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                 writer.Write("|IMGLEN: " + imgBytes.Length + Environment.NewLine);
                                 writer.Write("|IMGFMT: " + imgFormat + Environment.NewLine);
-                                writer.Write("|IMGSRC: ");
-                                writer.Write(Environment.NewLine);
+                                writer.Write("|IMGSRC: " + Environment.NewLine);
 
                                 writer.Flush(); // Ensure all text data is written before writing binary data
 

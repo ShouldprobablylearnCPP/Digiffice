@@ -1076,10 +1076,13 @@ namespace Digiffice
             {
                 DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
                 newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
+                DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
+
             };
             newRichTextBox.SizeChanged += (s, e) =>
             {
                 DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
+                DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
             };
             newRichTextBox.GotFocus += (s, e) =>
             {
@@ -1190,6 +1193,16 @@ namespace Digiffice
             allowedToCreateTextBoxOnPage = allowedToCreateTextBoxOnPageLocal;
             allnoteFile_SavedAfterLatestChange = allnoteFile_SavedAfterLatestChangeLocal;
             isInDrawingMode = isInDrawingModeLocal;
+
+            // Set windowmsg if allnoteFile_SavedAfterLatestChange is false
+            if (!allnoteFile_SavedAfterLatestChangeLocal && Windowmsg.Visible && editorNotebook != null)
+            {
+                Windowmsg.Text = editorNotebook.fileName + "* - Digiffice Allnote";
+            }
+            else if (allnoteFile_SavedAfterLatestChangeLocal && Windowmsg.Visible && editorNotebook != null)
+            {
+                Windowmsg.Text = editorNotebook.fileName + " - Digiffice Allnote";
+            }
         }
 
         public Bitmap CreateBitmapFromControl(Control control)
@@ -1288,7 +1301,7 @@ namespace Digiffice
                         fileWriter.WriteDGANFile(fileToSave, chosenFilePath);
                         notebookAtLastSave = editorNotebook;
                         openFilePath = chosenFilePath;
-                        allnoteFile_SavedAfterLatestChange = true;
+                        DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
                     }
                 }
             }
@@ -1297,7 +1310,7 @@ namespace Digiffice
                 DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
                 fileWriter.WriteDGANFile(fileToSave, filePath);
                 notebookAtLastSave = editorNotebook;
-                allnoteFile_SavedAfterLatestChange = true;
+                DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
             }
         }
 
@@ -1347,6 +1360,7 @@ namespace Digiffice
 
                 DigifficeAllnote_CloseNotebook();
                 DigifficeAllnote_ShowNote(openedFile);
+                DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
             }
         }
     }

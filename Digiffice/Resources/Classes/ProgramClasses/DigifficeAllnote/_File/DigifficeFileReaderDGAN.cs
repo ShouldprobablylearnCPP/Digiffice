@@ -700,6 +700,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                             string imgLenStr = string.Empty;
                             string imgFormat = string.Empty;
 
+                            Point imgLocation = Point.Empty;
+                            Size imgSize = Size.Empty;
+
                             while (readingDraggableSizablePictureBox)
                             {
                                 string dspLine = br.ReadString().Trim();
@@ -771,7 +774,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                         if (float.TryParse(pagePosXStr, out float pagePosX) && float.TryParse(pagePosYStr, out float pagePosY))
                                         {
-                                            draggableSizablePictureBoxHost.Location = new Point((int)pagePosX, (int)pagePosY);
+                                            imgLocation = new Point((int)pagePosX, (int)pagePosY);
                                         }
                                     }
 
@@ -791,7 +794,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                         if (float.TryParse(pageSizeXStr, out float pageSizeX) && float.TryParse(pageSizeYStr, out float pageSizeY))
                                         {
-                                            draggableSizablePictureBoxHost.Size = new Size((int)pageSizeX, (int)pageSizeY);
+                                            imgSize = new Size((int)pageSizeX, (int)pageSizeY);
                                         }
                                     }
 
@@ -808,51 +811,32 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                 if (dspLine.StartsWith("IMGSRC: ")) // For some reason during testing the line doesn't include the leading '|' EVEN THOUGH THE WRITER WRITES IT!!!!!!! So we read it without the leading '|
                                 {
-                                    BitmapDecoder decoder = null;
+                                    int imgBytesLen = int.TryParse(imgLenStr, out int imgLen) ? imgLen : 0;
+                                    byte[] imgBytes = br.ReadBytes(imgBytesLen);
 
-                                    using (MemoryStream imageStream = new MemoryStream())
+                                    using (MemoryStream ms = new MemoryStream(imgBytes))
                                     {
-                                        imageStream.Position = 0;
+                                        System.Windows.Controls.Image img = new System.Windows.Controls.Image();
 
-                                        switch (imgFormat)
+                                        BitmapSource bitmapSource = null;
+                                        try
                                         {
-                                            case "png":
-                                                decoder = new PngBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                                                break;
-
-                                            case "jpeg":
-                                                decoder = new JpegBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                                                break;
-
-                                            case "bmp":
-                                                decoder = new BmpBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                                                break;
-
-                                            case "gif":
-                                                decoder = new GifBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                                                break;
-
-                                            case "tiff":
-                                                decoder = new TiffBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                                                break;
-
-                                            case "wmp":
-                                                decoder = new WmpBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                                                break;
-
-                                            default:
-                                                decoder = new PngBitmapDecoder(imageStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default); // Default to PNG
-                                                break;
+                                            BitmapImage bitmapImage = new BitmapImage();
+                                            bitmapImage.BeginInit();
+                                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Ensure the stream can be closed after loading the image
+                                            bitmapImage.StreamSource = ms;
+                                            bitmapImage.EndInit();
+                                            bitmapImage.Freeze(); // Freeze the BitmapImage for cross-thread operations
+                                            bitmapSource = bitmapImage;
                                         }
-                                    }
+                                        catch (Exception ex)
+                                        {
+                                            MessageBox.Show($"Error loading image: {ex.Message}");
+                                        }
 
-                                    MessageBox.Show($"Image format: {imgFormat}\nImage length in bytes: {imgLenStr}");
-
-                                    if (decoder != null)
-                                    {
-                                        BitmapSource bitmapSource = decoder.Frames[0];
-
-                                        draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox(imgFormat, bitmapSource, true);
+                                        draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox(imgFormat, bitmapSource, false);
+                                        draggableSizablePictureBoxHost.Location = imgLocation;
+                                        draggableSizablePictureBoxHost.Size = imgSize;
                                     }
                                 }
                             }
