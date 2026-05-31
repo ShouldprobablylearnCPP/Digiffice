@@ -1155,9 +1155,12 @@ namespace Digiffice
             // Set ElementHost child
             elementHost.Child = draggableSizablePicturebox;
 
-            // Add PictureBox to current page
-            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
-            pagebg.Controls.Add(elementHost);
+            if (addToCtrl)
+            {
+                // Add PictureBox to current page
+                Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+                pagebg.Controls.Add(elementHost);
+            }
 
             // Add PictureBox to currentPage's pageElements for saving/loading purposes
             if (addToCtrl)

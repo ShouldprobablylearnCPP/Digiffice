@@ -720,7 +720,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Error: RichTextBox element found with no parent page or subpage.");
+                                        MessageBox.Show("Error: DSP element found with no parent page or subpage.");
                                     }
 
                                     readingDraggableSizablePictureBox = false;
@@ -798,45 +798,40 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                         }
                                     }
 
-                                    if (dspLine.Contains("|IMGLEN: "))
-                                    {
-                                        imgLenStr = dspLine.Substring(dspLine.IndexOf("|IMGLEN: ") + 9).Trim();
-                                    }
-
                                     if (dspLine.Contains("|IMGFMT: "))
                                     {
                                         imgFormat = dspLine.Substring(dspLine.IndexOf("|IMGFMT: ") + 9).Trim().ToLower();
                                     }
-                                }
 
-                                if (dspLine.StartsWith("IMGSRC: ")) // For some reason during testing the line doesn't include the leading '|' EVEN THOUGH THE WRITER WRITES IT!!!!!!! So we read it without the leading '|
-                                {
-                                    int imgBytesLen = int.TryParse(imgLenStr, out int imgLen) ? imgLen : 0;
-                                    byte[] imgBytes = br.ReadBytes(imgBytesLen);
-
-                                    using (MemoryStream ms = new MemoryStream(imgBytes))
+                                    if (dspLine.Contains("|IMGSRC:"))
                                     {
-                                        System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                                        int imgBytesLen = br.ReadInt32();
+                                        byte[] imgBytes = br.ReadBytes(imgBytesLen);
 
-                                        BitmapSource bitmapSource = null;
-                                        try
+                                        using (MemoryStream ms = new MemoryStream(imgBytes))
                                         {
-                                            BitmapImage bitmapImage = new BitmapImage();
-                                            bitmapImage.BeginInit();
-                                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Ensure the stream can be closed after loading the image
-                                            bitmapImage.StreamSource = ms;
-                                            bitmapImage.EndInit();
-                                            bitmapImage.Freeze(); // Freeze the BitmapImage for cross-thread operations
-                                            bitmapSource = bitmapImage;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            MessageBox.Show($"Error loading image: {ex.Message}");
-                                        }
+                                            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
 
-                                        draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox(imgFormat, bitmapSource, false);
-                                        draggableSizablePictureBoxHost.Location = imgLocation;
-                                        draggableSizablePictureBoxHost.Size = imgSize;
+                                            BitmapSource bitmapSource = null;
+                                            try
+                                            {
+                                                BitmapImage bitmapImage = new BitmapImage();
+                                                bitmapImage.BeginInit();
+                                                bitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Ensure the stream can be closed after loading the image
+                                                bitmapImage.StreamSource = ms;
+                                                bitmapImage.EndInit();
+                                                bitmapImage.Freeze(); // Freeze the BitmapImage for cross-thread operations
+                                                bitmapSource = bitmapImage;
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                MessageBox.Show($"Error loading image: {ex.Message}");
+                                            }
+
+                                            draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox(imgFormat, bitmapSource, false);
+                                            draggableSizablePictureBoxHost.Location = imgLocation;
+                                            draggableSizablePictureBoxHost.Size = imgSize;
+                                        }
                                     }
                                 }
                             }

@@ -190,13 +190,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                             {
                                 writer.Write("/DRAGGABLESIZABLEPICTUREBOX" + Environment.NewLine);
                                 writer.Write("|PARENTPAGENUM: " + page.pageNum + Environment.NewLine);
-                                writer.Write("|PARENTSUBPAGENUM: -1" + Environment.NewLine); // DraggableSizablePicturebox is not in subpage, set to -1
+                                writer.Write("|PARENTSUBPAGENUM: -1"); // DraggableSizablePicturebox is in page, set to -1
                                 writer.Write("|PAGEPOS: " + item.Location + Environment.NewLine);
                                 writer.Write("|SIZE: " + item.Size + Environment.NewLine);
-
                                 BitmapEncoder encoder = getFormatFromImageSource(dsp);
-                                string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper();
-
+                                string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper().Trim();
                                 var bitmapSource = dsp.baseImg.Source as BitmapSource;
                                 if (bitmapSource != null)
                                 {
@@ -214,17 +212,13 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                     imgBytes = ms.ToArray();
                                 }
 
-                                writer.Write("|IMGLEN: " + imgBytes.Length + Environment.NewLine);
                                 writer.Write("|IMGFMT: " + imgFormat + Environment.NewLine);
-                                writer.Write("|IMGSRC: ".ToCharArray());
+                                writer.Write("|IMGSRC: " + Environment.NewLine);
 
-                                writer.Flush(); // Ensure all text data is written before writing binary data
-
+                                writer.Write(imgBytes.Length);
                                 writer.Write(imgBytes); // Write binary image data directly to the file
 
-                                writer.Flush(); // Ensure all binary data is written
-
-                                writer.Write(Environment.NewLine.ToCharArray());
+                                writer.Write(Environment.NewLine);
 
                                 writer.Write("\\" + Environment.NewLine);
                                 writer.Write(Environment.NewLine);
@@ -266,7 +260,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                 writer.Write("|PAGEPOS: " + item.Location + Environment.NewLine);
                                 writer.Write("|SIZE: " + item.Size + Environment.NewLine);
                                 BitmapEncoder encoder = getFormatFromImageSource(dsp);
-                                string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper();
+                                string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper().Trim();
                                 var bitmapSource = dsp.baseImg.Source as BitmapSource;
                                 if (bitmapSource != null)
                                 {
@@ -284,15 +278,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                     imgBytes = ms.ToArray();
                                 }
 
-                                writer.Write("|IMGLEN: " + imgBytes.Length + Environment.NewLine);
                                 writer.Write("|IMGFMT: " + imgFormat + Environment.NewLine);
                                 writer.Write("|IMGSRC: " + Environment.NewLine);
 
-                                writer.Flush(); // Ensure all text data is written before writing binary data
-
+                                writer.Write(imgBytes.Length);
                                 writer.Write(imgBytes); // Write binary image data directly to the file
-
-                                writer.Flush(); // Ensure all binary data is written
 
                                 writer.Write(Environment.NewLine);
 
