@@ -706,7 +706,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                             while (readingDraggableSizablePictureBox)
                             {
                                 string dspLine = br.ReadString().Trim();
-                                MessageBox.Show($"DraggableSizablePictureBox line: {dspLine}");
 
                                 if (dspLine == "\\")
                                 {
