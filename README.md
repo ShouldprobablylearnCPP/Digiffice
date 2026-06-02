@@ -44,29 +44,6 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 === 4 - UI ===
 - The Interface of Digiffice will be similar to that of other office software suites, however there will be mostly slight differences. Despite this, it should still be easy to use.
 
-# ROADMAP 🛠️
-
-Current Version: 0.x (alpha/pre-release)
-
-NOTE: These goals are not in any order (except for short vs long term)
-
-=== Short-Term ===
-- full .dgan File Reading
-- More drawing features in note-taker
-- P2P Networking via WebRTC
-- P2P Collaboration
-- Basic file editors (e.g .txt) in collaboration software
-- Client-Server Networking/Collaboration
-- Fully functional DPI scaling
-- More homepage features
-
-=== Long-Term (1.0) ===
-- Full suite of tools (Slideshow editor, Spreadsheet engine, etc)
-- Full Customisation
-- Compatibility with ODF (Open Document Format) and XAML Formats (.docx, .pptx etc).
-
-There are likely goals that have been missed - the point here is to give you an idea of what Digiffice will include at 1.0 ans what the focus is right now.
-
 # FAQs
 
 # CONCLUSION:
