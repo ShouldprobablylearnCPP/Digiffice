@@ -827,7 +827,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                                 MessageBox.Show($"Error loading image: {ex.Message}");
                                             }
 
-                                            draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox(imgFormat, bitmapSource, false);
+                                            draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox("." + imgFormat, bitmapSource, false);
                                             draggableSizablePictureBoxHost.Location = imgLocation;
                                             draggableSizablePictureBoxHost.Size = imgSize;
                                         }

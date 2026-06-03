@@ -10,9 +10,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
     {
         // Class Elements
         Button InsertImageBtn;
+        Button InsertTableBtn;
 
         // Prerequisite variables
         public EventHandler InsertImageBtn_Click;
+        public EventHandler InsertTableBtn_Click;
 
         public void InitialiseUI(Panel rbnPnl)
         {
@@ -24,10 +26,31 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
                 return;
             }
 
+            // InsertTableBtn
+            InsertTableBtn = new Button();
+            InsertTableBtn.Name = "InsertTableButton";
+            InsertTableBtn.Location = new Point(20, 20);
+            InsertTableBtn.Size = new Size(110, 110);
+            InsertTableBtn.Text = "Table";
+            InsertTableBtn.TextAlign = ContentAlignment.BottomCenter;
+            InsertTableBtn.Font = new Font("Roboto", 8, FontStyle.Regular);
+            InsertTableBtn.BackColor = Color.Transparent;
+            InsertTableBtn.Cursor = Cursors.Hand;
+
+            InsertTableBtn.FlatStyle = FlatStyle.Flat;
+            InsertTableBtn.FlatAppearance.BorderSize = 0;
+            InsertTableBtn.FlatAppearance.BorderColor = Color.FromArgb(0, 0, 0, 0);
+            InsertTableBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            InsertTableBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
+            InsertTableBtn.Click += InsertTableBtn_Click;
+
+            rbnPnl.Controls.Add(InsertTableBtn);
+
             // InsertImageBtn
             InsertImageBtn = new Button();
             InsertImageBtn.Name = "InsertImageButton";
-            InsertImageBtn.Location = new Point(20, 20);
+            InsertImageBtn.Location = new Point(140, 20);
             InsertImageBtn.Size = new Size(110, 110);
             InsertImageBtn.Text = "Images ⮟";
             InsertImageBtn.TextAlign = ContentAlignment.BottomCenter;
@@ -46,9 +69,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             rbnPnl.Controls.Add(InsertImageBtn);
         }
 
-        public void Prerequisities_InitialiseUI(EventHandler insertImgBtnClick)
+        public void Prerequisities_InitialiseUI(EventHandler insertImgBtnClick, EventHandler insertTableBtnClick)
         {
             InsertImageBtn_Click = insertImgBtnClick;
+            InsertTableBtn_Click = insertTableBtnClick;
         }
     }
 }

@@ -595,7 +595,7 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            insertTabContents.Prerequisities_InitialiseUI(InsertImageBtn_Click);
+            insertTabContents.Prerequisities_InitialiseUI(InsertImageBtn_Click, InsertTableBtn_Click);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             insertTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = InsertTab;
@@ -883,6 +883,12 @@ namespace Digiffice
             }
         }
 
+        private void InsertTableBtn_Click(object sender, EventArgs e)
+        {
+            DigifficeAllnote_InsertTable insertTableForm = new DigifficeAllnote_InsertTable();
+            insertTableForm.ShowDialog();
+        }
+
         // Events for DigifficeAllnoteHomeTab
 
         // Events for DigifficeAllnoteDrawTab
@@ -903,7 +909,7 @@ namespace Digiffice
                 InkCanvas_EditingModeChanged();
             }
         }
-        
+
         // InkCanvas Functions/Events
         private void InkCanvas_EditingModeChanged()
         {
