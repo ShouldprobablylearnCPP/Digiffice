@@ -30,8 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DigifficeAllnote_InsertTable));
             NumColsLabel = new Label();
-            classicNumericUpDown1 = new Digiffice.Resources.Classes.ProgramClasses.CustomControls.ClassicNumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)classicNumericUpDown1).BeginInit();
+            ColsNumericUpDown = new Digiffice.Resources.Classes.ProgramClasses.CustomControls.ClassicNumericUpDown();
+            RowsNumericUpDown = new Digiffice.Resources.Classes.ProgramClasses.CustomControls.ClassicNumericUpDown();
+            NumRowsLabel = new Label();
+            OKBtn = new Button();
+            CancelBtn = new Button();
+            ((System.ComponentModel.ISupportInitialize)ColsNumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)RowsNumericUpDown).BeginInit();
             SuspendLayout();
             // 
             // NumColsLabel
@@ -43,24 +48,65 @@
             NumColsLabel.Size = new Size(117, 14);
             NumColsLabel.TabIndex = 0;
             NumColsLabel.Text = "Number of Columns";
-            NumColsLabel.Paint += NumColsLabel_Paint;
             // 
-            // classicNumericUpDown1
+            // ColsNumericUpDown
             // 
-            classicNumericUpDown1.Location = new Point(135, 6);
-            classicNumericUpDown1.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
-            classicNumericUpDown1.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            classicNumericUpDown1.Name = "classicNumericUpDown1";
-            classicNumericUpDown1.Size = new Size(33, 23);
-            classicNumericUpDown1.TabIndex = 1;
-            classicNumericUpDown1.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            ColsNumericUpDown.Location = new Point(135, 6);
+            ColsNumericUpDown.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
+            ColsNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            ColsNumericUpDown.Name = "ColsNumericUpDown";
+            ColsNumericUpDown.Size = new Size(33, 23);
+            ColsNumericUpDown.TabIndex = 1;
+            ColsNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
+            // RowsNumericUpDown
+            // 
+            RowsNumericUpDown.Location = new Point(135, 35);
+            RowsNumericUpDown.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
+            RowsNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            RowsNumericUpDown.Name = "RowsNumericUpDown";
+            RowsNumericUpDown.Size = new Size(33, 23);
+            RowsNumericUpDown.TabIndex = 3;
+            RowsNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
+            // NumRowsLabel
+            // 
+            NumRowsLabel.AutoSize = true;
+            NumRowsLabel.Font = new Font("Roboto", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NumRowsLabel.Location = new Point(12, 38);
+            NumRowsLabel.Name = "NumRowsLabel";
+            NumRowsLabel.Size = new Size(97, 14);
+            NumRowsLabel.TabIndex = 2;
+            NumRowsLabel.Text = "Number of Rows";
+            // 
+            // OKBtn
+            // 
+            OKBtn.Location = new Point(12, 172);
+            OKBtn.Name = "OKBtn";
+            OKBtn.Size = new Size(75, 23);
+            OKBtn.TabIndex = 4;
+            OKBtn.Text = "OK";
+            OKBtn.UseVisualStyleBackColor = true;
+            // 
+            // CancelBtn
+            // 
+            CancelBtn.Location = new Point(93, 172);
+            CancelBtn.Name = "CancelBtn";
+            CancelBtn.Size = new Size(75, 23);
+            CancelBtn.TabIndex = 5;
+            CancelBtn.Text = "Cancel";
+            CancelBtn.UseVisualStyleBackColor = true;
             // 
             // DigifficeAllnote_InsertTable
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(180, 207);
-            Controls.Add(classicNumericUpDown1);
+            Controls.Add(CancelBtn);
+            Controls.Add(OKBtn);
+            Controls.Add(RowsNumericUpDown);
+            Controls.Add(NumRowsLabel);
+            Controls.Add(ColsNumericUpDown);
             Controls.Add(NumColsLabel);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -70,7 +116,8 @@
             Name = "DigifficeAllnote_InsertTable";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Insert Table";
-            ((System.ComponentModel.ISupportInitialize)classicNumericUpDown1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ColsNumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)RowsNumericUpDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -78,6 +125,10 @@
         #endregion
 
         private Label NumColsLabel;
-        private Resources.Classes.ProgramClasses.CustomControls.ClassicNumericUpDown classicNumericUpDown1;
+        private Resources.Classes.ProgramClasses.CustomControls.ClassicNumericUpDown ColsNumericUpDown;
+        private Resources.Classes.ProgramClasses.CustomControls.ClassicNumericUpDown RowsNumericUpDown;
+        private Label NumRowsLabel;
+        private Button OKBtn;
+        private Button CancelBtn;
     }
 }

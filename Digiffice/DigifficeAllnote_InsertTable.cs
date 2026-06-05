@@ -17,10 +17,5 @@ namespace Digiffice
         {
             InitializeComponent();
         }
-
-        private void NumColsLabel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }
