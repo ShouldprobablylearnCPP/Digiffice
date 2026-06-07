@@ -81,21 +81,25 @@
             // 
             // OKBtn
             // 
+            OKBtn.FlatStyle = FlatStyle.System;
             OKBtn.Location = new Point(12, 172);
             OKBtn.Name = "OKBtn";
             OKBtn.Size = new Size(75, 23);
             OKBtn.TabIndex = 4;
             OKBtn.Text = "OK";
             OKBtn.UseVisualStyleBackColor = true;
+            OKBtn.Click += OKBtn_Click;
             // 
             // CancelBtn
             // 
+            CancelBtn.FlatStyle = FlatStyle.System;
             CancelBtn.Location = new Point(93, 172);
             CancelBtn.Name = "CancelBtn";
             CancelBtn.Size = new Size(75, 23);
             CancelBtn.TabIndex = 5;
             CancelBtn.Text = "Cancel";
             CancelBtn.UseVisualStyleBackColor = true;
+            CancelBtn.Click += CancelBtn_Click;
             // 
             // DigifficeAllnote_InsertTable
             // 
@@ -114,7 +118,7 @@
             MaximumSize = new Size(200, 250);
             MinimizeBox = false;
             Name = "DigifficeAllnote_InsertTable";
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Insert Table";
             ((System.ComponentModel.ISupportInitialize)ColsNumericUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)RowsNumericUpDown).EndInit();

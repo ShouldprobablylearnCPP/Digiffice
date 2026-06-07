@@ -173,6 +173,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BinIcon2 {
+            get {
+                object obj = ResourceManager.GetObject("BinIcon2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ControlButton {
             get {
                 object obj = ResourceManager.GetObject("ControlButton", resourceCulture);

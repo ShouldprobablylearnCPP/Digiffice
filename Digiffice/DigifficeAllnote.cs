@@ -706,6 +706,16 @@ namespace Digiffice
             return (int)pixel;
         }
 
+        private void DigifficeAllnote_UpdateTableFrameSize(Panel pnl, DataGridView table)
+        {
+            int totalWidth = table.Columns.GetColumnsWidth(DataGridViewElementStates.Visible);
+            int totalHeight = table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            table.Width = totalWidth + 1;
+            table.Height = totalHeight + 1;
+
+            pnl.Size = new Size(totalWidth + 1, totalHeight + 11);
+        }
+
         private void SectionBG_Paint(object sender, PaintEventArgs e)
         {
             this.SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 60);
@@ -886,7 +896,12 @@ namespace Digiffice
         private void InsertTableBtn_Click(object sender, EventArgs e)
         {
             DigifficeAllnote_InsertTable insertTableForm = new DigifficeAllnote_InsertTable();
-            insertTableForm.ShowDialog();
+            DialogResult dialogResult = insertTableForm.ShowDialog();
+
+            if (dialogResult == DialogResult.OK)
+            {
+                DataGridView tableDataGridView = DigifficeAllnote_Table(insertTableForm.Rows, insertTableForm.Cols, true);
+            }
         }
 
         // Events for DigifficeAllnoteHomeTab
@@ -1127,8 +1142,11 @@ namespace Digiffice
             // Focuses on new RichTextBox
             newRichTextBox.Focus();
 
-            // Adds new RichTextBox to Page Elements
-            currentPage.pageElements.Add(newPanel);
+            if (addToCtrl)
+            {
+                // Adds new RichTextBox to Page Elements
+                currentPage.pageElements.Add(newPanel);
+            }
 
             // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
             DigifficeAllnote_ChangeEditingVariables(false, false, isInDrawingMode);
@@ -1176,6 +1194,114 @@ namespace Digiffice
             }
 
             return elementHost;
+        }
+
+        public DataGridView DigifficeAllnote_Table(int rows, int cols, bool addToCtrl)
+        {
+            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+
+            Panel parentPnl = new Panel();
+            parentPnl.Tag = "NewPnl_Table";
+            parentPnl.Location = new Point(200, 200);
+            parentPnl.BackColor = Color.Gray;
+
+            // Make Parent Panel Draggable
+            bool isDragging = false;
+
+            // newPanel events
+            parentPnl.MouseDown += (s, e) =>
+            {
+                isDragging = true;
+                this.ActiveControl = parentPnl;
+            };
+            parentPnl.MouseUp += (s, e) =>
+            {
+                isDragging = false;
+            };
+            parentPnl.MouseMove += (s, e) =>
+            {
+                if (isDragging)
+                {
+                    int newX = parentPnl.Location.X + e.X - (parentPnl.Width / 2);
+                    int newY = parentPnl.Location.Y + e.Y;
+                    parentPnl.Location = new Point(newX, newY);
+                }
+            };
+
+            // Create Remove Button
+            Button removeBtn = new Button();
+            removeBtn.Size = new Size(8, 8);
+            removeBtn.Location = new Point(1, 1);
+            removeBtn.FlatStyle = FlatStyle.Flat;
+            removeBtn.FlatAppearance.BorderSize = 0;
+            removeBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            removeBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            removeBtn.BackgroundImage = Properties.Resources.BinIcon2;
+            removeBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            removeBtn.Cursor = Cursors.Hand;
+
+            // removeBtn events
+            removeBtn.Click += (s, e) =>
+            {
+                // Removes active control and allows a new RichTextBox to be created on the page
+                DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
+
+                // Remove parentPnl
+                currentPage.pageElements.Remove(parentPnl);
+                pagebg.Controls.Remove(parentPnl);
+                parentPnl.Dispose();
+            };
+            parentPnl.Controls.Add(removeBtn);
+
+            DataGridView table = new DataGridView();
+            table.Location = new Point(0, 10);
+            table.RowCount = rows;
+            table.ColumnCount = cols;
+            table.AutoSize = true;
+            table.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            table.ColumnHeadersVisible = false;
+            table.EnableHeadersVisualStyles = false;
+            table.RowHeadersVisible = false;
+            table.BorderStyle = BorderStyle.None;
+            table.AllowUserToAddRows = true;
+            table.AllowUserToDeleteRows = true;
+            table.AllowUserToResizeRows = true;
+            table.AllowUserToResizeColumns = true;
+            table.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            table.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None; // Lock in place after setting fill size
+            table.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+            table.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None; // Lock in place after setting displayed cells size
+            table.ScrollBars = ScrollBars.None;
+            table.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
+            table.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
+
+            table.Layout += (s, e) =>
+            {
+                DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
+            };
+
+            table.CellValueChanged += (s, e) =>
+            {
+                if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+                table.AutoResizeColumn(e.ColumnIndex, DataGridViewAutoSizeColumnMode.AllCells);
+                table.AutoResizeRow(e.RowIndex, DataGridViewAutoSizeRowMode.AllCells);
+                DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
+            };
+
+            // Todo: Resize while mouse dragging so that the end rows can be resized.
+            // Todo: Multi-line table text
+
+            parentPnl.Controls.Add(table);
+
+            if (addToCtrl)
+            {
+                pagebg.Controls.Add(parentPnl);
+            }
+
+            return table;
         }
 
         // Other Functions

@@ -80,7 +80,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
                     if (dr.Read() == true)
                     {
-                        
+                        PeerConnection peerConnection = new PeerConnection();
                     }
                 }
             }
