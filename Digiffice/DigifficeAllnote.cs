@@ -1117,15 +1117,6 @@ namespace Digiffice
             };
             newRichTextBox.KeyDown += (s, e) =>
             {
-                if (e.KeyCode == Keys.Delete)
-                {
-                    // Removes newPanel
-                    this.ActiveControl = null;
-                    DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
-                    pagebg.Controls.Remove(newPanel);
-                    newPanel.Dispose();
-                }
-
                 if (e.KeyCode == Keys.Escape)
                 {
                     // Defocuses RichTextBox

@@ -23,6 +23,8 @@ namespace DigifficeWPFControls
         // Variables
         public bool IsTransforming { get; set; } = false;
         public bool IsDragging { get; set; } = false;
+        public Point draggingMouseOrigin;
+        public Point draggingObjectOrigin;
 
         public DraggableSizablePicturebox()
         {
@@ -50,9 +52,17 @@ namespace DigifficeWPFControls
             this.Height = baseImg.Height + 5; // Add some padding for the resizers
         }
 
-        private void BaseImg_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void BaseImg_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (IsTransforming)
+            {
+                IsDragging = true;
+            }
+        }
+
+        private void BaseImg_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (IsTransforming && !IsDragging)
             {
                 // Hide the resizers when the user finishes transforming
                 topLeftResizer.Visibility = Visibility.Hidden;
@@ -65,7 +75,7 @@ namespace DigifficeWPFControls
                 rightResizer.Visibility = Visibility.Hidden;
                 IsTransforming = false;
             }
-            else
+            else if (!IsTransforming)
             {
                 // Show the resizers when the user clicks on the image
                 topLeftResizer.Visibility = Visibility.Visible;
@@ -77,6 +87,14 @@ namespace DigifficeWPFControls
                 leftResizer.Visibility = Visibility.Visible;
                 rightResizer.Visibility = Visibility.Visible;
                 IsTransforming = true;
+            } else if (IsTransforming)
+            {
+
+            }
+
+            if (IsDragging)
+            {
+                IsDragging = false;
             }
         }
     }
