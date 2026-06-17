@@ -66,23 +66,26 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
             {
                 OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
                 OleDbCommand cmd = new OleDbCommand();
+                OleDbDataReader dr = null;
 
                 con.Open();
                 cmd.Connection = con;
-                cmd.CommandText = "SELECT user_ipv4 FROM Digiffice_Accounts WHERE username = '" + user + "'"; // Todo: add ipv6 support
-                OleDbDataReader dr = cmd.ExecuteReader();
 
-                if (dr.Read() == true)
+                // Use this when the database is live.
+                //string ipv4 = retrieveIPV4Info(user, dr, cmd);
+                //string ipv6 = retrieveIPV6Info(user, dr, cmd);
+                //string port = retrievePortInfo(user, dr, cmd);
+
+                string ipv4 = "Dummy value"; // Todo: Make the user input the data for testing.
+                string ipv6 = "Dummy value";
+                string port = "Dummy value";
+
+                if (ipv4 != null || ipv4 != "" || ipv6 != null || ipv6 != "" || port != null || port != "")
                 {
-                    dr.Close();
-                    cmd.CommandText = "SELECT user_port FROM Digiffice_Accounts WHERE username = '" + user + "'";
-                    dr = cmd.ExecuteReader();
-
-                    if (dr.Read() == true)
-                    {
-                        PeerConnection peerConnection = new PeerConnection();
-                    }
+                    PeerConnection peerConnection = new PeerConnection();
                 }
+
+                con.Close();
             }
         }
 
@@ -99,6 +102,42 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
         public void disconnectP2PNode()
         {
             // Todo: Disconnect from the network by severing the connection.
+        }
+
+        public string retrieveIPV4Info(string user, OleDbDataReader dr, OleDbCommand cmd)
+        {
+            string returnStr;
+
+            cmd.CommandText = "SELECT user_ipv4 FROM Digiffice_Accounts WHERE username = '" + user + "'";
+            dr = cmd.ExecuteReader();
+            returnStr = dr.Read() ? dr["user_ipv4"].ToString() : "";
+            dr.Close();
+
+            return returnStr;
+        }
+
+        public string retrieveIPV6Info(string user, OleDbDataReader dr, OleDbCommand cmd)
+        {
+            string returnStr;
+
+            cmd.CommandText = "SELECT user_ipv6 FROM Digiffice_Accounts WHERE username = '" + user + "'";
+            dr = cmd.ExecuteReader();
+            returnStr = dr.Read() ? dr["user_ipv6"].ToString() : "";
+            dr.Close();
+
+            return returnStr;
+        }
+
+        public string retrievePortInfo(string user, OleDbDataReader dr, OleDbCommand cmd)
+        {
+            string returnStr;
+
+            cmd.CommandText = "SELECT user_port FROM Digiffice_Accounts WHERE username = '" + user + "'";
+            dr = cmd.ExecuteReader();
+            returnStr = dr.Read() ? dr["user_port"].ToString() : "";
+            dr.Close();
+
+            return returnStr;
         }
     }
 }
