@@ -22,9 +22,8 @@ namespace DigifficeWPFControls
     {
         // Variables
         public bool IsTransforming { get; set; } = false;
+        public bool IsDragReady { get; set; } = false;
         public bool IsDragging { get; set; } = false;
-        public Point draggingMouseOrigin;
-        public Point draggingObjectOrigin;
 
         public DraggableSizablePicturebox()
         {
@@ -56,7 +55,7 @@ namespace DigifficeWPFControls
         {
             if (IsTransforming)
             {
-                IsDragging = true;
+                IsDragReady = true;
             }
         }
 
@@ -87,14 +86,12 @@ namespace DigifficeWPFControls
                 leftResizer.Visibility = Visibility.Visible;
                 rightResizer.Visibility = Visibility.Visible;
                 IsTransforming = true;
-            } else if (IsTransforming)
-            {
-
             }
 
-            if (IsDragging)
+            if (IsDragging || IsDragReady)
             {
                 IsDragging = false;
+                IsDragReady = false;
             }
         }
     }

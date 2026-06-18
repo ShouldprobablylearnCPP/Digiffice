@@ -83,6 +83,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                 if (ipv4 != null || ipv4 != "" || ipv6 != null || ipv6 != "" || port != null || port != "")
                 {
                     PeerConnection peerConnection = new PeerConnection();
+                    string sdp = "";
                 }
 
                 con.Close();

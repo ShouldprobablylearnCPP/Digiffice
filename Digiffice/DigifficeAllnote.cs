@@ -1154,6 +1154,10 @@ namespace Digiffice
             elementHost.AutoSize = true;
             elementHost.BackColorTransparent = true;
 
+            // Create points
+            Point elementInitPoint = new Point();
+            Point mouseInitPoint = new Point();
+
             DraggableSizablePicturebox draggableSizablePicturebox = new DraggableSizablePicturebox();
             draggableSizablePicturebox.Tag = fmt;
             draggableSizablePicturebox.baseImg.Source = bmpImg;
@@ -1164,7 +1168,27 @@ namespace Digiffice
             // Add drag functionality to DraggableSizablePicturebox
             draggableSizablePicturebox.baseImg.MouseMove += (s, e) =>
             {
-                // 
+                if (draggableSizablePicturebox.IsDragging)
+                {
+                    Point mousePos = Cursor.Position;
+                    int newX = elementInitPoint.X + (mousePos.X - mouseInitPoint.X);
+                    int newY = elementInitPoint.Y + (mousePos.Y - mouseInitPoint.Y);
+                    elementHost.Location = new Point(newX, newY);
+                }
+
+                if (draggableSizablePicturebox.IsDragReady && Math.Abs(mouseInitPoint.X - Cursor.Position.X) > 5 && Math.Abs(mouseInitPoint.Y - Cursor.Position.Y) > 5)
+                {
+                    draggableSizablePicturebox.IsDragging = true;
+                }
+            };
+
+            draggableSizablePicturebox.MouseDown += (s, e) =>
+            {
+                if (draggableSizablePicturebox.IsTransforming)
+                {
+                    elementInitPoint = elementHost.Location;
+                    mouseInitPoint = Cursor.Position;
+                }
             };
 
             // Set ElementHost child
