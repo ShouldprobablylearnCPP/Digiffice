@@ -17,9 +17,16 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
         private List<string> offlineUserList = new List<string>();
 
         List<PeerConnection> peerConnections = new List<PeerConnection>();
-        PeerConnectionConfiguration peerConnectionConfig = new PeerConnectionConfiguration();
+        PeerConnectionConfiguration peerConnectionConfig = new PeerConnectionConfiguration
+        {
+            SdpSemantic = SdpSemantic.UnifiedPlan,
+            IceServers = new List<IceServer>
+            {
+                new IceServer { Urls = new List<string> { "stun:stun.l.google.com:19302" } }
+            }
+        };
 
-        public void initP2PNode(string directory, string username)
+        public async Task initP2PNode(string directory, string username)
         {
             // Todo: Implement. Implementation should include: Attempt to connect to P2P network. If successful, store necessary information for future use. If unsuccessful, handle the error - let them retry, exit, and let them know to check if anyone in the network is online.
             DigifficeFileReaderDGPU fileReader = new DigifficeFileReaderDGPU();
@@ -83,7 +90,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                 if (ipv4 != null || ipv4 != "" || ipv6 != null || ipv6 != "" || port != null || port != "")
                 {
                     PeerConnection peerConnection = new PeerConnection();
-                    string sdp = "";
+                    await peerConnection.InitializeAsync(peerConnectionConfig);
+
+                    peerConnection.IceCandidateReadytoSend += (IceCandidate iceCandidate) =>
+                    {
+
+                    };
                 }
 
                 con.Close();

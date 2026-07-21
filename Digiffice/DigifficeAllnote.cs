@@ -300,6 +300,7 @@ namespace Digiffice
             // Add InkCanvas to PageBG
             inkCanvasHost.Child = inkCanvas;
             pagebg.Controls.Add(inkCanvasHost);
+            inkCanvasHost.SendToBack();
 
             // Set InkCanvas Editing Mode
             if (isInDrawingMode)
@@ -332,6 +333,12 @@ namespace Digiffice
 
                 }
             }
+
+            // Send inkcanvas to back when a control is added
+            pagebg.ControlAdded += (s, e) =>
+            {
+                inkCanvasHost.SendToBack();
+            };
 
             // Create a textbox anywhere on the page that is clicked
             pagebg.Click += (s, e) =>

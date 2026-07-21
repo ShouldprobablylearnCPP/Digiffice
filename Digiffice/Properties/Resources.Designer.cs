@@ -412,6 +412,26 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Post_itsButton {
+            get {
+                object obj = ResourceManager.GetObject("Post-itsButton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Post_itsButton1 {
+            get {
+                object obj = ResourceManager.GetObject("Post-itsButton1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ResizeXArrowsIcon {
             get {
                 object obj = ResourceManager.GetObject("ResizeXArrowsIcon", resourceCulture);
@@ -445,6 +465,16 @@ namespace Digiffice.Properties {
         internal static System.Drawing.Bitmap SelectedPageLabel_Allnote {
             get {
                 object obj = ResourceManager.GetObject("SelectedPageLabel_Allnote", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SimpleBG400x600 {
+            get {
+                object obj = ResourceManager.GetObject("SimpleBG400x600", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

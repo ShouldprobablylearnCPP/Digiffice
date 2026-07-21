@@ -4,9 +4,10 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                  xmlns:local="clr-namespace:DigifficeWPFControls"
+                 Background="Transparent"
                  mc:Ignorable="d">
     <Viewbox Stretch="Uniform">
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
             <Image x:Name="BaseImg" HorizontalAlignment="Left" VerticalAlignment="Top" Height="500" Margin="5,5,5,5" Width="500" Stretch="Fill" SourceUpdated="baseImg_ImgChanged" MouseLeftButtonUp="BaseImg_MouseLeftButtonUp" MouseLeftButtonDown="BaseImg_MouseLeftButtonDown"/>
             <Button x:Name="TopLeftResizer" Content="" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Height="10" Width="10" Visibility="Hidden"/>
             <Button x:Name="TopResizer" Content="" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Height="10" Width="10" Visibility="Hidden"/>

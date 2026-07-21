@@ -581,7 +581,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                 {
                                     // End of richtextbox element, break out of the loop to move on to the next element
 
-                                    // Make a default Digiffice ALlnote form so we have access to the default rtbpnl function.
+                                    // Make a default Digiffice Allnote form so we have access to the default rtbpnl function.
                                     // Make a default rtbPnl and plug in our values. Then add to the page/subpage
 
                                     Panel rtbpnl = digifficeAllnoteForm.DigifficeAllnote_DefaultRTBPnl(new Control(), false);

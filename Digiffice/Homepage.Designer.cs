@@ -41,6 +41,7 @@
             ProfileNameLabel = new Label();
             VersionLabel = new Label();
             TourDigifficeBtn = new Button();
+            MoreProgramsBtn = new Button();
             Homepanel.SuspendLayout();
             ProgramsPanel.SuspendLayout();
             PfpFramePanel.SuspendLayout();
@@ -98,7 +99,7 @@
             Offlinemsg.BackColor = Color.Transparent;
             Offlinemsg.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Offlinemsg.ForeColor = SystemColors.ControlLight;
-            Offlinemsg.Location = new Point(0, 1024);
+            Offlinemsg.Location = new Point(0, 1062);
             Offlinemsg.Name = "Offlinemsg";
             Offlinemsg.Size = new Size(459, 17);
             Offlinemsg.TabIndex = 2;
@@ -196,12 +197,32 @@
             TourDigifficeBtn.UseVisualStyleBackColor = false;
             TourDigifficeBtn.Click += TourDigifficeBtn_Click;
             // 
+            // MoreProgramsBtn
+            // 
+            MoreProgramsBtn.Anchor = AnchorStyles.Bottom;
+            MoreProgramsBtn.BackColor = Color.FromArgb(10, 255, 255, 255);
+            MoreProgramsBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            MoreProgramsBtn.FlatAppearance.BorderSize = 0;
+            MoreProgramsBtn.FlatAppearance.MouseDownBackColor = Color.FromArgb(50, 255, 255, 255);
+            MoreProgramsBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(25, 255, 255, 255);
+            MoreProgramsBtn.FlatStyle = FlatStyle.Flat;
+            MoreProgramsBtn.Font = new Font("Roboto", 14.25F, FontStyle.Italic);
+            MoreProgramsBtn.ForeColor = Color.FromArgb(0, 0, 64);
+            MoreProgramsBtn.Location = new Point(1550, 1010);
+            MoreProgramsBtn.Name = "MoreProgramsBtn";
+            MoreProgramsBtn.Size = new Size(200, 50);
+            MoreProgramsBtn.TabIndex = 7;
+            MoreProgramsBtn.Text = "More Programs...";
+            MoreProgramsBtn.UseVisualStyleBackColor = false;
+            MoreProgramsBtn.Click += MoreProgramsBtn_Click;
+            // 
             // Homepage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.HotTrack;
-            ClientSize = new Size(1904, 1041);
+            ClientSize = new Size(1904, 1080);
+            Controls.Add(MoreProgramsBtn);
             Controls.Add(TourDigifficeBtn);
             Controls.Add(VersionLabel);
             Controls.Add(ProfileNameLabel);
@@ -240,5 +261,6 @@
         private Label ProfileNameLabel;
         private Label VersionLabel;
         private Button TourDigifficeBtn;
+        private Button MoreProgramsBtn;
     }
 }

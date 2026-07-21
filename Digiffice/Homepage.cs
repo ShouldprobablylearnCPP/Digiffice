@@ -269,5 +269,11 @@ namespace Digiffice
             // set back colour
             btn.BackColor = Color.WhiteSmoke;
         }
+
+        private void MoreProgramsBtn_Click(object sender, EventArgs e)
+        {
+            MoreProgramsForm moreProgramsForm = new MoreProgramsForm();
+            moreProgramsForm.ShowDialog();
+        }
     }
 }
