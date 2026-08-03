@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute._File;
-using Microsoft.MixedReality.WebRTC;
 
 namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNode
 {
@@ -16,15 +15,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
         private List<string> onlineUserList = new List<string>();
         private List<string> offlineUserList = new List<string>();
 
-        List<PeerConnection> peerConnections = new List<PeerConnection>();
-        PeerConnectionConfiguration peerConnectionConfig = new PeerConnectionConfiguration
-        {
-            SdpSemantic = SdpSemantic.UnifiedPlan,
-            IceServers = new List<IceServer>
-            {
-                new IceServer { Urls = new List<string> { "stun:stun.l.google.com:19302" } }
-            }
-        };
+        // Connection Variables
 
         public async Task initP2PNode(string directory, string username)
         {
@@ -89,13 +80,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
                 if (ipv4 != null || ipv4 != "" || ipv6 != null || ipv6 != "" || port != null || port != "")
                 {
-                    PeerConnection peerConnection = new PeerConnection();
-                    await peerConnection.InitializeAsync(peerConnectionConfig);
 
-                    peerConnection.IceCandidateReadytoSend += (IceCandidate iceCandidate) =>
-                    {
-
-                    };
                 }
 
                 con.Close();
@@ -111,6 +96,8 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
         {
             return offlineUserList;
         }
+
+        // Connection methods
 
         public void disconnectP2PNode()
         {

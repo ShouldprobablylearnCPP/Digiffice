@@ -34,6 +34,7 @@
             Windowmsg = new Label();
             DigifficeButton = new Button();
             PeercomputeLeftBarContainerPanel = new Panel();
+            NewPeercomputeBtn = new Button();
             PeercomputeLeftBarPanel = new Panel();
             PeercomputesPanelBorder = new Panel();
             PeercomputesTab = new Panel();
@@ -118,6 +119,7 @@
             // 
             PeercomputeLeftBarContainerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             PeercomputeLeftBarContainerPanel.BackColor = Color.Transparent;
+            PeercomputeLeftBarContainerPanel.Controls.Add(NewPeercomputeBtn);
             PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputeLeftBarPanel);
             PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputesPanelBorder);
             PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputesTab);
@@ -125,6 +127,23 @@
             PeercomputeLeftBarContainerPanel.Name = "PeercomputeLeftBarContainerPanel";
             PeercomputeLeftBarContainerPanel.Size = new Size(370, 969);
             PeercomputeLeftBarContainerPanel.TabIndex = 5;
+            // 
+            // NewPeercomputeBtn
+            // 
+            NewPeercomputeBtn.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            NewPeercomputeBtn.BackColor = SystemColors.Control;
+            NewPeercomputeBtn.BackgroundImage = Properties.Resources.NewPeercomputeBtn;
+            NewPeercomputeBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            NewPeercomputeBtn.FlatAppearance.BorderSize = 0;
+            NewPeercomputeBtn.FlatStyle = FlatStyle.Flat;
+            NewPeercomputeBtn.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            NewPeercomputeBtn.Location = new Point(1, 41);
+            NewPeercomputeBtn.Name = "NewPeercomputeBtn";
+            NewPeercomputeBtn.Size = new Size(369, 40);
+            NewPeercomputeBtn.TabIndex = 0;
+            NewPeercomputeBtn.TextAlign = ContentAlignment.MiddleLeft;
+            NewPeercomputeBtn.UseVisualStyleBackColor = false;
+            NewPeercomputeBtn.Click += NewPeercomputeBtn_Click;
             // 
             // PeercomputeLeftBarPanel
             // 
@@ -246,5 +265,6 @@
         private Panel CurrentPeercomputeBorderPanel;
         private Panel CurrentPeercomputeBackgroundPanel;
         private Panel CurrentPeercomputeDataPanel;
+        private Button NewPeercomputeBtn;
     }
 }

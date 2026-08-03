@@ -79,7 +79,7 @@ namespace Digiffice
                 PeercomputeLeftBarPanel.Controls.Clear();
 
                 // Loop through each directory and create a label for it in the left bar panel
-                int yOffset = 0;
+                int yOffset = 40;
                 foreach (string directory in PeercomputeDirectories)
                 {
                     DigifficePeercompute_CreatePeercomputeEntryControl(0, yOffset, directory, PeercomputeLeftBarPanel, true, false);
@@ -214,7 +214,7 @@ namespace Digiffice
             }
         }
 
-        // Tab Events
+        // Events for PeercomputesTab
         private void PeercomputesTab_Click(object sender, EventArgs e)
         {
             if (selectedLeftbarTab != null)
@@ -225,6 +225,19 @@ namespace Digiffice
             selectedLeftbarTab = PeercomputesTab;
             PeercomputesTab.Location = new Point(PeercomputesTab.Location.X, PeercomputesTab.Location.Y - 10);
             DigifficePeercompute_ShowPeercomputesList();
+        }
+
+        // Events for NewPeercomputeBtn
+        private void NewPeercomputeBtn_Click(object sender, EventArgs e)
+        {
+            NewPeercomputeCreationForm newPeercomputeCreationForm = new NewPeercomputeCreationForm();
+            DialogResult result = newPeercomputeCreationForm.ShowDialog();
+        }
+
+        // Events For Scrollbar
+        private void CustomVScrollBar_Scroll(object sender, EventArgs e)
+        {
+
         }
 
         // Control Creation Methods
@@ -294,12 +307,6 @@ namespace Digiffice
 
             // Add Picture Box to form
             PeercomputeEntryPanel.Controls.Add(PeercomputePictureBox);
-        }
-
-        // Events For Scrollbar
-        private void CustomVScrollBar_Scroll(object sender, EventArgs e)
-        {
-            
         }
 
         // Prerequisite Functions

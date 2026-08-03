@@ -69,7 +69,10 @@
             ClientSize = new Size(384, 561);
             Controls.Add(PostItsOpenBtn);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "MoreProgramsForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "More Programs";

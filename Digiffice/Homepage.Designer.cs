@@ -207,7 +207,7 @@
             MoreProgramsBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(25, 255, 255, 255);
             MoreProgramsBtn.FlatStyle = FlatStyle.Flat;
             MoreProgramsBtn.Font = new Font("Roboto", 14.25F, FontStyle.Italic);
-            MoreProgramsBtn.ForeColor = Color.FromArgb(0, 0, 64);
+            MoreProgramsBtn.ForeColor = Color.White;
             MoreProgramsBtn.Location = new Point(1550, 1010);
             MoreProgramsBtn.Name = "MoreProgramsBtn";
             MoreProgramsBtn.Size = new Size(200, 50);
