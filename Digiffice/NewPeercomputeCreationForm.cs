@@ -14,7 +14,32 @@ namespace Digiffice
     {
         public NewPeercomputeCreationForm()
         {
+
             InitializeComponent();
+        }
+
+        private void p2pPeercomputeTypeBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (p2pPeercomputeTypeBtn.Checked)
+            {
+                clientServerTypeBtn.Checked = false;
+            }
+            else
+            {
+                clientServerTypeBtn.Checked |= true;
+            }
+        }
+
+        private void clientServerTypeBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (p2pPeercomputeTypeBtn.Checked)
+            {
+                clientServerTypeBtn.Checked = false;
+            }
+            else
+            {
+                clientServerTypeBtn.Checked |= true;
+            }
         }
     }
 }

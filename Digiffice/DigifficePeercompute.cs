@@ -95,6 +95,7 @@ namespace Digiffice
         // Exit Button Events
         private void ExitButton_Click(object sender, EventArgs e)
         {
+            DigifficePeercompute_DisconnectFromPeercompute();
             Application.Exit();
         }
 
@@ -126,6 +127,7 @@ namespace Digiffice
         // Digiffice Button Events
         private void DigifficeButton_Click(object sender, EventArgs e)
         {
+            DigifficePeercompute_DisconnectFromPeercompute();
             this.Close();
         }
 
@@ -192,7 +194,7 @@ namespace Digiffice
         {
             if (currentPeercomputeType == "P2P")
             {
-                _P2PNode.disconnectP2PNode();
+                _P2PNode.disconnectLocalP2PNode();
             }
             else if (currentPeercomputeType == "CLIENTSERVER")
             {

@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute._File;
 
 namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNode
@@ -15,13 +19,72 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
         private List<string> onlineUserList = new List<string>();
         private List<string> offlineUserList = new List<string>();
 
-        // Connection Variables
+        // Peercompute variables
+        string directory;
 
-        public async Task initP2PNode(string directory, string username)
+        // Connection Variables
+        public TcpListener localNodeTcpListener;
+        public List<TcpClient> outClients = new List<TcpClient>();
+        public List<TcpClient> inNodes = new List<TcpClient>();
+        public List<NetworkStream> inStreams = new List<NetworkStream>();
+        public List<NetworkStream> outStreams = new List<NetworkStream>();
+
+        public int localConnectionPort;
+
+        public CancellationTokenSource localNodeTcpListenerCTokenSource;
+
+        public void initP2PNode(string localDirectory, string username)
         {
             // Todo: Implement. Implementation should include: Attempt to connect to P2P network. If successful, store necessary information for future use. If unsuccessful, handle the error - let them retry, exit, and let them know to check if anyone in the network is online.
-            DigifficeFileReaderDGPU fileReader = new DigifficeFileReaderDGPU();
-            userList = fileReader.ReadDGPUFile(directory + "\\PEERCOMPUTE_USERS.dgpu");
+            directory = localDirectory;
+
+            DigifficeFileReaderDGPD digifficeFileReaderDGPD = new DigifficeFileReaderDGPD();
+            localConnectionPort = digifficeFileReaderDGPD.readDGPDLocalPort(directory + "\\PEERCOMPUTE_DATA.dgpd");
+
+            DigifficeFileReaderDGPU digifficeFileReaderDGPU = new DigifficeFileReaderDGPU();
+            userList = digifficeFileReaderDGPU.ReadDGPUFile(directory + "\\PEERCOMPUTE_USERS.dgpu");
+
+            localNodeTcpListener = new TcpListener(IPAddress.Any, localConnectionPort);
+            localNodeTcpListener.Start();
+
+            localNodeTcpListenerCTokenSource = new CancellationTokenSource();
+
+
+            // TESTING P2P
+
+            beginListeningForP2PNodes();
+
+            string testIpv4 = string.Empty;
+            string testIpv6 = string.Empty;
+            string testPort = string.Empty;
+
+            EnterTextValueForm enterIPV4 = new EnterTextValueForm("Enter an ipv4 address:");
+            DialogResult enterIPV4Result = enterIPV4.ShowDialog();
+
+            if (enterIPV4Result == DialogResult.OK)
+            {
+                testIpv4 = enterIPV4.value;
+            }
+
+            EnterTextValueForm enterIPV6 = new EnterTextValueForm("Enter an ipv6 address:");
+            DialogResult enterIPV6Result = enterIPV6.ShowDialog();
+
+            if (enterIPV6Result == DialogResult.OK)
+            {
+                testIpv6 = enterIPV6.value;
+            }
+
+            EnterTextValueForm enterPort = new EnterTextValueForm("Enter a port:");
+            DialogResult enterPortResult = enterPort.ShowDialog();
+
+            if (enterPortResult == DialogResult.OK)
+            {
+                testPort = enterPort.value;
+            }
+
+            connectLocalP2PNodeTo(testIpv4, testIpv6, int.Parse(testPort));
+
+            return;
 
             foreach (string user in userList)
             {
@@ -70,17 +133,14 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                 cmd.Connection = con;
 
                 // Use this when the database is live.
-                //string ipv4 = retrieveIPV4Info(user, dr, cmd);
-                //string ipv6 = retrieveIPV6Info(user, dr, cmd);
-                //string port = retrievePortInfo(user, dr, cmd);
+                string ipv4 = retrieveIPV4Info(user, dr, cmd);
+                string ipv6 = retrieveIPV6Info(user, dr, cmd);
+                string port = retrievePortInfo(user, dr, cmd);
 
-                string ipv4 = "Dummy value"; // Todo: Make the user input the data for testing.
-                string ipv6 = "Dummy value";
-                string port = "Dummy value";
-
-                if (ipv4 != null || ipv4 != "" || ipv6 != null || ipv6 != "" || port != null || port != "")
+                if (ipv4 != null || ipv4 != "" || ipv6 != null || ipv6 != "" || port != null)
                 {
-
+                    //beginListeningForP2PNodes();
+                    connectLocalP2PNodeTo(ipv4, ipv6, int.Parse(port));
                 }
 
                 con.Close();
@@ -98,12 +158,129 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
         }
 
         // Connection methods
-
-        public void disconnectP2PNode()
+        public void beginListeningForP2PNodes()
         {
-            // Todo: Disconnect from the network by severing the connection.
+            Task.Run(() => listenForP2PNodes(localNodeTcpListenerCTokenSource.Token));
         }
 
+        public void connectLocalP2PNodeTo(string ipv4, string ipv6, int port)
+        {
+            TcpClient client = new TcpClient();
+            outClients.Add(client);
+
+            Task.Run(() => connectToNode(localNodeTcpListenerCTokenSource.Token, ipv4, ipv6, port, client));
+        }
+
+        public void disconnectLocalP2PNode()
+        {
+            // Todo: Disconnect from the network by severing the connection.
+
+            localNodeTcpListenerCTokenSource.Cancel();
+
+            if (localNodeTcpListener != null)
+            {
+                localNodeTcpListener.Stop();
+                localNodeTcpListener.Dispose();
+            }
+
+            foreach (TcpClient client in outClients)
+            {
+                if (client != null)
+                {
+                    try { client.Close(); } catch { }
+                    try { client.Dispose(); } catch { }
+                }
+            }
+            outClients.Clear();
+        }
+
+        // Connection tasks
+        public async Task listenForP2PNodes(CancellationToken cToken)
+        {
+            while (!cToken.IsCancellationRequested)
+            {
+                try
+                {
+                    TcpClient extClient = await localNodeTcpListener.AcceptTcpClientAsync();
+                    inNodes.Add(extClient);
+
+                    Task.Run(() => RecieveP2PData(extClient, cToken));
+                }
+                catch (Exception ex)
+                {
+                    if (!cToken.IsCancellationRequested)
+                    {
+                        MessageBox.Show("Error connecting to P2P Node. Source: listenForP2PNodes(). msg: " + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    break;
+                }
+            }
+
+            return;
+        }
+
+        public async Task connectToNode(CancellationToken cToken, string ipv4, string ipv6, int port, TcpClient client)
+        {
+            while (!cToken.IsCancellationRequested)
+            {
+                try
+                {
+                    await client.ConnectAsync(ipv4, port);
+                    outStreams.Add(client.GetStream());
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if (!cToken.IsCancellationRequested)
+                    {
+                        MessageBox.Show("Error connecting to P2P Node. Source: connectToNode(). msg: " + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    break;
+                }
+            }
+
+            return;
+        }
+
+        public async Task RecieveP2PData(TcpClient node, CancellationToken cToken)
+        {
+            using (node)
+            using (NetworkStream inStream = node.GetStream())
+            {
+                inStreams.Add(inStream);
+                byte[] buffer = new byte[4096];
+
+                while (!cToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        int bytesRead = await inStream.ReadAsync(buffer, 0, buffer.Length);
+
+                        if (bytesRead == 0) // Disconnection
+                        {
+                            break;
+                        }
+
+                        string recievedMsg = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        MessageBox.Show("Recieved message: " + recievedMsg);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error reading p2p stream. Source: RecieveP2PData(). msg: " + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Communication Methods
+
+        public async Task writeToStream(NetworkStream stream)
+        {
+
+        }
+
+        // Other Methods
         public string retrieveIPV4Info(string user, OleDbDataReader dr, OleDbCommand cmd)
         {
             string returnStr;
