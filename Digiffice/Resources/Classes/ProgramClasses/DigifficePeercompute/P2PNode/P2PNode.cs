@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -21,22 +22,23 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
         // Peercompute variables
         string directory;
+        string _username;
 
         // Connection Variables
         public TcpListener localNodeTcpListener;
         public List<TcpClient> outClients = new List<TcpClient>();
         public List<TcpClient> inNodes = new List<TcpClient>();
-        public List<NetworkStream> inStreams = new List<NetworkStream>();
-        public List<NetworkStream> outStreams = new List<NetworkStream>();
+        List<IdentifiableNetworkStream> streams = new List<IdentifiableNetworkStream>();
 
         public int localConnectionPort;
 
         public CancellationTokenSource localNodeTcpListenerCTokenSource;
 
-        public void initP2PNode(string localDirectory, string username)
+        public void initP2PNode(string localDirectory, nonprotected_AccountData nonprotected_ac)
         {
             // Todo: Implement. Implementation should include: Attempt to connect to P2P network. If successful, store necessary information for future use. If unsuccessful, handle the error - let them retry, exit, and let them know to check if anyone in the network is online.
             directory = localDirectory;
+            _username = nonprotected_ac.ac_username;
 
             DigifficeFileReaderDGPD digifficeFileReaderDGPD = new DigifficeFileReaderDGPD();
             localConnectionPort = digifficeFileReaderDGPD.readDGPDLocalPort(directory + "\\PEERCOMPUTE_DATA.dgpd");
@@ -88,7 +90,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
             foreach (string user in userList)
             {
-                if (user != username)
+                if (user != nonprotected_ac.ac_username)
                 {
                     OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
                     OleDbCommand cmd = new OleDbCommand();
@@ -139,12 +141,13 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
                 if (ipv4 != null || ipv4 != "" || ipv6 != null || ipv6 != "" || port != null)
                 {
-                    //beginListeningForP2PNodes();
                     connectLocalP2PNodeTo(ipv4, ipv6, int.Parse(port));
                 }
 
                 con.Close();
             }
+
+            //beginListeningForP2PNodes();
         }
 
         public List<string> getOnlineUserList()
@@ -192,6 +195,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                 }
             }
             outClients.Clear();
+
+            foreach (IdentifiableNetworkStream stream in streams)
+            {
+                try { stream.networkStream.Close(); } catch { }
+            }
+            streams.Clear();
         }
 
         // Connection tasks
@@ -204,7 +213,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                     TcpClient extClient = await localNodeTcpListener.AcceptTcpClientAsync();
                     inNodes.Add(extClient);
 
-                    Task.Run(() => RecieveP2PData(extClient, cToken));
+                    Task.Run(() => StartP2PSession(extClient, cToken, true));
                 }
                 catch (Exception ex)
                 {
@@ -226,7 +235,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                 try
                 {
                     await client.ConnectAsync(ipv4, port);
-                    outStreams.Add(client.GetStream());
+                    Task.Run(() => StartP2PSession(client, cToken, false));
                     break;
                 }
                 catch (Exception ex)
@@ -242,31 +251,172 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
             return;
         }
 
-        public async Task RecieveP2PData(TcpClient node, CancellationToken cToken)
+        public async Task StartP2PSession(TcpClient node, CancellationToken cToken, bool isLazy)
         {
             using (node)
-            using (NetworkStream inStream = node.GetStream())
+            using (NetworkStream stream = node.GetStream())
+            using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true))
             {
-                inStreams.Add(inStream);
-                byte[] buffer = new byte[4096];
+                string discoveredPeerUsername = string.Empty;
+
+                if (!isLazy)
+                {
+                    P2PCommandProcessor.P2PCommand outCmd = new P2PCommandProcessor.P2PCommand();
+                    outCmd.commandType = P2PCommandProcessor.P2PCommands.P2PConnected;
+                    sendCommandToNode(node, outCmd);
+                    MessageBox.Show("sent first cmd: " + outCmd.commandType.ToString());
+                }
+
+                StringBuilder streamBuffer = new StringBuilder();
 
                 while (!cToken.IsCancellationRequested)
                 {
                     try
                     {
-                        int bytesRead = await inStream.ReadAsync(buffer, 0, buffer.Length);
+                        char ch = reader.ReadChar();
+                        streamBuffer.Append(ch);
 
-                        if (bytesRead == 0) // Disconnection
+                        string currentText = streamBuffer.ToString();
+
+                        if (!currentText.Contains(P2PCommandProcessor.P2PCommandHeader))
                         {
-                            break;
+                            if (streamBuffer.Length > 20)
+                            {
+                                streamBuffer.Clear();
+                            }
+                            continue;
                         }
 
-                        string recievedMsg = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                        MessageBox.Show("Recieved message: " + recievedMsg);
+                        if (currentText.StartsWith(" ") || !currentText.StartsWith(P2PCommandProcessor.P2PCommandHeader))
+                        {
+                            int headerIdx = currentText.IndexOf(P2PCommandProcessor.P2PCommandHeader);
+                            streamBuffer.Remove(0, headerIdx);
+                            currentText = streamBuffer.ToString();
+                        }
+
+                        if (currentText.EndsWith(P2PCommandProcessor.P2PCommandEnd))
+                        {
+                            int startIdx = P2PCommandProcessor.P2PCommandHeader.Length;
+                            int length = currentText.Length - P2PCommandProcessor.P2PCommandHeader.Length - P2PCommandProcessor.P2PCommandEnd.Length;
+
+                            P2PCommandProcessor commandProcessor = new P2PCommandProcessor();
+
+                            P2PCommandProcessor.P2PCommand inCmd = commandProcessor.ProcessRawP2PCommand(currentText.Substring(startIdx, length));
+                            MessageBox.Show("Recieved cmd: " + inCmd.commandType.ToString() + " raw: " + currentText.Substring(startIdx, length));
+
+                            switch (inCmd.commandType)
+                            {
+                                case P2PCommandProcessor.P2PCommands.P2PConnectedReturn:
+                                    IdentifiableNetworkStream identifiableNetworkStream = new IdentifiableNetworkStream();
+
+                                    identifiableNetworkStream.networkStream = stream;
+                                    identifiableNetworkStream.associatedUser = inCmd.parameters[1];
+                                    discoveredPeerUsername = inCmd.parameters[1];
+
+                                    //
+                                    // Todo: Add when multiple devices can use the login system
+                                    //
+                                    //if (!verifyUserIsAuthorised(discoveredPeerName))
+                                    //{
+                                    //    foreach (IdentifiableNetworkStream IDstream in streams)
+                                    //    {
+                                    //        if (IDstream.networkStream == stream)
+                                    //        {
+                                    //            streams.Remove(IDstream);
+                                    //            try { IDstream.networkStream.Close(); } catch { }
+                                    //        }
+                                    //    }
+                                    //
+                                    //    foreach (TcpClient client in inNodes)
+                                    //    {
+                                    //        if (node == client)
+                                    //        {
+                                    //            inNodes.Remove(client);
+                                    //            try { node.Close(); } catch { }
+                                    //        }
+                                    //    }
+                                    //
+                                    //    return;
+                                    //}
+                                    //
+
+                                    streams.Add(identifiableNetworkStream);
+                                    break;
+
+                                case P2PCommandProcessor.P2PCommands.P2PGlobalMessage:
+                                    // Todo: Add Global Message sending
+                                    break;
+                            }
+
+                            if (commandProcessor.doesCommandRequireResponse(inCmd))
+                            {
+                                P2PCommandProcessor.P2PCommands p2pCommandType = commandProcessor.getAppropriateResponseP2PCommand(inCmd);
+                                P2PCommandProcessor.P2PCommand outCmd = new P2PCommandProcessor.P2PCommand();
+
+                                switch (p2pCommandType)
+                                {
+                                    case P2PCommandProcessor.P2PCommands.P2PConnected:
+                                    case P2PCommandProcessor.P2PCommands.P2PSyncRequest:
+                                    case P2PCommandProcessor.P2PCommands.P2PSyncRequestAccept:
+                                    case P2PCommandProcessor.P2PCommands.P2PSyncStart:
+                                    case P2PCommandProcessor.P2PCommands.P2PSyncEnd:
+                                        outCmd.commandType = p2pCommandType;
+                                        break;
+
+                                    case P2PCommandProcessor.P2PCommands.P2PConnectedReturn:
+                                        outCmd.commandType = p2pCommandType;
+                                        outCmd.parameters.Add(_username.Length.ToString());
+                                        outCmd.parameters.Add(_username);
+                                        break;
+
+                                    case P2PCommandProcessor.P2PCommands.P2PGlobalMessage:
+                                        outCmd.commandType = p2pCommandType;
+                                        //outCmd.parameters.Add(messageToSend.Length.ToString());
+                                        //outCmd.parameters.Add(messageToSend);
+                                        break;
+                                }
+
+                                sendCommandToNode(node, outCmd);
+                                MessageBox.Show("sent cmd: " + outCmd.commandType.ToString());
+                            }
+
+                            currentText = string.Empty;
+                            streamBuffer.Clear();
+                        }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error reading p2p stream. Source: RecieveP2PData(). msg: " + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        try
+                        {
+                            EndOfStreamException eos = (EndOfStreamException)ex;
+                            MessageBox.Show("Peer " + discoveredPeerUsername + " Disconnected");
+
+                            foreach (IdentifiableNetworkStream IDstream in streams)
+                            {
+                                if (IDstream.networkStream == stream)
+                                {
+                                    streams.Remove(IDstream);
+                                    try { IDstream.networkStream.Close(); } catch { }
+                                }
+                            }
+
+                            foreach (TcpClient client in inNodes)
+                            {
+                                if (node == client)
+                                {
+                                    inNodes.Remove(client);
+                                    try { node.Close(); } catch { }
+                                }
+                            }
+
+                            break;
+                        }
+                        catch (Exception ex2)
+                        {
+
+                        }
+
+                        MessageBox.Show("Error with p2p session. Source: StartP2PSession(). msg: " + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
                     }
                 }
@@ -274,10 +424,51 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
         }
 
         // Communication Methods
-
-        public async Task writeToStream(NetworkStream stream)
+        
+        public void sendCommandToNode(TcpClient node, P2PCommandProcessor.P2PCommand cmd)
         {
+            string commandStr = P2PCommandProcessor.P2PCommandHeader + " TYPE=";
 
+            switch (cmd.commandType)
+            {
+                case P2PCommandProcessor.P2PCommands.P2PConnected:
+                    commandStr += "NDE-CONNECT";
+                    break;
+
+                case P2PCommandProcessor.P2PCommands.P2PConnectedReturn:
+                    commandStr += "NDE-CONNECT-RETURN USERNAME-LEN=" + cmd.parameters[0] + " USERNAME=\"" + cmd.parameters[1] + "\"";
+                    break;
+
+                case P2PCommandProcessor.P2PCommands.P2PSyncRequest:
+                    commandStr += "SYNC-REQ";
+                    break;
+
+                case P2PCommandProcessor.P2PCommands.P2PSyncRequestAccept:
+                    commandStr += "SYNC-REQ-ACCEPT";
+                    break;
+
+                case P2PCommandProcessor.P2PCommands.P2PSyncStart:
+                    commandStr += "SYNC-START";
+                    break;
+
+                case P2PCommandProcessor.P2PCommands.P2PSyncEnd:
+                    commandStr += "SYNC-END";
+                    break;
+
+                case P2PCommandProcessor.P2PCommands.P2PGlobalMessage:
+                    commandStr += "MESSAGE-GLOBAL MESSAGE-LEN=" + cmd.parameters[0] + " MESSAGE=\"" + cmd.parameters[1] + "\"";
+                    break;
+            }
+
+            commandStr += " END-CMD";
+
+            using (BinaryWriter writer = new BinaryWriter(node.GetStream(), Encoding.UTF8, true))
+            {
+                writer.Write(commandStr + " ");
+                writer.Flush();
+            }
+
+            commandStr = string.Empty;
         }
 
         // Other Methods

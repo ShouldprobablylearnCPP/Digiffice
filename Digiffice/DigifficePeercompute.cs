@@ -170,7 +170,7 @@ namespace Digiffice
 
                 // Initialise P2P Node
                 _P2PNode = new P2PNode();
-                _P2PNode.initP2PNode(PeercomputeDirectory, _nonprotected_AccountData.ac_username);
+                _P2PNode.initP2PNode(PeercomputeDirectory, _nonprotected_AccountData);
 
                 currentPeercomputeType = "P2P";
             }
