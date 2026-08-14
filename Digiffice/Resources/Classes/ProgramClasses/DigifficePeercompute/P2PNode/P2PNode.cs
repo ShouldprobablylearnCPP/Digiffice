@@ -257,13 +257,14 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
             using (NetworkStream stream = node.GetStream())
             using (BinaryReader reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true))
             {
+                P2PCommandProcessor commandProcessor = new P2PCommandProcessor();
                 string discoveredPeerUsername = string.Empty;
 
                 if (!isLazy)
                 {
                     P2PCommandProcessor.P2PCommand outCmd = new P2PCommandProcessor.P2PCommand();
                     outCmd.commandType = P2PCommandProcessor.P2PCommands.P2PConnected;
-                    sendCommandToNode(node, outCmd);
+                    sendCommandToNode(node, outCmd, commandProcessor);
                     MessageBox.Show("sent first cmd: " + outCmd.commandType.ToString());
                 }
 
@@ -298,8 +299,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                         {
                             int startIdx = P2PCommandProcessor.P2PCommandHeader.Length;
                             int length = currentText.Length - P2PCommandProcessor.P2PCommandHeader.Length - P2PCommandProcessor.P2PCommandEnd.Length;
-
-                            P2PCommandProcessor commandProcessor = new P2PCommandProcessor();
 
                             P2PCommandProcessor.P2PCommand inCmd = commandProcessor.ProcessRawP2PCommand(currentText.Substring(startIdx, length));
                             MessageBox.Show("Recieved cmd: " + inCmd.commandType.ToString() + " raw: " + currentText.Substring(startIdx, length));
@@ -346,6 +345,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                                 case P2PCommandProcessor.P2PCommands.P2PGlobalMessage:
                                     // Todo: Add Global Message sending
                                     break;
+
+                                case P2PCommandProcessor.P2PCommands.P2PSyncBlock:
+                                    // Todo: Add synching
+                                    break;
                             }
 
                             if (commandProcessor.doesCommandRequireResponse(inCmd))
@@ -360,6 +363,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                                     case P2PCommandProcessor.P2PCommands.P2PSyncRequestAccept:
                                     case P2PCommandProcessor.P2PCommands.P2PSyncStart:
                                     case P2PCommandProcessor.P2PCommands.P2PSyncEnd:
+                                    case P2PCommandProcessor.P2PCommands.P2PSyncBlockAccept:
+                                    case P2PCommandProcessor.P2PCommands.P2PSyncBlockResolve:
+                                    case P2PCommandProcessor.P2PCommands.P2PSyncContinue:
                                         outCmd.commandType = p2pCommandType;
                                         break;
 
@@ -374,10 +380,20 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                                         //outCmd.parameters.Add(messageToSend.Length.ToString());
                                         //outCmd.parameters.Add(messageToSend);
                                         break;
+
+                                    case P2PCommandProcessor.P2PCommands.P2PSyncBlock:
+                                        outCmd.commandType = p2pCommandType;
+                                        //outCmd.parameters.Add(binaryBlockToSend.Length.ToString());
+                                        //outCmd.parameters.Add(binaryBlockToSend);
+                                        break;
                                 }
 
-                                sendCommandToNode(node, outCmd);
+                                sendCommandToNode(node, outCmd, commandProcessor);
                                 MessageBox.Show("sent cmd: " + outCmd.commandType.ToString());
+                            }
+                            else
+                            {
+                                
                             }
 
                             currentText = string.Empty;
@@ -425,42 +441,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
         // Communication Methods
         
-        public void sendCommandToNode(TcpClient node, P2PCommandProcessor.P2PCommand cmd)
+        public void sendCommandToNode(TcpClient node, P2PCommandProcessor.P2PCommand cmd, P2PCommandProcessor processor)
         {
-            string commandStr = P2PCommandProcessor.P2PCommandHeader + " TYPE=";
-
-            switch (cmd.commandType)
-            {
-                case P2PCommandProcessor.P2PCommands.P2PConnected:
-                    commandStr += "NDE-CONNECT";
-                    break;
-
-                case P2PCommandProcessor.P2PCommands.P2PConnectedReturn:
-                    commandStr += "NDE-CONNECT-RETURN USERNAME-LEN=" + cmd.parameters[0] + " USERNAME=\"" + cmd.parameters[1] + "\"";
-                    break;
-
-                case P2PCommandProcessor.P2PCommands.P2PSyncRequest:
-                    commandStr += "SYNC-REQ";
-                    break;
-
-                case P2PCommandProcessor.P2PCommands.P2PSyncRequestAccept:
-                    commandStr += "SYNC-REQ-ACCEPT";
-                    break;
-
-                case P2PCommandProcessor.P2PCommands.P2PSyncStart:
-                    commandStr += "SYNC-START";
-                    break;
-
-                case P2PCommandProcessor.P2PCommands.P2PSyncEnd:
-                    commandStr += "SYNC-END";
-                    break;
-
-                case P2PCommandProcessor.P2PCommands.P2PGlobalMessage:
-                    commandStr += "MESSAGE-GLOBAL MESSAGE-LEN=" + cmd.parameters[0] + " MESSAGE=\"" + cmd.parameters[1] + "\"";
-                    break;
-            }
-
-            commandStr += " END-CMD";
+            string commandStr = processor.constructP2PCommand(cmd);
 
             using (BinaryWriter writer = new BinaryWriter(node.GetStream(), Encoding.UTF8, true))
             {
