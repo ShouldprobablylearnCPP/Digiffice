@@ -39,6 +39,8 @@
             PeercomputesPanelBorder = new Panel();
             PeercomputesTab = new Panel();
             PeercomputesTabLabel = new Label();
+            OnlineUsersTab = new Panel();
+            OnlineUsersTabLabel = new Label();
             CurrentPeercomputeContainerPanel = new Panel();
             CurrentPeercomputeBorderPanel = new Panel();
             CurrentPeercomputeBackgroundPanel = new Panel();
@@ -46,6 +48,7 @@
             Homepanel.SuspendLayout();
             PeercomputeLeftBarContainerPanel.SuspendLayout();
             PeercomputesTab.SuspendLayout();
+            OnlineUsersTab.SuspendLayout();
             CurrentPeercomputeContainerPanel.SuspendLayout();
             CurrentPeercomputeBorderPanel.SuspendLayout();
             CurrentPeercomputeBackgroundPanel.SuspendLayout();
@@ -68,6 +71,7 @@
             // 
             ExitButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             ExitButton.BackColor = Color.Transparent;
+            ExitButton.BackgroundImage = Properties.Resources.XbtnDefault;
             ExitButton.BackgroundImageLayout = ImageLayout.Stretch;
             ExitButton.Cursor = Cursors.Hand;
             ExitButton.FlatAppearance.BorderSize = 0;
@@ -75,10 +79,9 @@
             ExitButton.FlatStyle = FlatStyle.Flat;
             ExitButton.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ExitButton.ForeColor = SystemColors.ControlText;
-            ExitButton.Image = Properties.Resources.XbtnDefault;
             ExitButton.Location = new Point(1825, 0);
             ExitButton.Name = "ExitButton";
-            ExitButton.Size = new Size(74, 24);
+            ExitButton.Size = new Size(75, 25);
             ExitButton.TabIndex = 1;
             ExitButton.UseVisualStyleBackColor = false;
             ExitButton.Click += ExitButton_Click;
@@ -123,6 +126,7 @@
             PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputeLeftBarPanel);
             PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputesPanelBorder);
             PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputesTab);
+            PeercomputeLeftBarContainerPanel.Controls.Add(OnlineUsersTab);
             PeercomputeLeftBarContainerPanel.Location = new Point(12, 99);
             PeercomputeLeftBarContainerPanel.Name = "PeercomputeLeftBarContainerPanel";
             PeercomputeLeftBarContainerPanel.Size = new Size(370, 969);
@@ -186,6 +190,31 @@
             PeercomputesTabLabel.Click += PeercomputesTab_Click;
             PeercomputesTabLabel.Paint += PeercomputesTabLabel_Paint;
             // 
+            // OnlineUsersTab
+            // 
+            OnlineUsersTab.BackColor = Color.Transparent;
+            OnlineUsersTab.BackgroundImage = Properties.Resources.NavyTab_100x40_1080p;
+            OnlineUsersTab.Controls.Add(OnlineUsersTabLabel);
+            OnlineUsersTab.Cursor = Cursors.Hand;
+            OnlineUsersTab.Location = new Point(100, 10);
+            OnlineUsersTab.Name = "OnlineUsersTab";
+            OnlineUsersTab.Size = new Size(100, 40);
+            OnlineUsersTab.TabIndex = 3;
+            OnlineUsersTab.Click += OnlineUsersTab_Click;
+            // 
+            // OnlineUsersTabLabel
+            // 
+            OnlineUsersTabLabel.AutoSize = true;
+            OnlineUsersTabLabel.Font = new Font("Roboto", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            OnlineUsersTabLabel.ForeColor = Color.White;
+            OnlineUsersTabLabel.Location = new Point(10, 2);
+            OnlineUsersTabLabel.Name = "OnlineUsersTabLabel";
+            OnlineUsersTabLabel.Size = new Size(50, 14);
+            OnlineUsersTabLabel.TabIndex = 0;
+            OnlineUsersTabLabel.Text = "People";
+            OnlineUsersTabLabel.Click += OnlineUsersTab_Click;
+            OnlineUsersTabLabel.Paint += OnlineUsersTabLabel_Paint;
+            // 
             // CurrentPeercomputeContainerPanel
             // 
             CurrentPeercomputeContainerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
@@ -244,6 +273,8 @@
             PeercomputeLeftBarContainerPanel.ResumeLayout(false);
             PeercomputesTab.ResumeLayout(false);
             PeercomputesTab.PerformLayout();
+            OnlineUsersTab.ResumeLayout(false);
+            OnlineUsersTab.PerformLayout();
             CurrentPeercomputeContainerPanel.ResumeLayout(false);
             CurrentPeercomputeBorderPanel.ResumeLayout(false);
             CurrentPeercomputeBackgroundPanel.ResumeLayout(false);
@@ -266,5 +297,7 @@
         private Panel CurrentPeercomputeBackgroundPanel;
         private Panel CurrentPeercomputeDataPanel;
         private Button NewPeercomputeBtn;
+        private Panel OnlineUsersTab;
+        private Label OnlineUsersTabLabel;
     }
 }

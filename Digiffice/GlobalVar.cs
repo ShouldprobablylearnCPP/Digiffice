@@ -17,6 +17,10 @@ namespace Digiffice
 
         public string globalDigifficePeercomputeDataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/DIGIFFICE_DATA_FOLDER/Digiffice_Peercompute";
 
+        public string globalDigifficeUserDataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/DIGIFFICE_DATA_FOLDER/Users";
+
+        public string globalDigifficeOfflineUserDataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/DIGIFFICE_DATA_FOLDER/Users/Offline User";
+
         public string DigifficeVer = "0.x";
     }
 }

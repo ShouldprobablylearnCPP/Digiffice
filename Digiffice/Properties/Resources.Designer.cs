@@ -143,6 +143,16 @@ namespace Digiffice.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _3DCogSettingsIcon {
+            get {
+                object obj = ResourceManager.GetObject("3DCogSettingsIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap AllnoteSplashscreen {
             get {
                 object obj = ResourceManager.GetObject("AllnoteSplashscreen", resourceCulture);
@@ -475,6 +485,16 @@ namespace Digiffice.Properties {
         internal static System.Drawing.Bitmap SelectedPageLabel_Allnote {
             get {
                 object obj = ResourceManager.GetObject("SelectedPageLabel_Allnote", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SettingsIcon {
+            get {
+                object obj = ResourceManager.GetObject("SettingsIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

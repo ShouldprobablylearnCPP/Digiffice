@@ -26,6 +26,8 @@ using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClasses;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
+using Digiffice.Resources.Classes.ProgramClasses.Idlebars;
+using Digiffice.Resources.Classes.ProgramClasses.UserPrefs;
 using DigifficeWPFControls;
 using DigifficeWPFControls;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -53,10 +55,12 @@ namespace Digiffice
     {
 
         // Class Variables
+        GlobalVar globalVar = new GlobalVar();
         WPFDigifficeAllnoteInkCanvas globalInkCanvas;
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         Control currentSelectedTab = null;
+        nonprotected_AccountData np_AC = new nonprotected_AccountData();
 
         // Border Panels
         Panel SectionBG_Borderpnl = new Panel();
@@ -115,6 +119,8 @@ namespace Digiffice
                 splashscreen.Close();
             };
 
+            // Set nonprotected_AccountData
+            np_AC = nonprotected_AccountData;
 
             // Set dimensions
             this.ClientSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
@@ -140,12 +146,12 @@ namespace Digiffice
 
         private void ExitButton_MouseEnter(object sender, EventArgs e)
         {
-            ExitButton.Image = xBtnHover;
+            ExitButton.BackgroundImage = xBtnHover;
         }
 
         private void ExitButton_MouseLeave(object sender, EventArgs e)
         {
-            ExitButton.Image = xBtnDefault;
+            ExitButton.BackgroundImage = xBtnDefault;
         }
 
         // File Events
@@ -725,7 +731,7 @@ namespace Digiffice
 
         private void SectionBG_Paint(object sender, PaintEventArgs e)
         {
-            this.SectionBG.Location = new Point(LeftInfoPanel.Right + 20, LeftInfoPanel.Location.Y + 60);
+            this.SectionBG.Location = new Point(20, 60);
 
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             Point fixedClientRectLocation = new Point(SectionBG.ClientRectangle.Location.X - 1, SectionBG.ClientRectangle.Location.Y - 1);
@@ -1335,7 +1341,7 @@ namespace Digiffice
             SectionBG_Borderpnl.Size = new Size(SectionBG.Width + 2, SectionBG.Height + 2);
             SectionBG_Borderpnl.BackColor = Color.Navy;
             SectionBG_Borderpnl.SendToBack();
-            this.Controls.Add(SectionBG_Borderpnl);
+            WorkspacePanel.Controls.Add(SectionBG_Borderpnl);
         }
 
         private void DigifficeAllnote_EditSizeOfRichTextBox(RichTextBox richTextBox)
@@ -1395,6 +1401,36 @@ namespace Digiffice
             }
         }
 
+        // Idlebar Functions
+
+        private void DigifficeAllnote_IdlebarSetup()
+        {
+            DigifficeFileReaderDGUP fileReaderDGUP = new DigifficeFileReaderDGUP();
+
+            if (np_AC.ac_offline)
+            {
+                switch (fileReaderDGUP.readIdlebarInfo(globalVar.globalDigifficeOfflineUserDataPath + "/UserPrefs.dgup"))
+                {
+                    case "NEWS_IDLEBAR":
+                        NewsIdlebar newsIdlebar = new NewsIdlebar();
+                        newsIdlebar.idlebar = Idlebar;
+                        Idlebar.Controls.Add(newsIdlebar);
+                        break;
+                }
+            }
+            else
+            {
+                switch(fileReaderDGUP.readIdlebarInfo(globalVar.globalDigifficeUserDataPath + "/" + np_AC.ac_username + "/UserPrefs.dgup"))
+                {
+                    case "NEWS_IDLEBAR":
+                        NewsIdlebar newsIdlebar = new NewsIdlebar();
+                        newsIdlebar.idlebar = Idlebar;
+                        Idlebar.Controls.Add(newsIdlebar);
+                        break;
+                }
+            }
+        }
+
         // Prerequisite Functions
 
         private void DigifficeAllnote_EditorPrerequisite()
@@ -1419,6 +1455,8 @@ namespace Digiffice
             // Add scrollbars to class variables for later use
             hScrollBar = pageHScroll;
             vScrollBar = pageVScroll;
+
+            DigifficeAllnote_IdlebarSetup();
         }
 
         // Saving and Saving Related Functions/Events

@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Homepage));
             Welcomemsg = new Label();
             Homepanel = new Panel();
+            SettingsBtn = new Button();
             ExitButton = new Button();
             Offlinemsg = new Label();
             ProgramsPanel = new Panel();
@@ -61,10 +62,12 @@
             // 
             // Homepanel
             // 
+            Homepanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             Homepanel.AutoSize = true;
             Homepanel.BackColor = SystemColors.ControlLight;
             Homepanel.BackgroundImage = Properties.Resources.Panel;
             Homepanel.BackgroundImageLayout = ImageLayout.Stretch;
+            Homepanel.Controls.Add(SettingsBtn);
             Homepanel.Controls.Add(ExitButton);
             Homepanel.Controls.Add(Welcomemsg);
             Homepanel.Location = new Point(0, 0);
@@ -73,9 +76,29 @@
             Homepanel.TabIndex = 0;
             Homepanel.Paint += Homepanel_Paint;
             // 
+            // SettingsBtn
+            // 
+            SettingsBtn.BackColor = Color.Transparent;
+            SettingsBtn.BackgroundImage = Properties.Resources.SettingsIcon;
+            SettingsBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            SettingsBtn.Cursor = Cursors.Hand;
+            SettingsBtn.FlatAppearance.BorderSize = 0;
+            SettingsBtn.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 255, 255, 255);
+            SettingsBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(20, 255, 255, 255);
+            SettingsBtn.FlatStyle = FlatStyle.Flat;
+            SettingsBtn.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SettingsBtn.ForeColor = SystemColors.ControlText;
+            SettingsBtn.Location = new Point(1760, 7);
+            SettingsBtn.Name = "SettingsBtn";
+            SettingsBtn.Size = new Size(45, 45);
+            SettingsBtn.TabIndex = 2;
+            SettingsBtn.UseVisualStyleBackColor = false;
+            SettingsBtn.Click += SettingsBtn_Click;
+            // 
             // ExitButton
             // 
             ExitButton.BackColor = Color.Transparent;
+            ExitButton.BackgroundImage = Properties.Resources.XbtnDefault;
             ExitButton.BackgroundImageLayout = ImageLayout.Stretch;
             ExitButton.Cursor = Cursors.Hand;
             ExitButton.FlatAppearance.BorderSize = 0;
@@ -83,10 +106,9 @@
             ExitButton.FlatStyle = FlatStyle.Flat;
             ExitButton.Font = new Font("Roboto", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ExitButton.ForeColor = SystemColors.ControlText;
-            ExitButton.Image = Properties.Resources.XbtnDefault;
             ExitButton.Location = new Point(1825, 0);
             ExitButton.Name = "ExitButton";
-            ExitButton.Size = new Size(74, 24);
+            ExitButton.Size = new Size(75, 25);
             ExitButton.TabIndex = 1;
             ExitButton.UseVisualStyleBackColor = false;
             ExitButton.Click += ExitButton_Click;
@@ -262,5 +284,6 @@
         private Label VersionLabel;
         private Button TourDigifficeBtn;
         private Button MoreProgramsBtn;
+        private Button SettingsBtn;
     }
 }

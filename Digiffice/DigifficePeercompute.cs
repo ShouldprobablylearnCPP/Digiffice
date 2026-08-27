@@ -71,12 +71,7 @@ namespace Digiffice
             {
                 // Clear existing controls in the left bar panel
                 PeercomputeLeftBarPanel.Controls.Clear();
-
-                // Get list of Peercompute directories
                 string[] PeercomputeDirectories = Directory.GetDirectories(digifficeGlobalVariables.globalDigifficePeercomputeDataPath);
-
-                // Clear existing controls in the left bar panel
-                PeercomputeLeftBarPanel.Controls.Clear();
 
                 // Loop through each directory and create a label for it in the left bar panel
                 int yOffset = 40;
@@ -101,12 +96,12 @@ namespace Digiffice
 
         private void ExitButton_MouseEnter(object sender, EventArgs e)
         {
-            ExitButton.Image = xBtnHover;
+            ExitButton.BackgroundImage = xBtnHover;
         }
 
         private void ExitButton_MouseLeave(object sender, EventArgs e)
         {
-            ExitButton.Image = xBtnDefault;
+            ExitButton.BackgroundImage = xBtnDefault;
         }
 
         // Windowmsg Events
@@ -202,7 +197,19 @@ namespace Digiffice
             }
         }
 
-        // Other Events
+        // PeercomputesTab Events
+        private void PeercomputesTab_Click(object sender, EventArgs e)
+        {
+            if (selectedLeftbarTab != null)
+            {
+                selectedLeftbarTab.Location = new Point(selectedLeftbarTab.Location.X, selectedLeftbarTab.Location.Y + 10);
+            }
+
+            selectedLeftbarTab = PeercomputesTab;
+            PeercomputesTab.Location = new Point(PeercomputesTab.Location.X, PeercomputesTab.Location.Y - 10);
+            DigifficePeercompute_ShowPeercomputesList();
+        }
+
         private void PeercomputesTabLabel_Paint(object sender, EventArgs e)
         {
             PeercomputesTabLabel.Size = TextRenderer.MeasureText(PeercomputesTabLabel.Text, PeercomputesTabLabel.Font);
@@ -216,17 +223,21 @@ namespace Digiffice
             }
         }
 
-        // Events for PeercomputesTab
-        private void PeercomputesTab_Click(object sender, EventArgs e)
+        // OnlineUsersTab Events
+        private void OnlineUsersTab_Click(object sender, EventArgs e)
         {
             if (selectedLeftbarTab != null)
             {
                 selectedLeftbarTab.Location = new Point(selectedLeftbarTab.Location.X, selectedLeftbarTab.Location.Y + 10);
             }
 
-            selectedLeftbarTab = PeercomputesTab;
-            PeercomputesTab.Location = new Point(PeercomputesTab.Location.X, PeercomputesTab.Location.Y - 10);
-            DigifficePeercompute_ShowPeercomputesList();
+            selectedLeftbarTab = OnlineUsersTab;
+            OnlineUsersTab.Location = new Point(OnlineUsersTab.Location.X, OnlineUsersTab.Location.Y - 10);
+        }
+
+        private void OnlineUsersTabLabel_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         // Events for NewPeercomputeBtn

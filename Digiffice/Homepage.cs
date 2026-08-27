@@ -11,8 +11,7 @@ namespace Digiffice
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         GlobalVar globalVar = new GlobalVar();
-        string username = "";
-        bool offline = false;
+        nonprotected_AccountData np_AC = new nonprotected_AccountData();
 
         // Program Open Button Lists
         EventHandler[] ProgramClickEventHandlers = new EventHandler[2];
@@ -36,16 +35,14 @@ namespace Digiffice
             };
 
             // Initialise form dimensions
-            nonprotected_AccountData transferrable_nonprotectedaccdata = nonprotected_AccData;
+            np_AC = nonprotected_AccData;
             this.Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
 
             // Initialize components
             InitializeComponent();
 
             // Declare variable values
-            offline = nonprotected_AccData.ac_offline;
-            username = nonprotected_AccData.ac_username;
-            if (offline)
+            if (np_AC.ac_offline)
             {
                 Welcomemsg.Text = "Welcome to Digiffice!";
                 Offlinemsg.Text = "You are currently in offline mode. Certain features may be unavailable.";
@@ -58,13 +55,13 @@ namespace Digiffice
             }
             else
             {
-                Welcomemsg.Text = "Welcome to Digiffice, " + username + "!";
+                Welcomemsg.Text = "Welcome to Digiffice, " + np_AC.ac_username + "!";
                 Offlinemsg.Text = "";
 
                 // Set to user pfp (stored in nonprotected_AccData)
                 PfpFramePfpPanel.BackgroundImage = nonprotected_AccData.ac_profilepicture;
 
-                ProfileNameLabel.Text = username;
+                ProfileNameLabel.Text = np_AC.ac_username;
             }
             Offlinemsg.Location = new Point(0, Screen.PrimaryScreen.Bounds.Height - Offlinemsg.Height);
             VersionLabel.Text = "Version: " + globalVar.DigifficeVer;
@@ -116,12 +113,12 @@ namespace Digiffice
 
         private void ExitButton_MouseEnter(object sender, EventArgs e)
         {
-            ExitButton.Image = xBtnHover;
+            ExitButton.BackgroundImage = xBtnHover;
         }
 
         private void ExitButton_MouseLeave(object sender, EventArgs e)
         {
-            ExitButton.Image = xBtnDefault;
+            ExitButton.BackgroundImage = xBtnDefault;
         }
 
         // Homepage Setup Functions
@@ -143,6 +140,18 @@ namespace Digiffice
         private void TourDigifficeBtn_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void MoreProgramsBtn_Click(object sender, EventArgs e)
+        {
+            MoreProgramsForm moreProgramsForm = new MoreProgramsForm();
+            moreProgramsForm.ShowDialog();
+        }
+
+        private void SettingsBtn_Click(object sender, EventArgs e)
+        {
+            SettingsMenuForm settingsMenuForm = new SettingsMenuForm();
+            settingsMenuForm.Show();
         }
 
         // Program Button Group Functions
@@ -210,10 +219,7 @@ namespace Digiffice
             splashscreen.BringToFront();
             splashscreen.Show();
 
-            nonprotected_AccountData transfer_npac = new nonprotected_AccountData();
-            transfer_npac.ac_username = this.username;
-            string username = this.username;
-            DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(transfer_npac, splashscreen);
+            DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(np_AC, splashscreen);
             DigifficeAllnote.SuspendLayout(); // Suspend layout to prevent rendering issues during load
             DigifficeAllnote.Show();
         }
@@ -244,10 +250,7 @@ namespace Digiffice
             splashscreen.BringToFront();
             splashscreen.Show();
 
-            nonprotected_AccountData transfer_npac = new nonprotected_AccountData();
-            transfer_npac.ac_username = this.username;
-            string username = this.username;
-            DigifficePeercompute DigifficePeercompute = new DigifficePeercompute(transfer_npac, splashscreen);
+            DigifficePeercompute DigifficePeercompute = new DigifficePeercompute(np_AC, splashscreen);
             DigifficePeercompute.SuspendLayout(); // Suspend layout to prevent rendering issues during load
             DigifficePeercompute.Show();
         }
@@ -268,12 +271,6 @@ namespace Digiffice
 
             // set back colour
             btn.BackColor = Color.WhiteSmoke;
-        }
-
-        private void MoreProgramsBtn_Click(object sender, EventArgs e)
-        {
-            MoreProgramsForm moreProgramsForm = new MoreProgramsForm();
-            moreProgramsForm.ShowDialog();
         }
     }
 }
