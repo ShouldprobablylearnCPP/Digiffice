@@ -79,7 +79,7 @@
             // SettingsBtn
             // 
             SettingsBtn.BackColor = Color.Transparent;
-            SettingsBtn.BackgroundImage = Properties.Resources.SettingsIcon;
+            SettingsBtn.BackgroundImage = Properties.Resources._3DCogSettingsIcon;
             SettingsBtn.BackgroundImageLayout = ImageLayout.Stretch;
             SettingsBtn.Cursor = Cursors.Hand;
             SettingsBtn.FlatAppearance.BorderSize = 0;
