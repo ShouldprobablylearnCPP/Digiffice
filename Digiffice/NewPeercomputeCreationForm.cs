@@ -12,11 +12,23 @@ namespace Digiffice
 {
     public partial class NewPeercomputeCreationForm : Form
     {
+        //
+        //
+        // Form Constructor
+        //
+        //
+
         public NewPeercomputeCreationForm()
         {
 
             InitializeComponent();
         }
+
+        //
+        //
+        // View
+        //
+        //
 
         private void p2pPeercomputeTypeBtn_CheckedChanged(object sender, EventArgs e)
         {

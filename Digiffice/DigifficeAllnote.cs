@@ -84,7 +84,12 @@ namespace Digiffice
         bool allnoteFile_SavedAfterLatestChange = false;
         bool isInDrawingMode = false;
 
-        // Override Functions
+        //
+        //
+        // Override
+        //
+        //
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             // Check for Ctrl + S
@@ -97,17 +102,12 @@ namespace Digiffice
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x00000020; // WS_EX_TRANSPARENT
-                return cp;
-            }
-        }
+        //
+        //
+        // Form Constructor
+        //
+        //
 
-        // Form
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
             // Hide form until fully loaded to prevent flickering
@@ -136,578 +136,145 @@ namespace Digiffice
             DigifficeAllnote_NewFile("NewNotebook");
         }
 
-        // Form Events
+        //
+        //
+        // Prerequisites (View)
+        //
+        //
 
-        // Exit Button Events
-        private void ExitButton_Click(object sender, EventArgs e)
+        private void DigifficeAllnote_EditorPrerequisite()
         {
-            Application.Exit();
+            // Setup nonPageBg
+            nonPageBg.Location = new Point(20, 20);
+            nonPageBg.Size = new Size(SectionBG.Width - 290, SectionBG.Height - 70);
+
+            // Create Scrollbars
+            CustomVScrollBar pageVScroll = new CustomVScrollBar(new Point(nonPageBg.Right, nonPageBg.Top), new Size(30, nonPageBg.Height),
+                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
+                null, Properties.Resources.VScrollBar_UpScrollBtn, Properties.Resources.VScrollBar_DownScrollBtn, Properties.Resources.CustomVScrollBar_1);
+            pageVScroll.setMinMaxRange(0, 0);
+            pageVScroll.addControlstoControl(SectionBG);
+
+            CustomHScrollBar pageHScroll = new CustomHScrollBar(new Point(nonPageBg.Left, nonPageBg.Bottom), new Size(nonPageBg.Width, 30),
+                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
+                null, Properties.Resources.VScrollBar_LeftScrollBtn, Properties.Resources.VScrollBar_RightScrollBtn, Properties.Resources.CustomHScrollBar_1);
+            pageHScroll.setMinMaxRange(0, 0);
+            pageHScroll.addControlstoControl(SectionBG);
+
+            // Add scrollbars to class variables for later use
+            hScrollBar = pageHScroll;
+            vScrollBar = pageVScroll;
+
+            DigifficeAllnote_IdlebarSetup();
         }
 
-        private void ExitButton_MouseEnter(object sender, EventArgs e)
-        {
-            ExitButton.BackgroundImage = xBtnHover;
-        }
+        //
+        //
+        // File Managing Code (Model)
+        //
+        //
 
-        private void ExitButton_MouseLeave(object sender, EventArgs e)
-        {
-            ExitButton.BackgroundImage = xBtnDefault;
-        }
-
-        // File Events
-        // ..._New... Events
-        private void DigifficeAllnote_NewFile(string fileName)
-        {
-            DigifficeAllnoteEditorFile editorFile = new DigifficeAllnoteEditorFile();
-            editorFile.fileName = fileName;
-            DigifficeAllnote_NewChapter("Unnamed Chapter", editorFile);
-            DigifficeAllnoteEditorFile.Chapter? firstChapter = FindChapterByName(editorFile, "Unnamed Chapter");
-            if (firstChapter == null)
-            {
-                MessageBox.Show("Error creating new notebook: first chapter not found. Closing Digiffice Allnote...");
-                this.Close();
-            }
-            DigifficeAllnote_ShowNote(editorFile);
-        }
-
-        private void DigifficeAllnote_NewPage(string pageName, Vector2 Size, DigifficeAllnoteEditorFile parentNotebook, DigifficeAllnoteEditorFile.Chapter parentChapter, bool isFirstInChapter)
+        private void DigifficeAllnote_SaveFile(DigifficeAllnoteEditorFile fileToSave, string filePath)
         {
 
-            DigifficeAllnoteEditorFile.Page newPage = new DigifficeAllnoteEditorFile.Page();
-            newPage.pageSize = Size;
-            newPage.pageNum = parentNotebook.filePages.Count + 1;
-            newPage.pageTitle = pageName;
-            newPage.CreatedDateTime = DateTime.Now;
-
-            int insertIndex;
-            if (isFirstInChapter)
+            // Check to see if filePath is empty
+            if (filePath == null)
             {
-                insertIndex = parentNotebook.filePages.Count;
-            }
-            else
-            {
-                insertIndex = parentChapter.chapterPages[parentChapter.chapterPages.Count - 1].pageNum;
-            }
-            newPage.parentChapter = parentChapter;
-            parentNotebook.filePages.Insert(insertIndex, newPage);
-            parentChapter.chapterPages.Add(newPage);
+                // Show Dialog to choose file path
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Title = "Save Digiffice Allnote Notebook";
+                saveFileDialog.Filter = "Digiffice Allnote Notebook (*.dgan)|*.dgan";
+                DialogResult result = saveFileDialog.ShowDialog();
 
-            // Update Page numbers (After over a week it finally works)
-            foreach (var item in parentNotebook.filePages)
-            {
-                item.pageNum = parentNotebook.filePages.IndexOf(item) + 1;
-            }
-
-            DigifficeAllnote_ShowPagesInInspector(parentChapter);
-
-            DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
-        }
-
-        private void DigifficeAllnote_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
-        {
-            // Create Chapter
-            DigifficeAllnoteEditorFile.Chapter newChapter = new DigifficeAllnoteEditorFile.Chapter();
-            Random rnd = new Random();
-            newChapter.chapterNum = parentNotebook.chapters.Count + 1;
-            if (newChapter.chapterNum != 1)
-            {
-                newChapter.chapterCol = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
-            }
-            else
-            {
-                newChapter.chapterCol = Color.LightPink;
-            }
-            newChapter.chapterName = chapterName;
-            newChapter.chapterNum = parentNotebook.chapters.Count + 1;
-
-            // Create first page in chapter
-            Vector2 defaultPageSize_cm = new Vector2(42.00f, 29.70f);
-            DigifficeAllnote_NewPage("Unnamed Page", defaultPageSize_cm, parentNotebook, newChapter, true);
-
-            parentNotebook.chapters.Add(newChapter);
-        }
-
-        // ..._Show... Events
-        private void DigifficeAllnote_ShowChapter(DigifficeAllnoteEditorFile.Chapter chapter, DigifficeAllnoteEditorFile editorFile)
-        {
-            // Update current chapter
-            currentChapter = chapter;
-            notebook_ChapterCol = chapter.chapterCol;
-            currentPage = chapter.chapterPages[0];
-            SectionBG.Refresh();
-            DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[0]);
-            DigifficeAllnote_ShowPagesInInspector(chapter);
-        }
-
-        private void DigifficeAllnote_ShowNote(DigifficeAllnoteEditorFile editorFile)
-        {
-            // Show Editable Page
-            editorNotebook = editorFile;
-            DigifficeAllnoteEditorFile.Chapter chapter = editorFile.chapters[0];
-            DigifficeAllnote_ShowChapter(chapter, editorFile);
-
-            // Show Chapters and Pages in Inspectors
-            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorFile, chapter);
-
-            // Initialise Editor Functions
-        }
-
-        private void DigifficeAllnote_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
-        {
-            // Clear previous Page BG and Scrollbars
-            nonPageBg.Controls.Clear();
-
-            // Create Page
-            Panel pagebg = new Panel();
-            pagebg.Name = "PageBG";
-            pagebg.BackColor = Color.FromArgb(255, 249, 251, 255);
-            int sizex = Convertcm_pixels(currentPage.pageSize.X);
-            int sizey = Convertcm_pixels(currentPage.pageSize.Y);
-            pagebg.Size = new Size(sizex, sizey);
-            Point pagebgPos = new Point(0, 0);
-            pagebg.Location = pagebgPos;
-            nonPageBg.Controls.Add(pagebg);
-
-            // Edit Scrollbar Ranges and Sizes
-            vScrollBar.setMinMaxRange(0, sizey - nonPageBg.Height);
-            hScrollBar.setMinMaxRange(0, sizex - nonPageBg.Width);
-
-            // Setup/Reconfigure nonPageBG_Borderpnl
-            nonPageBG_Borderpnl.Location = new Point(nonPageBg.Location.X - 1, nonPageBg.Location.Y - 1);
-            nonPageBG_Borderpnl.Size = new Size(nonPageBg.Width + vScrollBar.ctrlToAdd.Width + 2, nonPageBg.Height + hScrollBar.ctrlToAdd.Height + 2);
-            nonPageBG_Borderpnl.BackColor = Color.Navy;
-            nonPageBG_Borderpnl.SendToBack();
-            SectionBG.Controls.Add(nonPageBG_Borderpnl);
-
-            // Show Page Title and Created DateTime
-            DigifficeAllnote_ShowPageTitleAndDatetime(currentPage);
-
-            // Create InkCanvas
-            ElementHost inkCanvasHost = new ElementHost();
-            inkCanvasHost.Name = "InkCanvasHost";
-            inkCanvasHost.Dock = DockStyle.Fill;
-            inkCanvasHost.BackColorTransparent = true;
-
-            WPFDigifficeAllnoteInkCanvas inkCanvas = new WPFDigifficeAllnoteInkCanvas();
-
-            // Set Background to pagebg col for seamless look.
-            inkCanvas.inkCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0));
-
-            // Set Default Drawing Attributes
-            inkCanvas.inkCanvas.DefaultDrawingAttributes.Color = System.Windows.Media.Color.FromArgb(255, 0, 0, 0);
-            inkCanvas.inkCanvas.DefaultDrawingAttributes.Width = 2;
-            inkCanvas.inkCanvas.DefaultDrawingAttributes.Height = 2;
-            inkCanvas.inkCanvas.DefaultDrawingAttributes.FitToCurve = true;
-            inkCanvas.inkCanvas.DefaultDrawingAttributes.StylusTip = System.Windows.Ink.StylusTip.Ellipse;
-            inkCanvas.inkCanvas.DefaultDrawingAttributes.StylusTipTransform = new System.Windows.Media.Matrix();
-            inkCanvas.inkCanvas.DefaultDrawingAttributes.IgnorePressure = false;
-            inkCanvas.inkCanvas.DefaultDrawingAttributes.IsHighlighter = false;
-
-            // Add InkCanvas to PageBG
-            inkCanvasHost.Child = inkCanvas;
-            pagebg.Controls.Add(inkCanvasHost);
-            inkCanvasHost.SendToBack();
-
-            // Set InkCanvas Editing Mode
-            if (isInDrawingMode)
-            {
-                inkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.Ink;
-                inkCanvasHost.Show();
-            }
-            else
-            {
-                inkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.None;
-                inkCanvasHost.Hide();
-            }
-
-            // Store reference to global InkCanvas
-            globalInkCanvas = inkCanvas;
-
-            // Load page elements
-            foreach (var item in currentPage.pageElements)
-            {
-                // Create control for control checker
-                Control itemCtrl;
-                try
+                // Handle Dialog Result
+                if (result == DialogResult.OK)
                 {
-                    itemCtrl = (Control)item;
-                    pagebg.Controls.Add(itemCtrl);
-                    itemCtrl.Show();
-                }
-                catch (InvalidCastException)
-                {
+                    // Save path to variable
+                    string chosenFilePath = saveFileDialog.FileName;
 
+                    // Check if .dgan extension. If so, save file using DigifficeFileWriterDGAN.
+                    if (Path.GetExtension(chosenFilePath) == ".dgan")
+                    {
+                        // Create extension-removed string
+                        string extensionRemovedFileName = Path.GetFileNameWithoutExtension(chosenFilePath);
+
+                        if (fileToSave == editorNotebook)
+                        {
+                            editorNotebook.fileName = extensionRemovedFileName;
+                        }
+
+                        fileToSave.fileName = extensionRemovedFileName;
+
+                        DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
+                        fileWriter.WriteDGANFile(fileToSave, chosenFilePath);
+                        notebookAtLastSave = editorNotebook;
+                        openFilePath = chosenFilePath;
+                        DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
+                    }
                 }
             }
-
-            // Send inkcanvas to back when a control is added
-            pagebg.ControlAdded += (s, e) =>
+            else
             {
-                inkCanvasHost.SendToBack();
-            };
+                DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
+                fileWriter.WriteDGANFile(fileToSave, filePath);
+                notebookAtLastSave = editorNotebook;
+                DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
+            }
+        }
 
-            // Create a textbox anywhere on the page that is clicked
-            pagebg.Click += (s, e) =>
+        private void DigifficeAllnote_OpenFile(string filePath)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Open Digiffice Allnote Notebook";
+            openFileDialog.Filter = "Digiffice Allnote Notebook (*.dgan)|*.dgan";
+            DialogResult result = openFileDialog.ShowDialog();
+
+            bool continueBool = false;
+
+            // Handle Dialog Result
+            if (result == DialogResult.OK)
             {
-                if (allowedToCreateTextBoxOnPage)
+                string chosenFilePath = openFileDialog.FileName;
+                if (Path.GetExtension(chosenFilePath) == ".dgan")
                 {
-                    Panel rtbPnl = DigifficeAllnote_DefaultRTBPnl(pagebg, true);
+                    filePath = chosenFilePath;
+                    continueBool = true;
                 }
                 else
                 {
-                    // If any control is focused, unfocus it and allow textbox creation on next click
-                    if (this.ActiveControl != null)
-                    {
-                        this.ActiveControl = null;
-                    }
-
-                    // Allow textbox creation on next click
-                    DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
-                }
-            };
-        }
-
-        // ..._Close... Events
-        private void DigifficeAllnote_CloseNotebook()
-        {
-            // Clear Editor
-            nonPageBg.Controls.Clear();
-            SectionBG_Chapters.Controls.Clear();
-            SectionBG_Pages.Controls.Clear();
-            // Clear Editor Variables
-            editorNotebook = null;
-            notebookAtLastSave = null;
-            currentChapter = null;
-            currentPage = null;
-            currentSelectedPage_Lbl = null;
-            isInDrawingMode = false;
-        }
-
-        private void NewRichTextBox_SelectionChanged(object? sender, EventArgs e)
-        {
-            // Show Home Tab
-            if (currentSelectedTab != HomeTab)
-            {
-                HomeTab_Click(HomeTab, new EventArgs());
-            }
-        }
-
-        private void DigifficeAllnote_ShowPageTitleAndDatetime(DigifficeAllnoteEditorFile.Page page)
-        {
-            // Create Page Title and Created DateTime Controls
-            TextBox pageTitle = new TextBox();
-            pageTitle.Location = new Point(20, 20);
-            pageTitle.BackColor = Color.White;
-            pageTitle.ForeColor = Color.Black;
-            pageTitle.BorderStyle = BorderStyle.None;
-            pageTitle.TextAlign = HorizontalAlignment.Left;
-            pageTitle.Font = new Font("Roboto", 14, FontStyle.Bold);
-            pageTitle.Text = page.pageTitle;
-            pageTitle.Size = TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font);
-            pageTitle.TextChanged += (s, e) =>
-            {
-                SizeF size = TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font);
-                pageTitle.Size = new Size((int)size.Width + 10, pageTitle.Height);
-                page.pageTitle = pageTitle.Text;
-                if (currentSelectedPage_Lbl != null)
-                {
-                    // Set Background image
-                    currentSelectedPage_Lbl.Text = page.pageNum + ". " + page.pageTitle;
-                }
-            };
-            pageTitle.GotFocus += (s, e) =>
-            {
-                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
-            };
-
-            Label PageCreatedDateTime = new Label();
-            PageCreatedDateTime.Location = new Point(20, pageTitle.Location.Y + pageTitle.Height + 10);
-            PageCreatedDateTime.Size = new Size(300, 20);
-            //PageCreatedDateTime.BackColor = Color.FromArgb(0, 0, 0, 0);
-            PageCreatedDateTime.ForeColor = Color.Black;
-            PageCreatedDateTime.Font = new Font("Roboto", 10, FontStyle.Regular);
-            PageCreatedDateTime.Text = page.CreatedDateTime.ToString("g");
-            PageCreatedDateTime.Size = new Size(TextRenderer.MeasureText(PageCreatedDateTime.Text, PageCreatedDateTime.Font).Width + 10, PageCreatedDateTime.Height);
-
-            // Add controls to PageBg
-            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
-            pagebg.Controls.Add(pageTitle);
-            pagebg.Controls.Add(PageCreatedDateTime);
-        }
-
-        private void DigifficeAllnote_ShowChaptersAndPagesInInspectors(DigifficeAllnoteEditorFile file, DigifficeAllnoteEditorFile.Chapter chapter)
-        {
-
-
-            DigifficeAllnote_ShowChaptersInInspector(file);
-            DigifficeAllnote_ShowPagesInInspector(chapter);
-        }
-
-        private void DigifficeAllnote_ShowPagesInInspector(DigifficeAllnoteEditorFile.Chapter chapter)
-        {
-            // Get Border Cover
-            Panel inspector_Pages_BorderCover = SectionBGPages_BorderCover;
-
-            // Clear controls
-            SectionBG_Pages.Controls.Clear();
-
-            // Add Border Cover
-            SectionBG_Pages.Controls.Add(inspector_Pages_BorderCover);
-
-            // Pages from chapter
-            for (int i = 0; i < chapter.chapterPages.Count;)
-            {
-                // Instantiate Page Panel and add to SectionBG_Pages
-
-                DigifficeAllnoteEditorFile.Page pageToShow = chapter.chapterPages[i];
-
-                Label inspector_PageLabel = new Label();
-                inspector_PageLabel.Name = "Inspector_PageLabel_" + pageToShow.pageNum;
-                inspector_PageLabel.Text = pageToShow.pageNum + ". " + pageToShow.pageTitle;
-                inspector_PageLabel.TextAlign = ContentAlignment.MiddleCenter;
-                inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Regular);
-                inspector_PageLabel.AutoEllipsis = true;
-                inspector_PageLabel.Size = new Size(SectionBG_Pages.Width, 36);
-                inspector_PageLabel.Image = Properties.Resources.DeselectedPageLabel_Allnote;
-                inspector_PageLabel.ImageAlign = ContentAlignment.MiddleCenter;
-                inspector_PageLabel.BackColor = Color.Transparent;
-                inspector_PageLabel.ForeColor = Color.Black;
-                inspector_PageLabel.BorderStyle = BorderStyle.None;
-                inspector_PageLabel.Location = new Point(0, (i * 35));
-                inspector_PageLabel.Cursor = Cursors.Hand;
-                inspector_PageLabel.Click += (s, e) =>
-                {
-                    // Deselect previous selected page
-                    if (currentSelectedPage_Lbl != null)
-                    {
-                        currentSelectedPage_Lbl.Image = Properties.Resources.DeselectedPageLabel_Allnote;
-                    }
-                    currentSelectedPage_Lbl = inspector_PageLabel;
-                    currentPage = pageToShow;
-
-                    // Show selected page
-                    DigifficeAllnote_ShowEditablePageBackground(pageToShow);
-                    currentSelectedPage_Lbl.Image = Properties.Resources.SelectedPageLabel_Allnote;
-
-                    // Todo: Paint when selected but not clicked (eg. when chapter is selected, first page is automatically selected but not clicked so it doesn't get painted) (Also applies to chapter labels in chapter inspector)
-                };
-
-                SectionBG_Pages.Controls.Add(inspector_PageLabel);
-                i++;
-            }
-        }
-
-        private void DigifficeAllnote_ShowChaptersInInspector(DigifficeAllnoteEditorFile file)
-        {
-            SectionBG_Chapters.Controls.Clear();
-            // Chapters from file
-            for (int i = 0; i < file.chapters.Count;)
-            {
-                // Instantiate Chapter Panel and add to SectionBG_Chapters
-                DigifficeAllnoteEditorFile.Chapter chapter = file.chapters[i];
-                Label inspector_ChapterLabel = new Label();
-                inspector_ChapterLabel.Name = "Inspector_ChapterLabel_" + chapter.chapterNum;
-                inspector_ChapterLabel.Text = chapter.chapterNum + ". " + chapter.chapterName;
-                inspector_ChapterLabel.TextAlign = ContentAlignment.MiddleCenter;
-                inspector_ChapterLabel.Font = new Font("Roboto", 12, FontStyle.Regular);
-                inspector_ChapterLabel.Size = new Size(SectionBG_Chapters.Width / file.chapters.Count, 30);
-                inspector_ChapterLabel.BackColor = file.chapters[i].chapterCol;
-                inspector_ChapterLabel.ForeColor = Color.Black;
-                inspector_ChapterLabel.BorderStyle = BorderStyle.None;
-                inspector_ChapterLabel.Location = new Point(i * (SectionBG_Chapters.Width / file.chapters.Count), 0);
-                inspector_ChapterLabel.Cursor = Cursors.Hand;
-                inspector_ChapterLabel.Click += (s, e) =>
-                {
-                    DigifficeAllnote_ShowChapter(chapter, file);
-                };
-                SectionBG_Chapters.Controls.Add(inspector_ChapterLabel);
-                i++;
-            }
-        }
-
-        // Other File Events
-        private DigifficeAllnoteEditorFile.Chapter? FindChapterByName(DigifficeAllnoteEditorFile file, string name)
-        {
-            foreach (DigifficeAllnoteEditorFile.Chapter chapter in file.chapters)
-            {
-                if (chapter.chapterName == name)
-                {
-                    return chapter;
+                    MessageBox.Show("Invalid file type. Please select a .dgan file.");
+                    return;
                 }
             }
-            MessageBox.Show("Chapter " + name + " not found in file " + file.fileName);
-            return null;
-        }
-
-        // Digiffice Button Events
-        private void DigifficeButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        // NewPageBtn Events
-        private void NewPage_Click(object sender, EventArgs e)
-        {
-            DigifficeAllnote_NewPage("Unnamed Page", new Vector2(42.00f, 29.70f), editorNotebook, currentChapter, false);
-        }
-
-        // NewChapterBtn Events
-        private void NewChapterBtn_Click(object sender, EventArgs e)
-        {
-            DigifficeAllnote_NewChapter("Unnamed Chapter", editorNotebook);
-            DigifficeAllnote_ShowChapter(editorNotebook.chapters[editorNotebook.chapters.Count - 1], editorNotebook);
-            DigifficeAllnoteEditorFile.Chapter newChapter = editorNotebook.chapters[editorNotebook.chapters.Count - 1];
-            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorNotebook, newChapter);
-        }
-
-        // Allnote Tab Events
-        private void FileTab_Click(object sender, EventArgs e)
-        {
-            // Change ribbon tab image
-            if (currentSelectedTab != null)
+            else
             {
-                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                continueBool = false;
             }
-            FileTab.BackgroundImage = Properties.Resources.Tab;
 
-            // Instantiate File Tab Contents
-            RibbonPanel.Controls.Clear();
-            DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            fileTabContents.Prerequisites_InitialiseUI(NewAllnoteFileBtn_Click, SaveNotebookBtn_Click, OpenNotebookBtn_Click);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            fileTabContents.InitialiseUI(RibbonPanel);
-            currentSelectedTab = FileTab;
-        }
-
-        private void HomeTab_Click(object sender, EventArgs e)
-        {
-            // Change ribbon tab image
-            if (currentSelectedTab != null)
+            if (continueBool)
             {
-                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+                DigifficeFileReaderDGAN fileReader = new DigifficeFileReaderDGAN();
+                DigifficeAllnoteEditorFile openedFile = fileReader.ReadDGANFile(filePath, this);
+                openFilePath = filePath;
+
+                // Show name of file
+
+                if (openedFile == null || openedFile.chapters.Count == 0)
+                {
+                    throw new Exception("Error loading file. File may be corrupted or in an invalid format.");
+                }
+
+                DigifficeAllnote_CloseNotebook();
+                DigifficeAllnote_ShowNote(openedFile);
+                DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
             }
-            HomeTab.BackgroundImage = Properties.Resources.Tab;
-
-            // Instantiate Home Tab Contents
-            RibbonPanel.Controls.Clear();
-            DigifficeAllnoteHomeTab homeTabContents = new DigifficeAllnoteHomeTab();
-            homeTabContents.InitialiseUI(RibbonPanel);
-            currentSelectedTab = HomeTab;
-        }
-        private void InsertTab_Click(object sender, EventArgs e)
-        {
-            // Change ribbon tab image
-            if (currentSelectedTab != null)
-            {
-                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
-            }
-            InsertTab.BackgroundImage = Properties.Resources.Tab;
-
-            // Instantiate Insert Tab Contents
-            RibbonPanel.Controls.Clear();
-            DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            insertTabContents.Prerequisities_InitialiseUI(InsertImageBtn_Click, InsertTableBtn_Click);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            insertTabContents.InitialiseUI(RibbonPanel);
-            currentSelectedTab = InsertTab;
-        }
-        private void DrawTab_Click(object sender, EventArgs e)
-        {
-            // Change ribbon tab image
-            if (currentSelectedTab != null)
-            {
-                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
-            }
-            DrawTab.BackgroundImage = Properties.Resources.Tab;
-
-            // Instantiate Draw Tab Contents
-            RibbonPanel.Controls.Clear();
-            DigifficeAllnoteDrawTab drawTabContents = new DigifficeAllnoteDrawTab();
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            drawTabContents.Prerequisities_InitialiseUI(EnterExitDrawingModeBtn_Click);
-#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            drawTabContents.InitialiseUI(RibbonPanel);
-            currentSelectedTab = DrawTab;
-        }
-        private void HistoryTab_Click(object sender, EventArgs e)
-        {
-            // Change ribbon tab image
-            if (currentSelectedTab != null)
-            {
-                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
-            }
-            HistoryTab.BackgroundImage = Properties.Resources.Tab;
-
-            // Instantiate History Tab Contents
-            RibbonPanel.Controls.Clear();
-            DigifficeAllnoteHistoryTab historyTabContents = new DigifficeAllnoteHistoryTab();
-            historyTabContents.InitialiseUI(RibbonPanel);
-            currentSelectedTab = HistoryTab;
-        }
-        private void ReviewTab_Click(object sender, EventArgs e)
-        {
-            // Change ribbon tab image
-            if (currentSelectedTab != null)
-            {
-                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
-            }
-            ReviewTab.BackgroundImage = Properties.Resources.Tab;
-
-            // Instantiate Review Tab Contents
-            RibbonPanel.Controls.Clear();
-            DigifficeAllnoteReviewTab reviewTabContents = new DigifficeAllnoteReviewTab();
-            reviewTabContents.InitialiseUI(RibbonPanel);
-            currentSelectedTab = ReviewTab;
-        }
-        private void ViewTab_Click(object sender, EventArgs e)
-        {
-            // Change ribbon tab image
-            if (currentSelectedTab != null)
-            {
-                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
-            }
-            ViewTab.BackgroundImage = Properties.Resources.Tab;
-
-            // Instantiate View Tab Contents
-            RibbonPanel.Controls.Clear();
-            DigifficeAllnoteViewTab viewTabContents = new DigifficeAllnoteViewTab();
-            viewTabContents.InitialiseUI(RibbonPanel);
-            currentSelectedTab = ViewTab;
-        }
-        private void HelpTab_Click(object sender, EventArgs e)
-        {
-            // Change ribbon tab image
-            if (currentSelectedTab != null)
-            {
-                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
-            }
-            HelpTab.BackgroundImage = Properties.Resources.Tab;
-
-            // Instantiate Help Tab Contents
-            RibbonPanel.Controls.Clear();
-            DigifficeAllnoteHelpTab helpTabContents = new DigifficeAllnoteHelpTab();
-            helpTabContents.InitialiseUI(RibbonPanel);
-            currentSelectedTab = HelpTab;
         }
 
-        // Windowmsg Events
-        private void Windowmsg_Paint(object sender, PaintEventArgs e)
-        {
-            // Center Windowmsg Label
-            int centerX = (this.Width - Windowmsg.Width) / 2;
-            Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
-        }
-
-        private void Windowmsg_TextChanged(object sender, EventArgs e)
-        {
-            // Center Windowmsg Label
-            int centerX = (this.Width - Windowmsg.Width) / 2;
-            Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
-        }
-
-        // Other Events
+        //
+        //
+        // Calculation Code (Model)
+        //
+        //
 
         private int Convertcm_pixels(float centimeters)
         {
@@ -719,244 +286,230 @@ namespace Digiffice
             return (int)pixel;
         }
 
-        private void DigifficeAllnote_UpdateTableFrameSize(Panel pnl, DataGridView table)
+        //
+        //
+        // UI (View) Code
+        //
+        //
+
+        private void DigifficeAllnote_IdlebarSetup()
         {
-            int totalWidth = table.Columns.GetColumnsWidth(DataGridViewElementStates.Visible);
-            int totalHeight = table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
-            table.Width = totalWidth + 1;
-            table.Height = totalHeight + 1;
+            DigifficeFileReaderDGUP fileReaderDGUP = new DigifficeFileReaderDGUP();
 
-            pnl.Size = new Size(totalWidth + 1, totalHeight + 11);
-        }
-
-        private void SectionBG_Paint(object sender, PaintEventArgs e)
-        {
-            this.SectionBG.Location = new Point(20, 60);
-
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            Point fixedClientRectLocation = new Point(SectionBG.ClientRectangle.Location.X - 1, SectionBG.ClientRectangle.Location.Y - 1);
-            Size fixedClientRectSize = new Size(SectionBG.ClientRectangle.Size.Width + 1, SectionBG.ClientRectangle.Size.Height + 1);
-            Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
-            using (LinearGradientBrush brush = new LinearGradientBrush(rect, notebook_ChapterCol, Color.FromArgb(255,
-                Math.Clamp(notebook_ChapterCol.R + 30, 0, 255),
-                Math.Clamp(notebook_ChapterCol.G + 30, 0, 255),
-                Math.Clamp(notebook_ChapterCol.B + 30, 0, 255)), LinearGradientMode.Vertical))
+            if (np_AC.ac_offline)
             {
-                e.Graphics.FillRectangle(brush, rect);
-            }
-
-            // Change NewPageBtn text colour based on notebook_ChapterCol brightness
-            double Value_Darkness = (notebook_ChapterCol.R + notebook_ChapterCol.G + notebook_ChapterCol.B) / (255 * 3);
-            if (Value_Darkness < 0.33)
-            {
-                NewPageBtn.ForeColor = Color.Black;
-                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Black;
-            }
-            else if (Value_Darkness < 0.66)
-            {
-                NewPageBtn.ForeColor = Color.Gray;
-                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Gray;
-            }
-            else
-            {
-                NewPageBtn.ForeColor = Color.White;
-                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.White;
-            }
-        }
-
-        private void CosmeticPanel_BetweenScrollbars_Paint(object sender, PaintEventArgs e)
-        {
-            // Setup CosmeticPanel_BetweenScrollbars
-            CosmeticPanel_BetweenScrollbars.Location = new Point(nonPageBg.Right, nonPageBg.Bottom);
-            CosmeticPanel_BetweenScrollbars.Size = new Size(30, 30);
-        }
-
-        private void SelectedPageLabel_Paint(object sender, PaintEventArgs e)
-        {
-            Label inspector_PageLabel = (Label)sender;
-
-            // Paint selected page label
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            Point fixedClientRectLocation = new Point(inspector_PageLabel.ClientRectangle.Location.X - 1, inspector_PageLabel.ClientRectangle.Location.Y - 1);
-            Size fixedClientRectSize = new Size(inspector_PageLabel.Width + 2, inspector_PageLabel.Height + 2);
-            Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
-            using (LinearGradientBrush brush = new LinearGradientBrush(rect, Color.White, Color.LightBlue, LinearGradientMode.Horizontal))
-            {
-                e.Graphics.FillRectangle(brush, rect);
-            }
-
-            // Render Text above gradient
-            TextRenderer.DrawText(e.Graphics, inspector_PageLabel.Text, inspector_PageLabel.Font, inspector_PageLabel.ClientRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
-        }
-
-        // Events for DigifficeAllnoteFileTab
-        private void NewAllnoteFileBtn_Click(object sender, EventArgs e)
-        {
-            // Create continue boolean
-            bool continueBool = false;
-
-            // Show Messagebox if !allnoteFile_SavedAfterLatestChange
-
-            if (!allnoteFile_SavedAfterLatestChange)
-            {
-                DialogResult resultSave = MessageBox.Show("Would you like to save before creating a new file? Any Unsaved Changes will be lost.", "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (resultSave)
+                switch (fileReaderDGUP.readIdlebarInfo(globalVar.globalDigifficeOfflineUserDataPath + "/UserPrefs.dgup"))
                 {
-                    case DialogResult.Yes:
-                        SaveNotebookBtn_Click(sender, e);
-                        // Continue on with creating New Notebook
-                        continueBool = true;
-                        break;
-
-                    case DialogResult.No:
-                        // Continue on with creating New Notebook
-                        continueBool = true;
-                        break;
-
-                    case DialogResult.Cancel:
-                        continueBool = false;
-                        break;
-
-                }
-            }
-
-            DialogResult resultConfirm = MessageBox.Show("Are you sure you want to close this notebook?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            // Check Result of resultConfirm
-            if (resultConfirm == DialogResult.Yes)
-            {
-                continueBool = true;
-            }
-            else
-            {
-                continueBool = false;
-            }
-
-            // Continue with Function if continueBool
-            if (continueBool)
-            {
-                // Close Notebook
-                DigifficeAllnote_CloseNotebook();
-                DigifficeAllnote_NewFile("New Notebook");
-            }
-        }
-
-        private void SaveNotebookBtn_Click(object sender, EventArgs e)
-        {
-            DigifficeAllnote_SaveFile(editorNotebook, openFilePath);
-        }
-
-        private void OpenNotebookBtn_Click(object sender, EventArgs e)
-        {
-            // Create continue boolean
-            bool continueBool = true;
-            // Show Messagebox if !allnoteFile_SavedAfterLatestChange
-            if (!allnoteFile_SavedAfterLatestChange)
-            {
-                DialogResult resultSave = MessageBox.Show("Would you like to save before opening a new file? Any Unsaved Changes will be lost.", "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (resultSave)
-                {
-                    case DialogResult.Yes:
-                        SaveNotebookBtn_Click(sender, e);
-                        // Continue on with opening Notebook
-                        continueBool = true;
-                        break;
-                    case DialogResult.No:
-                        // Continue on with opening Notebook
-                        continueBool = true;
-                        break;
-                    case DialogResult.Cancel:
-                        continueBool = false;
+                    case "NEWS_IDLEBAR":
+                        NewsIdlebar newsIdlebar = new NewsIdlebar();
+                        newsIdlebar.idlebar = Idlebar;
+                        Idlebar.Controls.Add(newsIdlebar);
                         break;
                 }
             }
-            // Continue with Function if continueBool
-            if (continueBool)
+            else
             {
-                DigifficeAllnote_OpenFile(openFilePath);
-            }
-        }
-
-        // Events for DigifficeAllnoteInsertTab
-        private void InsertImageBtn_Click(object sender, EventArgs e)
-        {
-            if (currentPage != null)
-            {
-                // Show Dialog to choose image
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Title = "Insert Image";
-                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-                DialogResult result = openFileDialog.ShowDialog();
-                // Handle Dialog Result
-                if (result == DialogResult.OK)
+                switch (fileReaderDGUP.readIdlebarInfo(globalVar.globalDigifficeUserDataPath + "/" + np_AC.ac_username + "/UserPrefs.dgup"))
                 {
-                    // Get image
-                    string chosenImagePath = openFileDialog.FileName;
-                    BitmapImage bmpImg = new BitmapImage();
-                    bmpImg.BeginInit();
-                    bmpImg.UriSource = new Uri(chosenImagePath);
-
-                    bmpImg.CacheOption = BitmapCacheOption.OnLoad; // Load the image immediately to prevent file locking issues
-                    bmpImg.CreateOptions = BitmapCreateOptions.IgnoreImageCache; // Ignore the image cache to ensure the latest version of the image is loaded
-
-                    bmpImg.EndInit();
-
-                    ElementHost dspElementHost = DigifficeAllnote_DefaultDraggableSizablePictureBox(Path.GetExtension(chosenImagePath).ToLower(), bmpImg, true);
+                    case "NEWS_IDLEBAR":
+                        NewsIdlebar newsIdlebar = new NewsIdlebar();
+                        newsIdlebar.idlebar = Idlebar;
+                        Idlebar.Controls.Add(newsIdlebar);
+                        break;
                 }
             }
         }
 
-        private void InsertTableBtn_Click(object sender, EventArgs e)
+        private void SetupBorderPanels()
         {
-            DigifficeAllnote_InsertTable insertTableForm = new DigifficeAllnote_InsertTable();
-            DialogResult dialogResult = insertTableForm.ShowDialog();
-
-            if (dialogResult == DialogResult.OK)
-            {
-                DataGridView tableDataGridView = DigifficeAllnote_Table(insertTableForm.Rows, insertTableForm.Cols, true);
-            }
+            // Setup SectionBG_Borderpnl
+            SectionBG_Borderpnl.Location = new Point(SectionBG.Location.X - 1, SectionBG.Location.Y - 1);
+            SectionBG_Borderpnl.Size = new Size(SectionBG.Width + 2, SectionBG.Height + 2);
+            SectionBG_Borderpnl.BackColor = Color.Navy;
+            SectionBG_Borderpnl.SendToBack();
+            WorkspacePanel.Controls.Add(SectionBG_Borderpnl);
         }
 
-        // Events for DigifficeAllnoteHomeTab
-
-        // Events for DigifficeAllnoteDrawTab
-        private void EnterExitDrawingModeBtn_Click(object sender, EventArgs e)
+        private void DigifficeAllnote_EditSizeOfRichTextBox(RichTextBox richTextBox)
         {
-            if (!isInDrawingMode)
-            {
-                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, true);
-
-                // Enable InkCanvas Editing Mode
-                InkCanvas_EditingModeChanged();
-            }
-            else
-            {
-                DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, false);
-
-                // Disable InkCanvas Editing Mode
-                InkCanvas_EditingModeChanged();
-            }
+            int lineCount = richTextBox.GetLineFromCharIndex(richTextBox.TextLength) + 1;
+            int newHeight = (lineCount * richTextBox.Font.Height);
+            richTextBox.Height = newHeight;
         }
 
-        // InkCanvas Functions/Events
-        private void InkCanvas_EditingModeChanged()
+        public DataGridView DigifficeAllnote_Table(int rows, int cols, bool addToCtrl)
         {
-            ElementHost inkCanvasHost = (ElementHost)SectionBG.Controls.Find("InkCanvasHost", true)[0];
+            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
 
-            if (isInDrawingMode)
-            {
-                globalInkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.Ink;
-                inkCanvasHost.Show();
+            Panel parentPnl = new Panel();
+            parentPnl.Tag = "NewPnl_Table";
+            parentPnl.Location = new Point(200, 200);
+            parentPnl.BackColor = Color.Gray;
 
-            }
-            else
+            // Make Parent Panel Draggable
+            bool isDragging = false;
+
+            // newPanel events
+            parentPnl.MouseDown += (s, e) =>
             {
-                globalInkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.None;
-                inkCanvasHost.Hide();
+                isDragging = true;
+                this.ActiveControl = parentPnl;
+            };
+            parentPnl.MouseUp += (s, e) =>
+            {
+                isDragging = false;
+            };
+            parentPnl.MouseMove += (s, e) =>
+            {
+                if (isDragging)
+                {
+                    int newX = parentPnl.Location.X + e.X - (parentPnl.Width / 2);
+                    int newY = parentPnl.Location.Y + e.Y;
+                    parentPnl.Location = new Point(newX, newY);
+                }
+            };
+
+            // Create Remove Button
+            Button removeBtn = new Button();
+            removeBtn.Size = new Size(8, 8);
+            removeBtn.Location = new Point(1, 1);
+            removeBtn.FlatStyle = FlatStyle.Flat;
+            removeBtn.FlatAppearance.BorderSize = 0;
+            removeBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            removeBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            removeBtn.BackgroundImage = Properties.Resources.BinIcon2;
+            removeBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            removeBtn.Cursor = Cursors.Hand;
+
+            // removeBtn events
+            removeBtn.Click += (s, e) =>
+            {
+                // Removes active control and allows a new RichTextBox to be created on the page
+                DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
+
+                // Remove parentPnl
+                currentPage.pageElements.Remove(parentPnl);
+                pagebg.Controls.Remove(parentPnl);
+                parentPnl.Dispose();
+            };
+            parentPnl.Controls.Add(removeBtn);
+
+            DataGridView table = new DataGridView();
+            table.Location = new Point(0, 10);
+            table.RowCount = rows;
+            table.ColumnCount = cols;
+            table.AutoSize = true;
+            table.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            table.ColumnHeadersVisible = false;
+            table.EnableHeadersVisualStyles = false;
+            table.RowHeadersVisible = false;
+            table.BorderStyle = BorderStyle.None;
+            table.AllowUserToAddRows = true;
+            table.AllowUserToDeleteRows = true;
+            table.AllowUserToResizeRows = true;
+            table.AllowUserToResizeColumns = true;
+            table.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            table.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None; // Lock in place after setting fill size
+            table.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+            table.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None; // Lock in place after setting displayed cells size
+            table.ScrollBars = ScrollBars.None;
+            table.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
+            table.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
+
+            table.Layout += (s, e) =>
+            {
+                DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
+            };
+
+            table.CellValueChanged += (s, e) =>
+            {
+                if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+                table.AutoResizeColumn(e.ColumnIndex, DataGridViewAutoSizeColumnMode.AllCells);
+                table.AutoResizeRow(e.RowIndex, DataGridViewAutoSizeRowMode.AllCells);
+                DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
+            };
+
+            // Todo: Resize while mouse dragging so that the end rows can be resized.
+            // Todo: Multi-line table text
+
+            parentPnl.Controls.Add(table);
+
+            if (addToCtrl)
+            {
+                pagebg.Controls.Add(parentPnl);
             }
+
+            return table;
         }
 
-        // Element Creation
+        public ElementHost DigifficeAllnote_DefaultDraggableSizablePictureBox(string fmt, BitmapSource bmpImg, bool addToCtrl)
+        {
+            // Create DraggableSizablePicturebox
+            ElementHost elementHost = new ElementHost();
+            elementHost.Location = new Point(200, 200);
+            elementHost.Size = new Size(200, 200);
+            elementHost.AutoSize = true;
+            elementHost.BackColorTransparent = true;
+
+            // Create points
+            Point elementInitPoint = new Point();
+            Point mouseInitPoint = new Point();
+
+            DraggableSizablePicturebox draggableSizablePicturebox = new DraggableSizablePicturebox();
+            draggableSizablePicturebox.Tag = fmt;
+            draggableSizablePicturebox.baseImg.Source = bmpImg;
+            draggableSizablePicturebox.baseImg.Width = bmpImg.PixelWidth;
+            draggableSizablePicturebox.baseImg.Height = bmpImg.PixelHeight;
+            draggableSizablePicturebox.UpdateLayout();
+
+            // Add drag functionality to DraggableSizablePicturebox
+            draggableSizablePicturebox.baseImg.MouseMove += (s, e) =>
+            {
+                if (draggableSizablePicturebox.IsDragging)
+                {
+                    Point mousePos = Cursor.Position;
+                    int newX = elementInitPoint.X + (mousePos.X - mouseInitPoint.X);
+                    int newY = elementInitPoint.Y + (mousePos.Y - mouseInitPoint.Y);
+                    elementHost.Location = new Point(newX, newY);
+                }
+
+                if (draggableSizablePicturebox.IsDragReady && Math.Abs(mouseInitPoint.X - Cursor.Position.X) > 5 && Math.Abs(mouseInitPoint.Y - Cursor.Position.Y) > 5)
+                {
+                    draggableSizablePicturebox.IsDragging = true;
+                }
+            };
+
+            draggableSizablePicturebox.MouseDown += (s, e) =>
+            {
+                if (draggableSizablePicturebox.IsTransforming)
+                {
+                    elementInitPoint = elementHost.Location;
+                    mouseInitPoint = Cursor.Position;
+                }
+            };
+
+            // Set ElementHost child
+            elementHost.Child = draggableSizablePicturebox;
+
+            if (addToCtrl)
+            {
+                // Add PictureBox to current page
+                Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+                pagebg.Controls.Add(elementHost);
+            }
+
+            // Add PictureBox to currentPage's pageElements for saving/loading purposes
+            if (addToCtrl)
+            {
+                currentPage.pageElements.Add(elementHost);
+                elementHost.BringToFront();
+            }
+
+            return elementHost;
+        }
 
         public Panel DigifficeAllnote_DefaultRTBPnl(Control pagebg, bool addToCtrl)
         {
@@ -1158,198 +711,512 @@ namespace Digiffice
             return newPanel;
         }
 
-        public ElementHost DigifficeAllnote_DefaultDraggableSizablePictureBox(string fmt, BitmapSource bmpImg, bool addToCtrl)
+        private void EnterExitDrawingModeBtn_Click(object sender, EventArgs e)
         {
-            // Create DraggableSizablePicturebox
-            ElementHost elementHost = new ElementHost();
-            elementHost.Location = new Point(200, 200);
-            elementHost.Size = new Size(200, 200);
-            elementHost.AutoSize = true;
-            elementHost.BackColorTransparent = true;
-
-            // Create points
-            Point elementInitPoint = new Point();
-            Point mouseInitPoint = new Point();
-
-            DraggableSizablePicturebox draggableSizablePicturebox = new DraggableSizablePicturebox();
-            draggableSizablePicturebox.Tag = fmt;
-            draggableSizablePicturebox.baseImg.Source = bmpImg;
-            draggableSizablePicturebox.baseImg.Width = bmpImg.PixelWidth;
-            draggableSizablePicturebox.baseImg.Height = bmpImg.PixelHeight;
-            draggableSizablePicturebox.UpdateLayout();
-
-            // Add drag functionality to DraggableSizablePicturebox
-            draggableSizablePicturebox.baseImg.MouseMove += (s, e) =>
+            if (!isInDrawingMode)
             {
-                if (draggableSizablePicturebox.IsDragging)
-                {
-                    Point mousePos = Cursor.Position;
-                    int newX = elementInitPoint.X + (mousePos.X - mouseInitPoint.X);
-                    int newY = elementInitPoint.Y + (mousePos.Y - mouseInitPoint.Y);
-                    elementHost.Location = new Point(newX, newY);
-                }
+                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, true);
 
-                if (draggableSizablePicturebox.IsDragReady && Math.Abs(mouseInitPoint.X - Cursor.Position.X) > 5 && Math.Abs(mouseInitPoint.Y - Cursor.Position.Y) > 5)
-                {
-                    draggableSizablePicturebox.IsDragging = true;
-                }
-            };
-
-            draggableSizablePicturebox.MouseDown += (s, e) =>
+                // Enable InkCanvas Editing Mode
+                InkCanvas_EditingModeChanged();
+            }
+            else
             {
-                if (draggableSizablePicturebox.IsTransforming)
-                {
-                    elementInitPoint = elementHost.Location;
-                    mouseInitPoint = Cursor.Position;
-                }
-            };
+                DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, false);
 
-            // Set ElementHost child
-            elementHost.Child = draggableSizablePicturebox;
+                // Disable InkCanvas Editing Mode
+                InkCanvas_EditingModeChanged();
+            }
+        }
 
-            if (addToCtrl)
+        private void InsertImageBtn_Click(object sender, EventArgs e)
+        {
+            if (currentPage != null)
             {
-                // Add PictureBox to current page
-                Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
-                pagebg.Controls.Add(elementHost);
+                // Show Dialog to choose image
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Title = "Insert Image";
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                DialogResult result = openFileDialog.ShowDialog();
+                // Handle Dialog Result
+                if (result == DialogResult.OK)
+                {
+                    // Get image
+                    string chosenImagePath = openFileDialog.FileName;
+                    BitmapImage bmpImg = new BitmapImage();
+                    bmpImg.BeginInit();
+                    bmpImg.UriSource = new Uri(chosenImagePath);
+
+                    bmpImg.CacheOption = BitmapCacheOption.OnLoad; // Load the image immediately to prevent file locking issues
+                    bmpImg.CreateOptions = BitmapCreateOptions.IgnoreImageCache; // Ignore the image cache to ensure the latest version of the image is loaded
+
+                    bmpImg.EndInit();
+
+                    ElementHost dspElementHost = DigifficeAllnote_DefaultDraggableSizablePictureBox(Path.GetExtension(chosenImagePath).ToLower(), bmpImg, true);
+                }
+            }
+        }
+
+        private void InsertTableBtn_Click(object sender, EventArgs e)
+        {
+            DigifficeAllnote_InsertTable insertTableForm = new DigifficeAllnote_InsertTable();
+            DialogResult dialogResult = insertTableForm.ShowDialog();
+
+            if (dialogResult == DialogResult.OK)
+            {
+                DataGridView tableDataGridView = DigifficeAllnote_Table(insertTableForm.Rows, insertTableForm.Cols, true);
+            }
+        }
+
+        private void NewAllnoteFileBtn_Click(object sender, EventArgs e)
+        {
+            // Create continue boolean
+            bool continueBool = false;
+
+            // Show Messagebox if !allnoteFile_SavedAfterLatestChange
+
+            if (!allnoteFile_SavedAfterLatestChange)
+            {
+                DialogResult resultSave = MessageBox.Show("Would you like to save before creating a new file? Any Unsaved Changes will be lost.", "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (resultSave)
+                {
+                    case DialogResult.Yes:
+                        SaveNotebookBtn_Click(sender, e);
+                        // Continue on with creating New Notebook
+                        continueBool = true;
+                        break;
+
+                    case DialogResult.No:
+                        // Continue on with creating New Notebook
+                        continueBool = true;
+                        break;
+
+                    case DialogResult.Cancel:
+                        continueBool = false;
+                        break;
+
+                }
             }
 
-            // Add PictureBox to currentPage's pageElements for saving/loading purposes
-            if (addToCtrl)
+            DialogResult resultConfirm = MessageBox.Show("Are you sure you want to close this notebook?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            // Check Result of resultConfirm
+            if (resultConfirm == DialogResult.Yes)
             {
-                currentPage.pageElements.Add(elementHost);
-                elementHost.BringToFront();
+                continueBool = true;
+            }
+            else
+            {
+                continueBool = false;
             }
 
-            return elementHost;
+            // Continue with Function if continueBool
+            if (continueBool)
+            {
+                // Close Notebook
+                DigifficeAllnote_CloseNotebook();
+                DigifficeAllnote_NewFile("New Notebook");
+            }
         }
 
-        public DataGridView DigifficeAllnote_Table(int rows, int cols, bool addToCtrl)
+        private void SaveNotebookBtn_Click(object sender, EventArgs e)
         {
-            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+            DigifficeAllnote_SaveFile(editorNotebook, openFilePath);
+        }
 
-            Panel parentPnl = new Panel();
-            parentPnl.Tag = "NewPnl_Table";
-            parentPnl.Location = new Point(200, 200);
-            parentPnl.BackColor = Color.Gray;
-
-            // Make Parent Panel Draggable
-            bool isDragging = false;
-
-            // newPanel events
-            parentPnl.MouseDown += (s, e) =>
+        private void OpenNotebookBtn_Click(object sender, EventArgs e)
+        {
+            // Create continue boolean
+            bool continueBool = true;
+            // Show Messagebox if !allnoteFile_SavedAfterLatestChange
+            if (!allnoteFile_SavedAfterLatestChange)
             {
-                isDragging = true;
-                this.ActiveControl = parentPnl;
-            };
-            parentPnl.MouseUp += (s, e) =>
-            {
-                isDragging = false;
-            };
-            parentPnl.MouseMove += (s, e) =>
-            {
-                if (isDragging)
+                DialogResult resultSave = MessageBox.Show("Would you like to save before opening a new file? Any Unsaved Changes will be lost.", "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (resultSave)
                 {
-                    int newX = parentPnl.Location.X + e.X - (parentPnl.Width / 2);
-                    int newY = parentPnl.Location.Y + e.Y;
-                    parentPnl.Location = new Point(newX, newY);
+                    case DialogResult.Yes:
+                        SaveNotebookBtn_Click(sender, e);
+                        // Continue on with opening Notebook
+                        continueBool = true;
+                        break;
+                    case DialogResult.No:
+                        // Continue on with opening Notebook
+                        continueBool = true;
+                        break;
+                    case DialogResult.Cancel:
+                        continueBool = false;
+                        break;
+                }
+            }
+            // Continue with Function if continueBool
+            if (continueBool)
+            {
+                DigifficeAllnote_OpenFile(openFilePath);
+            }
+        }
+
+        private void SectionBG_Paint(object sender, PaintEventArgs e)
+        {
+            this.SectionBG.Location = new Point(20, 60);
+
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            Point fixedClientRectLocation = new Point(SectionBG.ClientRectangle.Location.X - 1, SectionBG.ClientRectangle.Location.Y - 1);
+            Size fixedClientRectSize = new Size(SectionBG.ClientRectangle.Size.Width + 1, SectionBG.ClientRectangle.Size.Height + 1);
+            Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
+            using (LinearGradientBrush brush = new LinearGradientBrush(rect, notebook_ChapterCol, Color.FromArgb(255,
+                Math.Clamp(notebook_ChapterCol.R + 30, 0, 255),
+                Math.Clamp(notebook_ChapterCol.G + 30, 0, 255),
+                Math.Clamp(notebook_ChapterCol.B + 30, 0, 255)), LinearGradientMode.Vertical))
+            {
+                e.Graphics.FillRectangle(brush, rect);
+            }
+
+            // Change NewPageBtn text colour based on notebook_ChapterCol brightness
+            double Value_Darkness = (notebook_ChapterCol.R + notebook_ChapterCol.G + notebook_ChapterCol.B) / (255 * 3);
+            if (Value_Darkness < 0.33)
+            {
+                NewPageBtn.ForeColor = Color.Black;
+                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Black;
+            }
+            else if (Value_Darkness < 0.66)
+            {
+                NewPageBtn.ForeColor = Color.Gray;
+                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.Gray;
+            }
+            else
+            {
+                NewPageBtn.ForeColor = Color.White;
+                CosmeticPanel_ButtonSeperator_SectionBG.BackColor = Color.White;
+            }
+        }
+
+        private void CosmeticPanel_BetweenScrollbars_Paint(object sender, PaintEventArgs e)
+        {
+            // Setup CosmeticPanel_BetweenScrollbars
+            CosmeticPanel_BetweenScrollbars.Location = new Point(nonPageBg.Right, nonPageBg.Bottom);
+            CosmeticPanel_BetweenScrollbars.Size = new Size(30, 30);
+        }
+
+        private void SelectedPageLabel_Paint(object sender, PaintEventArgs e)
+        {
+            Label inspector_PageLabel = (Label)sender;
+
+            // Paint selected page label
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            Point fixedClientRectLocation = new Point(inspector_PageLabel.ClientRectangle.Location.X - 1, inspector_PageLabel.ClientRectangle.Location.Y - 1);
+            Size fixedClientRectSize = new Size(inspector_PageLabel.Width + 2, inspector_PageLabel.Height + 2);
+            Rectangle rect = new(fixedClientRectLocation, fixedClientRectSize);
+            using (LinearGradientBrush brush = new LinearGradientBrush(rect, Color.White, Color.LightBlue, LinearGradientMode.Horizontal))
+            {
+                e.Graphics.FillRectangle(brush, rect);
+            }
+
+            // Render Text above gradient
+            TextRenderer.DrawText(e.Graphics, inspector_PageLabel.Text, inspector_PageLabel.Font, inspector_PageLabel.ClientRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+        }
+
+        private void Windowmsg_Paint(object sender, PaintEventArgs e)
+        {
+            // Center Windowmsg Label
+            int centerX = (this.Width - Windowmsg.Width) / 2;
+            Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
+        }
+
+        private void Windowmsg_TextChanged(object sender, EventArgs e)
+        {
+            // Center Windowmsg Label
+            int centerX = (this.Width - Windowmsg.Width) / 2;
+            Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
+        }
+
+        private void DigifficeButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void NewPage_Click(object sender, EventArgs e)
+        {
+            DigifficeAllnote_NewPage("Unnamed Page", new Vector2(42.00f, 29.70f), editorNotebook, currentChapter, false);
+        }
+
+        private void NewChapterBtn_Click(object sender, EventArgs e)
+        {
+            DigifficeAllnote_NewChapter("Unnamed Chapter", editorNotebook);
+            DigifficeAllnote_ShowChapter(editorNotebook.chapters[editorNotebook.chapters.Count - 1], editorNotebook);
+            DigifficeAllnoteEditorFile.Chapter newChapter = editorNotebook.chapters[editorNotebook.chapters.Count - 1];
+            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorNotebook, newChapter);
+        }
+
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void ExitButton_MouseEnter(object sender, EventArgs e)
+        {
+            ExitButton.BackgroundImage = xBtnHover;
+        }
+
+        private void ExitButton_MouseLeave(object sender, EventArgs e)
+        {
+            ExitButton.BackgroundImage = xBtnDefault;
+        }
+
+        //
+        // Ribbon Code
+        //
+
+        private void FileTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (currentSelectedTab != null)
+            {
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            FileTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate File Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            fileTabContents.Prerequisites_InitialiseUI(NewAllnoteFileBtn_Click, SaveNotebookBtn_Click, OpenNotebookBtn_Click);
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            fileTabContents.InitialiseUI(RibbonPanel);
+            currentSelectedTab = FileTab;
+        }
+
+        private void HomeTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (currentSelectedTab != null)
+            {
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            HomeTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Home Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteHomeTab homeTabContents = new DigifficeAllnoteHomeTab();
+            homeTabContents.InitialiseUI(RibbonPanel);
+            currentSelectedTab = HomeTab;
+        }
+        private void InsertTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (currentSelectedTab != null)
+            {
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            InsertTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Insert Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            insertTabContents.Prerequisities_InitialiseUI(InsertImageBtn_Click, InsertTableBtn_Click);
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            insertTabContents.InitialiseUI(RibbonPanel);
+            currentSelectedTab = InsertTab;
+        }
+        private void DrawTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (currentSelectedTab != null)
+            {
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            DrawTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Draw Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteDrawTab drawTabContents = new DigifficeAllnoteDrawTab();
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            drawTabContents.Prerequisities_InitialiseUI(EnterExitDrawingModeBtn_Click);
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            drawTabContents.InitialiseUI(RibbonPanel);
+            currentSelectedTab = DrawTab;
+        }
+        private void HistoryTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (currentSelectedTab != null)
+            {
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            HistoryTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate History Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteHistoryTab historyTabContents = new DigifficeAllnoteHistoryTab();
+            historyTabContents.InitialiseUI(RibbonPanel);
+            currentSelectedTab = HistoryTab;
+        }
+        private void ReviewTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (currentSelectedTab != null)
+            {
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            ReviewTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Review Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteReviewTab reviewTabContents = new DigifficeAllnoteReviewTab();
+            reviewTabContents.InitialiseUI(RibbonPanel);
+            currentSelectedTab = ReviewTab;
+        }
+        private void ViewTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (currentSelectedTab != null)
+            {
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            ViewTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate View Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteViewTab viewTabContents = new DigifficeAllnoteViewTab();
+            viewTabContents.InitialiseUI(RibbonPanel);
+            currentSelectedTab = ViewTab;
+        }
+        private void HelpTab_Click(object sender, EventArgs e)
+        {
+            // Change ribbon tab image
+            if (currentSelectedTab != null)
+            {
+                currentSelectedTab.BackgroundImage = Properties.Resources.DeselectedRibbontab;
+            }
+            HelpTab.BackgroundImage = Properties.Resources.Tab;
+
+            // Instantiate Help Tab Contents
+            RibbonPanel.Controls.Clear();
+            DigifficeAllnoteHelpTab helpTabContents = new DigifficeAllnoteHelpTab();
+            helpTabContents.InitialiseUI(RibbonPanel);
+            currentSelectedTab = HelpTab;
+        }
+
+        private void DigifficeAllnote_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
+        {
+            // Clear previous Page BG and Scrollbars
+            nonPageBg.Controls.Clear();
+
+            // Create Page
+            Panel pagebg = new Panel();
+            pagebg.Name = "PageBG";
+            pagebg.BackColor = Color.FromArgb(255, 249, 251, 255);
+            int sizex = Convertcm_pixels(currentPage.pageSize.X);
+            int sizey = Convertcm_pixels(currentPage.pageSize.Y);
+            pagebg.Size = new Size(sizex, sizey);
+            Point pagebgPos = new Point(0, 0);
+            pagebg.Location = pagebgPos;
+            nonPageBg.Controls.Add(pagebg);
+
+            // Edit Scrollbar Ranges and Sizes
+            vScrollBar.setMinMaxRange(0, sizey - nonPageBg.Height);
+            hScrollBar.setMinMaxRange(0, sizex - nonPageBg.Width);
+
+            // Setup/Reconfigure nonPageBG_Borderpnl
+            nonPageBG_Borderpnl.Location = new Point(nonPageBg.Location.X - 1, nonPageBg.Location.Y - 1);
+            nonPageBG_Borderpnl.Size = new Size(nonPageBg.Width + vScrollBar.ctrlToAdd.Width + 2, nonPageBg.Height + hScrollBar.ctrlToAdd.Height + 2);
+            nonPageBG_Borderpnl.BackColor = Color.Navy;
+            nonPageBG_Borderpnl.SendToBack();
+            SectionBG.Controls.Add(nonPageBG_Borderpnl);
+
+            // Show Page Title and Created DateTime
+            DigifficeAllnote_ShowPageTitleAndDatetime(currentPage);
+
+            // Create InkCanvas
+            ElementHost inkCanvasHost = new ElementHost();
+            inkCanvasHost.Name = "InkCanvasHost";
+            inkCanvasHost.Dock = DockStyle.Fill;
+            inkCanvasHost.BackColorTransparent = true;
+
+            WPFDigifficeAllnoteInkCanvas inkCanvas = new WPFDigifficeAllnoteInkCanvas();
+
+            // Set Background to pagebg col for seamless look.
+            inkCanvas.inkCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0));
+
+            // Set Default Drawing Attributes
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.Color = System.Windows.Media.Color.FromArgb(255, 0, 0, 0);
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.Width = 2;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.Height = 2;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.FitToCurve = true;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.StylusTip = System.Windows.Ink.StylusTip.Ellipse;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.StylusTipTransform = new System.Windows.Media.Matrix();
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.IgnorePressure = false;
+            inkCanvas.inkCanvas.DefaultDrawingAttributes.IsHighlighter = false;
+
+            // Add InkCanvas to PageBG
+            inkCanvasHost.Child = inkCanvas;
+            pagebg.Controls.Add(inkCanvasHost);
+            inkCanvasHost.SendToBack();
+
+            // Set InkCanvas Editing Mode
+            if (isInDrawingMode)
+            {
+                inkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.Ink;
+                inkCanvasHost.Show();
+            }
+            else
+            {
+                inkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.None;
+                inkCanvasHost.Hide();
+            }
+
+            // Store reference to global InkCanvas
+            globalInkCanvas = inkCanvas;
+
+            // Load page elements
+            foreach (var item in currentPage.pageElements)
+            {
+                // Create control for control checker
+                Control itemCtrl;
+                try
+                {
+                    itemCtrl = (Control)item;
+                    pagebg.Controls.Add(itemCtrl);
+                    itemCtrl.Show();
+                }
+                catch (InvalidCastException)
+                {
+
+                }
+            }
+
+            // Send inkcanvas to back when a control is added
+            pagebg.ControlAdded += (s, e) =>
+            {
+                inkCanvasHost.SendToBack();
+            };
+
+            // Create a textbox anywhere on the page that is clicked
+            pagebg.Click += (s, e) =>
+            {
+                if (allowedToCreateTextBoxOnPage)
+                {
+                    Panel rtbPnl = DigifficeAllnote_DefaultRTBPnl(pagebg, true);
+                }
+                else
+                {
+                    // If any control is focused, unfocus it and allow textbox creation on next click
+                    if (this.ActiveControl != null)
+                    {
+                        this.ActiveControl = null;
+                    }
+
+                    // Allow textbox creation on next click
+                    DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
                 }
             };
-
-            // Create Remove Button
-            Button removeBtn = new Button();
-            removeBtn.Size = new Size(8, 8);
-            removeBtn.Location = new Point(1, 1);
-            removeBtn.FlatStyle = FlatStyle.Flat;
-            removeBtn.FlatAppearance.BorderSize = 0;
-            removeBtn.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            removeBtn.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            removeBtn.BackgroundImage = Properties.Resources.BinIcon2;
-            removeBtn.BackgroundImageLayout = ImageLayout.Stretch;
-            removeBtn.Cursor = Cursors.Hand;
-
-            // removeBtn events
-            removeBtn.Click += (s, e) =>
-            {
-                // Removes active control and allows a new RichTextBox to be created on the page
-                DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
-
-                // Remove parentPnl
-                currentPage.pageElements.Remove(parentPnl);
-                pagebg.Controls.Remove(parentPnl);
-                parentPnl.Dispose();
-            };
-            parentPnl.Controls.Add(removeBtn);
-
-            DataGridView table = new DataGridView();
-            table.Location = new Point(0, 10);
-            table.RowCount = rows;
-            table.ColumnCount = cols;
-            table.AutoSize = true;
-            table.CellBorderStyle = DataGridViewCellBorderStyle.Single;
-            table.ColumnHeadersVisible = false;
-            table.EnableHeadersVisualStyles = false;
-            table.RowHeadersVisible = false;
-            table.BorderStyle = BorderStyle.None;
-            table.AllowUserToAddRows = true;
-            table.AllowUserToDeleteRows = true;
-            table.AllowUserToResizeRows = true;
-            table.AllowUserToResizeColumns = true;
-            table.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            table.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None; // Lock in place after setting fill size
-            table.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
-            table.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None; // Lock in place after setting displayed cells size
-            table.ScrollBars = ScrollBars.None;
-            table.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft;
-            table.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-
-            DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
-
-            table.Layout += (s, e) =>
-            {
-                DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
-            };
-
-            table.CellValueChanged += (s, e) =>
-            {
-                if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-
-                table.AutoResizeColumn(e.ColumnIndex, DataGridViewAutoSizeColumnMode.AllCells);
-                table.AutoResizeRow(e.RowIndex, DataGridViewAutoSizeRowMode.AllCells);
-                DigifficeAllnote_UpdateTableFrameSize(parentPnl, table);
-            };
-
-            // Todo: Resize while mouse dragging so that the end rows can be resized.
-            // Todo: Multi-line table text
-
-            parentPnl.Controls.Add(table);
-
-            if (addToCtrl)
-            {
-                pagebg.Controls.Add(parentPnl);
-            }
-
-            return table;
         }
 
-        // Other Functions
-
-        private void SetupBorderPanels()
-        {
-            // Setup SectionBG_Borderpnl
-            SectionBG_Borderpnl.Location = new Point(SectionBG.Location.X - 1, SectionBG.Location.Y - 1);
-            SectionBG_Borderpnl.Size = new Size(SectionBG.Width + 2, SectionBG.Height + 2);
-            SectionBG_Borderpnl.BackColor = Color.Navy;
-            SectionBG_Borderpnl.SendToBack();
-            WorkspacePanel.Controls.Add(SectionBG_Borderpnl);
-        }
-
-        private void DigifficeAllnote_EditSizeOfRichTextBox(RichTextBox richTextBox)
-        {
-            int lineCount = richTextBox.GetLineFromCharIndex(richTextBox.TextLength) + 1;
-            int newHeight = (lineCount * richTextBox.Font.Height);
-            richTextBox.Height = newHeight;
-        }
+        //
+        //
+        // User (Presenter) Code
+        //
+        //
 
         private void DigifficeAllnote_ChangeEditingVariables(bool allowedToCreateTextBoxOnPageLocal, bool allnoteFile_SavedAfterLatestChangeLocal, bool isInDrawingModeLocal)
         {
@@ -1368,195 +1235,287 @@ namespace Digiffice
             }
         }
 
-        public Bitmap CreateBitmapFromControl(Control control)
+        private void InkCanvas_EditingModeChanged()
         {
-            Bitmap bitmap = new Bitmap(control.Width, control.Height);
-            control.DrawToBitmap(bitmap, new Rectangle(Point.Empty, control.Size));
-            return bitmap;
-        }
+            ElementHost inkCanvasHost = (ElementHost)SectionBG.Controls.Find("InkCanvasHost", true)[0];
 
-        public BitmapSource ToBitmapSource(Bitmap bitmap)
-        {
-            BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                bitmap.GetHbitmap(),
-                IntPtr.Zero,
-                System.Windows.Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
-            return bitmapSource;
-        }
-
-        public Bitmap GetInkBitmap(InkCanvas canvas)
-        {
-            var rect = new Rect(0, 0, canvas.ActualWidth, canvas.ActualHeight);
-            RenderTargetBitmap rtb = new RenderTargetBitmap((int)rect.Width, (int)rect.Height, 96d, 96d, PixelFormats.Default);
-            rtb.Render(canvas);
-
-            BitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(rtb));
-
-            using (MemoryStream ms = new MemoryStream())
+            if (isInDrawingMode)
             {
-                encoder.Save(ms);
-                return new Bitmap(ms);
-            }
-        }
+                globalInkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.Ink;
+                inkCanvasHost.Show();
 
-        // Idlebar Functions
-
-        private void DigifficeAllnote_IdlebarSetup()
-        {
-            DigifficeFileReaderDGUP fileReaderDGUP = new DigifficeFileReaderDGUP();
-
-            if (np_AC.ac_offline)
-            {
-                switch (fileReaderDGUP.readIdlebarInfo(globalVar.globalDigifficeOfflineUserDataPath + "/UserPrefs.dgup"))
-                {
-                    case "NEWS_IDLEBAR":
-                        NewsIdlebar newsIdlebar = new NewsIdlebar();
-                        newsIdlebar.idlebar = Idlebar;
-                        Idlebar.Controls.Add(newsIdlebar);
-                        break;
-                }
             }
             else
             {
-                switch(fileReaderDGUP.readIdlebarInfo(globalVar.globalDigifficeUserDataPath + "/" + np_AC.ac_username + "/UserPrefs.dgup"))
-                {
-                    case "NEWS_IDLEBAR":
-                        NewsIdlebar newsIdlebar = new NewsIdlebar();
-                        newsIdlebar.idlebar = Idlebar;
-                        Idlebar.Controls.Add(newsIdlebar);
-                        break;
-                }
+                globalInkCanvas.inkCanvas.EditingMode = System.Windows.Controls.InkCanvasEditingMode.None;
+                inkCanvasHost.Hide();
             }
         }
 
-        // Prerequisite Functions
-
-        private void DigifficeAllnote_EditorPrerequisite()
+        private void DigifficeAllnote_UpdateTableFrameSize(Panel pnl, DataGridView table)
         {
-            // Setup nonPageBg
-            nonPageBg.Location = new Point(20, 20);
-            nonPageBg.Size = new Size(SectionBG.Width - 290, SectionBG.Height - 70);
+            int totalWidth = table.Columns.GetColumnsWidth(DataGridViewElementStates.Visible);
+            int totalHeight = table.Rows.GetRowsHeight(DataGridViewElementStates.Visible);
+            table.Width = totalWidth + 1;
+            table.Height = totalHeight + 1;
 
-            // Create Scrollbars
-            CustomVScrollBar pageVScroll = new CustomVScrollBar(new Point(nonPageBg.Right, nonPageBg.Top), new Size(30, nonPageBg.Height),
-                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
-                null, Properties.Resources.VScrollBar_UpScrollBtn, Properties.Resources.VScrollBar_DownScrollBtn, Properties.Resources.CustomVScrollBar_1);
-            pageVScroll.setMinMaxRange(0, 0);
-            pageVScroll.addControlstoControl(SectionBG);
-
-            CustomHScrollBar pageHScroll = new CustomHScrollBar(new Point(nonPageBg.Left, nonPageBg.Bottom), new Size(nonPageBg.Width, 30),
-                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
-                null, Properties.Resources.VScrollBar_LeftScrollBtn, Properties.Resources.VScrollBar_RightScrollBtn, Properties.Resources.CustomHScrollBar_1);
-            pageHScroll.setMinMaxRange(0, 0);
-            pageHScroll.addControlstoControl(SectionBG);
-
-            // Add scrollbars to class variables for later use
-            hScrollBar = pageHScroll;
-            vScrollBar = pageVScroll;
-
-            DigifficeAllnote_IdlebarSetup();
+            pnl.Size = new Size(totalWidth + 1, totalHeight + 11);
         }
 
-        // Saving and Saving Related Functions/Events
+        private void DigifficeAllnote_ShowPageTitleAndDatetime(DigifficeAllnoteEditorFile.Page page)
+        {
+            // Create Page Title and Created DateTime Controls
+            TextBox pageTitle = new TextBox();
+            pageTitle.Location = new Point(20, 20);
+            pageTitle.BackColor = Color.White;
+            pageTitle.ForeColor = Color.Black;
+            pageTitle.BorderStyle = BorderStyle.None;
+            pageTitle.TextAlign = HorizontalAlignment.Left;
+            pageTitle.Font = new Font("Roboto", 14, FontStyle.Bold);
+            pageTitle.Text = page.pageTitle;
+            pageTitle.Size = TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font);
+            pageTitle.TextChanged += (s, e) =>
+            {
+                SizeF size = TextRenderer.MeasureText(pageTitle.Text, pageTitle.Font);
+                pageTitle.Size = new Size((int)size.Width + 10, pageTitle.Height);
+                page.pageTitle = pageTitle.Text;
+                if (currentSelectedPage_Lbl != null)
+                {
+                    // Set Background image
+                    currentSelectedPage_Lbl.Text = page.pageNum + ". " + page.pageTitle;
+                }
+            };
+            pageTitle.GotFocus += (s, e) =>
+            {
+                DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
+            };
 
-        private void DigifficeAllnote_SaveFile(DigifficeAllnoteEditorFile fileToSave, string filePath)
+            Label PageCreatedDateTime = new Label();
+            PageCreatedDateTime.Location = new Point(20, pageTitle.Location.Y + pageTitle.Height + 10);
+            PageCreatedDateTime.Size = new Size(300, 20);
+            //PageCreatedDateTime.BackColor = Color.FromArgb(0, 0, 0, 0);
+            PageCreatedDateTime.ForeColor = Color.Black;
+            PageCreatedDateTime.Font = new Font("Roboto", 10, FontStyle.Regular);
+            PageCreatedDateTime.Text = page.CreatedDateTime.ToString("g");
+            PageCreatedDateTime.Size = new Size(TextRenderer.MeasureText(PageCreatedDateTime.Text, PageCreatedDateTime.Font).Width + 10, PageCreatedDateTime.Height);
+
+            // Add controls to PageBg
+            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+            pagebg.Controls.Add(pageTitle);
+            pagebg.Controls.Add(PageCreatedDateTime);
+        }
+
+        private void DigifficeAllnote_ShowChaptersAndPagesInInspectors(DigifficeAllnoteEditorFile file, DigifficeAllnoteEditorFile.Chapter chapter)
         {
 
-            // Check to see if filePath is empty
-            if (filePath == null)
+
+            DigifficeAllnote_ShowChaptersInInspector(file);
+            DigifficeAllnote_ShowPagesInInspector(chapter);
+        }
+
+        private void DigifficeAllnote_ShowPagesInInspector(DigifficeAllnoteEditorFile.Chapter chapter)
+        {
+            // Get Border Cover
+            Panel inspector_Pages_BorderCover = SectionBGPages_BorderCover;
+
+            // Clear controls
+            SectionBG_Pages.Controls.Clear();
+
+            // Add Border Cover
+            SectionBG_Pages.Controls.Add(inspector_Pages_BorderCover);
+
+            // Pages from chapter
+            for (int i = 0; i < chapter.chapterPages.Count;)
             {
-                // Show Dialog to choose file path
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Title = "Save Digiffice Allnote Notebook";
-                saveFileDialog.Filter = "Digiffice Allnote Notebook (*.dgan)|*.dgan";
-                DialogResult result = saveFileDialog.ShowDialog();
+                // Instantiate Page Panel and add to SectionBG_Pages
 
-                // Handle Dialog Result
-                if (result == DialogResult.OK)
+                DigifficeAllnoteEditorFile.Page pageToShow = chapter.chapterPages[i];
+
+                Label inspector_PageLabel = new Label();
+                inspector_PageLabel.Name = "Inspector_PageLabel_" + pageToShow.pageNum;
+                inspector_PageLabel.Text = pageToShow.pageNum + ". " + pageToShow.pageTitle;
+                inspector_PageLabel.TextAlign = ContentAlignment.MiddleCenter;
+                inspector_PageLabel.Font = new Font("Roboto", 12, FontStyle.Regular);
+                inspector_PageLabel.AutoEllipsis = true;
+                inspector_PageLabel.Size = new Size(SectionBG_Pages.Width, 36);
+                inspector_PageLabel.Image = Properties.Resources.DeselectedPageLabel_Allnote;
+                inspector_PageLabel.ImageAlign = ContentAlignment.MiddleCenter;
+                inspector_PageLabel.BackColor = Color.Transparent;
+                inspector_PageLabel.ForeColor = Color.Black;
+                inspector_PageLabel.BorderStyle = BorderStyle.None;
+                inspector_PageLabel.Location = new Point(0, (i * 35));
+                inspector_PageLabel.Cursor = Cursors.Hand;
+                inspector_PageLabel.Click += (s, e) =>
                 {
-                    // Save path to variable
-                    string chosenFilePath = saveFileDialog.FileName;
-
-                    // Check if .dgan extension. If so, save file using DigifficeFileWriterDGAN.
-                    if (Path.GetExtension(chosenFilePath) == ".dgan")
+                    // Deselect previous selected page
+                    if (currentSelectedPage_Lbl != null)
                     {
-                        // Create extension-removed string
-                        string extensionRemovedFileName = Path.GetFileNameWithoutExtension(chosenFilePath);
-
-                        if (fileToSave == editorNotebook)
-                        {
-                            editorNotebook.fileName = extensionRemovedFileName;
-                        }
-
-                        fileToSave.fileName = extensionRemovedFileName;
-
-                        DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
-                        fileWriter.WriteDGANFile(fileToSave, chosenFilePath);
-                        notebookAtLastSave = editorNotebook;
-                        openFilePath = chosenFilePath;
-                        DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
+                        currentSelectedPage_Lbl.Image = Properties.Resources.DeselectedPageLabel_Allnote;
                     }
-                }
-            }
-            else
-            {
-                DigifficeFileWriterDGAN fileWriter = new DigifficeFileWriterDGAN();
-                fileWriter.WriteDGANFile(fileToSave, filePath);
-                notebookAtLastSave = editorNotebook;
-                DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
+                    currentSelectedPage_Lbl = inspector_PageLabel;
+                    currentPage = pageToShow;
+
+                    // Show selected page
+                    DigifficeAllnote_ShowEditablePageBackground(pageToShow);
+                    currentSelectedPage_Lbl.Image = Properties.Resources.SelectedPageLabel_Allnote;
+
+                    // Todo: Paint when selected but not clicked (eg. when chapter is selected, first page is automatically selected but not clicked so it doesn't get painted) (Also applies to chapter labels in chapter inspector)
+                };
+
+                SectionBG_Pages.Controls.Add(inspector_PageLabel);
+                i++;
             }
         }
 
-        // Reading and Reading Related Functions/Events
-
-        private void DigifficeAllnote_OpenFile(string filePath)
+        private void DigifficeAllnote_ShowChaptersInInspector(DigifficeAllnoteEditorFile file)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Open Digiffice Allnote Notebook";
-            openFileDialog.Filter = "Digiffice Allnote Notebook (*.dgan)|*.dgan";
-            DialogResult result = openFileDialog.ShowDialog();
-
-            bool continueBool = false;
-
-            // Handle Dialog Result
-            if (result == DialogResult.OK)
+            SectionBG_Chapters.Controls.Clear();
+            // Chapters from file
+            for (int i = 0; i < file.chapters.Count;)
             {
-                string chosenFilePath = openFileDialog.FileName;
-                if (Path.GetExtension(chosenFilePath) == ".dgan")
+                // Instantiate Chapter Panel and add to SectionBG_Chapters
+                DigifficeAllnoteEditorFile.Chapter chapter = file.chapters[i];
+                Label inspector_ChapterLabel = new Label();
+                inspector_ChapterLabel.Name = "Inspector_ChapterLabel_" + chapter.chapterNum;
+                inspector_ChapterLabel.Text = chapter.chapterNum + ". " + chapter.chapterName;
+                inspector_ChapterLabel.TextAlign = ContentAlignment.MiddleCenter;
+                inspector_ChapterLabel.Font = new Font("Roboto", 12, FontStyle.Regular);
+                inspector_ChapterLabel.Size = new Size(SectionBG_Chapters.Width / file.chapters.Count, 30);
+                inspector_ChapterLabel.BackColor = file.chapters[i].chapterCol;
+                inspector_ChapterLabel.ForeColor = Color.Black;
+                inspector_ChapterLabel.BorderStyle = BorderStyle.None;
+                inspector_ChapterLabel.Location = new Point(i * (SectionBG_Chapters.Width / file.chapters.Count), 0);
+                inspector_ChapterLabel.Cursor = Cursors.Hand;
+                inspector_ChapterLabel.Click += (s, e) =>
                 {
-                    filePath = chosenFilePath;
-                    continueBool = true;
-                }
-                else
+                    DigifficeAllnote_ShowChapter(chapter, file);
+                };
+                SectionBG_Chapters.Controls.Add(inspector_ChapterLabel);
+                i++;
+            }
+        }
+
+        private DigifficeAllnoteEditorFile.Chapter? FindChapterByName(DigifficeAllnoteEditorFile file, string name)
+        {
+            foreach (DigifficeAllnoteEditorFile.Chapter chapter in file.chapters)
+            {
+                if (chapter.chapterName == name)
                 {
-                    MessageBox.Show("Invalid file type. Please select a .dgan file.");
-                    return;
+                    return chapter;
                 }
+            }
+            MessageBox.Show("Chapter " + name + " not found in file " + file.fileName);
+            return null;
+        }
+
+        private void DigifficeAllnote_NewFile(string fileName)
+        {
+            DigifficeAllnoteEditorFile editorFile = new DigifficeAllnoteEditorFile();
+            editorFile.fileName = fileName;
+            DigifficeAllnote_NewChapter("Unnamed Chapter", editorFile);
+            DigifficeAllnoteEditorFile.Chapter? firstChapter = FindChapterByName(editorFile, "Unnamed Chapter");
+            if (firstChapter == null)
+            {
+                MessageBox.Show("Error creating new notebook: first chapter not found. Closing Digiffice Allnote...");
+                this.Close();
+            }
+            DigifficeAllnote_ShowNote(editorFile);
+        }
+
+        private void DigifficeAllnote_NewPage(string pageName, Vector2 Size, DigifficeAllnoteEditorFile parentNotebook, DigifficeAllnoteEditorFile.Chapter parentChapter, bool isFirstInChapter)
+        {
+
+            DigifficeAllnoteEditorFile.Page newPage = new DigifficeAllnoteEditorFile.Page();
+            newPage.pageSize = Size;
+            newPage.pageNum = parentNotebook.filePages.Count + 1;
+            newPage.pageTitle = pageName;
+            newPage.CreatedDateTime = DateTime.Now;
+
+            int insertIndex;
+            if (isFirstInChapter)
+            {
+                insertIndex = parentNotebook.filePages.Count;
             }
             else
             {
-                continueBool = false;
+                insertIndex = parentChapter.chapterPages[parentChapter.chapterPages.Count - 1].pageNum;
             }
+            newPage.parentChapter = parentChapter;
+            parentNotebook.filePages.Insert(insertIndex, newPage);
+            parentChapter.chapterPages.Add(newPage);
 
-            if (continueBool)
+            // Update Page numbers (After over a week it finally works)
+            foreach (var item in parentNotebook.filePages)
             {
-                DigifficeFileReaderDGAN fileReader = new DigifficeFileReaderDGAN();
-                DigifficeAllnoteEditorFile openedFile = fileReader.ReadDGANFile(filePath, this);
-                openFilePath = filePath;
-
-                // Show name of file
-
-                if (openedFile == null || openedFile.chapters.Count == 0)
-                {
-                    throw new Exception("Error loading file. File may be corrupted or in an invalid format.");
-                }
-
-                DigifficeAllnote_CloseNotebook();
-                DigifficeAllnote_ShowNote(openedFile);
-                DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, true, isInDrawingMode);
+                item.pageNum = parentNotebook.filePages.IndexOf(item) + 1;
             }
+
+            DigifficeAllnote_ShowPagesInInspector(parentChapter);
+
+            DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
+        }
+
+        private void DigifficeAllnote_NewChapter(string chapterName, DigifficeAllnoteEditorFile parentNotebook)
+        {
+            // Create Chapter
+            DigifficeAllnoteEditorFile.Chapter newChapter = new DigifficeAllnoteEditorFile.Chapter();
+            Random rnd = new Random();
+            newChapter.chapterNum = parentNotebook.chapters.Count + 1;
+            if (newChapter.chapterNum != 1)
+            {
+                newChapter.chapterCol = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+            }
+            else
+            {
+                newChapter.chapterCol = Color.LightPink;
+            }
+            newChapter.chapterName = chapterName;
+            newChapter.chapterNum = parentNotebook.chapters.Count + 1;
+
+            // Create first page in chapter
+            Vector2 defaultPageSize_cm = new Vector2(42.00f, 29.70f);
+            DigifficeAllnote_NewPage("Unnamed Page", defaultPageSize_cm, parentNotebook, newChapter, true);
+
+            parentNotebook.chapters.Add(newChapter);
+        }
+
+        private void DigifficeAllnote_ShowChapter(DigifficeAllnoteEditorFile.Chapter chapter, DigifficeAllnoteEditorFile editorFile)
+        {
+            // Update current chapter
+            currentChapter = chapter;
+            notebook_ChapterCol = chapter.chapterCol;
+            currentPage = chapter.chapterPages[0];
+            SectionBG.Refresh();
+            DigifficeAllnote_ShowEditablePageBackground(chapter.chapterPages[0]);
+            DigifficeAllnote_ShowPagesInInspector(chapter);
+        }
+
+        private void DigifficeAllnote_ShowNote(DigifficeAllnoteEditorFile editorFile)
+        {
+            // Show Editable Page
+            editorNotebook = editorFile;
+            DigifficeAllnoteEditorFile.Chapter chapter = editorFile.chapters[0];
+            DigifficeAllnote_ShowChapter(chapter, editorFile);
+
+            // Show Chapters and Pages in Inspectors
+            DigifficeAllnote_ShowChaptersAndPagesInInspectors(editorFile, chapter);
+
+            // Initialise Editor Functions
+        }
+
+        private void DigifficeAllnote_CloseNotebook()
+        {
+            // Clear Editor
+            nonPageBg.Controls.Clear();
+            SectionBG_Chapters.Controls.Clear();
+            SectionBG_Pages.Controls.Clear();
+            // Clear Editor Variables
+            editorNotebook = null;
+            notebookAtLastSave = null;
+            currentChapter = null;
+            currentPage = null;
+            currentSelectedPage_Lbl = null;
+            isInDrawingMode = false;
         }
     }
 }

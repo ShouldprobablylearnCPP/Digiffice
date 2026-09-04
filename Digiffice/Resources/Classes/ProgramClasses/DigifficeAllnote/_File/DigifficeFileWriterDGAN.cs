@@ -31,6 +31,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                     // Step 2: Write (STRUCTURE) - includes Chapter groups, Chapters, Pages, and SubPages. This section must only define the properties of each element and their relationships, but not the contents.
                     // Note: The order is: / = Chapter Group, // = Chapter, /// = Page, //// = SubPage
                     writer.Write("(STRUCTURE)" + Environment.NewLine);
+
                     // Write Structure for Chapter groups
                     foreach (DigifficeAllnoteEditorFile.ChapterGroup chapterGroup in file.ChapterGroups)
                     {
@@ -106,6 +107,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                         writer.Write("|PAGESIZE: [" + page.pageSize.X + ", " + page.pageSize.Y + "]" + Environment.NewLine);
                         writer.Write("|CREATEDDATETIME: " + page.CreatedDateTime + Environment.NewLine);
                         writer.Write("|NUM: " + page.pageNum + Environment.NewLine);
+
                         // If page has parent chapter, write parent chapter number
                         if (page.parentChapter != null)
                         {
@@ -115,8 +117,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                         {
                             writer.Write("|PARENTCHAPTER: -1" + Environment.NewLine);
                         }
+
                         // Define string to add to line for page subpages
                         string pageSubPageNumbers = "[";
+
                         // Get number of each subpage in the page
                         foreach (DigifficeAllnoteEditorFile.SubPage subPage in file.fileSubPages)
                         {

@@ -13,10 +13,22 @@ namespace Digiffice
 {
     public partial class MoreProgramsForm : Form
     {
+        //
+        //
+        // Form Constructor
+        //
+        //
+
         public MoreProgramsForm()
         {
             InitializeComponent();
         }
+
+        //
+        //
+        // View
+        //
+        //
 
         private void MoreProgramsForm_Load(object sender, EventArgs e)
         {

@@ -16,6 +16,12 @@ namespace Digiffice
         public int Cols { get; private set; }
         public int Rows { get; private set; }
 
+        //
+        //
+        // Constructor
+        //
+        //
+
         public DigifficeAllnote_InsertTable()
         {
             InitializeComponent();
@@ -23,6 +29,12 @@ namespace Digiffice
             this.AcceptButton = OKBtn;
             this.CancelButton = CancelBtn;
         }
+
+        //
+        //
+        // View
+        //
+        //
 
         private void OKBtn_Click(object sender, EventArgs e)
         {

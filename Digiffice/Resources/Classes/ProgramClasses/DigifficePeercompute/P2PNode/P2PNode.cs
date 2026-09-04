@@ -34,6 +34,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
         public CancellationTokenSource localNodeTcpListenerCTokenSource;
 
+        //
+        // P2P Init
+        //
+
         public void initP2PNode(string localDirectory, nonprotected_AccountData nonprotected_ac)
         {
             // Todo: Implement. Implementation should include: Attempt to connect to P2P network. If successful, store necessary information for future use. If unsuccessful, handle the error - let them retry, exit, and let them know to check if anyone in the network is online.
@@ -150,17 +154,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
             //beginListeningForP2PNodes();
         }
 
-        public List<string> getOnlineUserList()
-        {
-            return onlineUserList;
-        }
+        //
+        //
+        // P2P Node
+        //
+        //
 
-        public List<string> getOfflineUserList()
-        {
-            return offlineUserList;
-        }
-
-        // Connection methods
         public void beginListeningForP2PNodes()
         {
             Task.Run(() => listenForP2PNodes(localNodeTcpListenerCTokenSource.Token));
@@ -203,7 +202,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
             streams.Clear();
         }
 
-        // Connection tasks
+        //
+        // P2P Tasks
+        //
+
         public async Task listenForP2PNodes(CancellationToken cToken)
         {
             while (!cToken.IsCancellationRequested)
@@ -250,6 +252,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
             return;
         }
+
+        //
+        // P2P Session
+        //
 
         public async Task StartP2PSession(TcpClient node, CancellationToken cToken, bool isLazy)
         {
@@ -437,7 +443,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
             }
         }
 
-        // Communication Methods
+        //
+        // P2P Communication
+        //
         
         public void sendCommandToNode(TcpClient node, P2PCommandProcessor.P2PCommand cmd, P2PCommandProcessor processor)
         {
@@ -452,7 +460,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
             commandStr = string.Empty;
         }
 
-        // Other Methods
+        //
+        //
+        // Model
+        //
+        //
+
         public string retrieveIPV4Info(string user, OleDbDataReader dr, OleDbCommand cmd)
         {
             string returnStr;
@@ -488,5 +501,16 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
 
             return returnStr;
         }
+
+        public List<string> getOnlineUserList()
+        {
+            return onlineUserList;
+        }
+
+        public List<string> getOfflineUserList()
+        {
+            return offlineUserList;
+        }
+
     }
 }

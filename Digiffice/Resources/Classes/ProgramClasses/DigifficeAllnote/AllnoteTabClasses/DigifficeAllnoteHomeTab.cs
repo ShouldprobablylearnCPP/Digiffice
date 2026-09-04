@@ -8,11 +8,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
 {
     public class DigifficeAllnoteHomeTab
     {
-        // Class Elements
-        public ComboBox fontComboBox = new ComboBox();
-        public ComboBox fontSizeComboBox = new ComboBox();
 
         // Class Variables
+        public ComboBox fontComboBox = new ComboBox();
+        public ComboBox fontSizeComboBox = new ComboBox();
         public List<string> fontList = new List<string>();
         public List<string> fontSizeList = new List<string>();
 

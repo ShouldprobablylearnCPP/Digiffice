@@ -15,11 +15,23 @@ namespace Digiffice
         public string prompt = string.Empty;
         public string value = string.Empty;
 
+        //
+        //
+        // Form Constructor
+        //
+        //
+
         public EnterTextValueForm(string _prompt)
         {
             prompt = _prompt;
             InitializeComponent();
         }
+
+        //
+        //
+        // View
+        //
+        //
 
         private void EnterTextValueForm_Load(object sender, EventArgs e)
         {

@@ -8,13 +8,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
 {
     public class DigifficeAllnoteDrawTab
     {
-        // Class Elements
+        // Class Variables
         Button enterExitDrawingModeBtn = new Button();
 
-        // Prerequisite Variables
-        EventHandler EnterExitDrawingModeBtn_Click;
-
-        public void InitialiseUI(Panel rbnPnl)
+        public void InitialiseUI(Panel rbnPnl, EventHandler EnterExitDrawingModeBtn_Click)
         {
             // Check prerequisites
             if (EnterExitDrawingModeBtn_Click == null)
@@ -48,11 +45,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             enterExitDrawingModeBtn.Click += EnterExitDrawingModeBtn_Click;
 
             rbnPnl.Controls.Add(enterExitDrawingModeBtn);
-        }
-
-        public void Prerequisities_InitialiseUI(EventHandler enterExitDrawingModeBtn_Click)
-        {
-            this.EnterExitDrawingModeBtn_Click = enterExitDrawingModeBtn_Click;
         }
     }
 }

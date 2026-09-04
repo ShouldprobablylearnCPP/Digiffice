@@ -14,6 +14,17 @@ namespace Digiffice
 {
     public partial class Register : Form
     {
+        // Class Variables
+        OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
+        OleDbCommand cmd = new OleDbCommand();
+        OleDbCommand checkCMD = new OleDbCommand();
+
+        //
+        //
+        // Form Constructor
+        //
+        //
+
         public Register()
         {
             // Enable visual styles for the application
@@ -30,9 +41,11 @@ namespace Digiffice
             };
         }
 
-        OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
-        OleDbCommand cmd = new OleDbCommand();
-        OleDbCommand checkCMD = new OleDbCommand();
+        //
+        //
+        // View
+        //
+        //
 
         private void btnRegister_Click(object sender, EventArgs e)
         {

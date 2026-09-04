@@ -11,17 +11,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
 {
     public class DigifficeAllnoteFileTab
     {
-        // Class Elements
+        // Class Variables
         Button NewAllnoteFileBtn = new Button();
         Button OpenAllnoteFileBtn = new Button();
         Button SaveFileBtn = new Button();
 
-        // Prerequisite variables
-        public EventHandler NewAllnoteFileBtn_Click;
-        public EventHandler SaveFileBtn_Click;
-        public EventHandler OpenAllnoteFileButton_Click;
-
-        public void InitialiseUI(Panel rbnPnl)
+        public void InitialiseUI(Panel rbnPnl, EventHandler NewAllnoteFileBtn_Click, EventHandler SaveFileBtn_Click, EventHandler OpenAllnoteFileButton_Click)
         {
             // Check prerequisites
             if (NewAllnoteFileBtn_Click == null || SaveFileBtn_Click == null || OpenAllnoteFileButton_Click == null)
@@ -105,13 +100,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             SaveFileBtn.Click += new EventHandler(SaveFileBtn_Click);
 
             rbnPnl.Controls.Add(SaveFileBtn);
-        }
-
-        public void Prerequisites_InitialiseUI(EventHandler NewAllnoteFileBtn_ClickEventHandler, EventHandler SaveFileBtn_ClickEventHandler, EventHandler OpenAllnoteFileButton_ClickEventHandler)
-        {
-            NewAllnoteFileBtn_Click = NewAllnoteFileBtn_ClickEventHandler;
-            SaveFileBtn_Click = SaveFileBtn_ClickEventHandler;
-            OpenAllnoteFileButton_Click = OpenAllnoteFileButton_ClickEventHandler;
         }
     }
 }

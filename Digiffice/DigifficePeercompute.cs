@@ -28,12 +28,21 @@ namespace Digiffice
         Panel selectedPeercomputeEntry;
         nonprotected_AccountData _nonprotected_AccountData;
 
-        // Peercompute variables
-        // NOTE: These classes are only initialised if a Peercompute is opened with the corresponding type.
+        // Peercompute variables (General)
+        string currentPeercomputeType;
+
+        // Peercompute variables (P2P)
         P2PNode _P2PNode;
+
+        // Peercompute variables (Client-Server)
         ClientServerClient _ClientServerClient;
         ClientServerServer _ClientServerHost;
-        string currentPeercomputeType;
+
+        //
+        //
+        // Form Constructor
+        //
+        //
 
         public DigifficePeercompute(nonprotected_AccountData nonprotected_AccountData, DigifficePeercompute_Splashscreen splashscreen)
         {
@@ -61,7 +70,55 @@ namespace Digiffice
             DigifficePeercompute_Prerequisite();
         }
 
-        // Show Methods
+        //
+        //
+        // Prerequisites (View)
+        //
+        //
+
+        private void DigifficePeercompute_Prerequisite()
+        {
+            // Create Scrollbar
+            CustomVScrollBar scrollbarV = new CustomVScrollBar(new Point(PeercomputeLeftBarContainerPanel.Right, PeercomputeLeftBarContainerPanel.Top + (PeercomputeLeftBarContainerPanel.Height - PeercomputeLeftBarPanel.Height) - 1), new Size(30, PeercomputeLeftBarPanel.Height),
+                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
+                null, Properties.Resources.VScrollBar_UpScrollBtn, Properties.Resources.VScrollBar_DownScrollBtn, Properties.Resources.CustomVScrollBar_1);
+            // Todo: Set scrollbar range based on number of Peercomputes and their heights
+            scrollbarV.setMinMaxRange(0, 0);
+            scrollbarV.addControlstoControl(this);
+
+            // Create Scrollbar Border
+            Panel scrollbarBorder = new Panel();
+            scrollbarBorder.Size = new Size(31, PeercomputesPanelBorder.Height);
+            scrollbarBorder.Location = new Point(PeercomputeLeftBarContainerPanel.Right, PeercomputeLeftBarContainerPanel.Top + (PeercomputeLeftBarContainerPanel.Height - PeercomputeLeftBarPanel.Height) - 2);
+            scrollbarBorder.BackColor = Color.Navy;
+            this.Controls.Add(scrollbarBorder);
+            scrollbarBorder.SendToBack();
+        }
+
+        //
+        //
+        // Model
+        //
+        //
+
+        private void DigifficePeercompute_DisconnectFromPeercompute()
+        {
+            if (currentPeercomputeType == "P2P")
+            {
+                _P2PNode.disconnectLocalP2PNode();
+            }
+            else if (currentPeercomputeType == "CLIENTSERVER")
+            {
+                // Disconnect from client-server.
+            }
+        }
+
+        //
+        //
+        // View
+        //
+        //
+
         private void DigifficePeercompute_ShowPeercomputesList()
         {
             // Access list of Peercompute directories from the user's Digiffice folder and display them in the left bar
@@ -87,7 +144,6 @@ namespace Digiffice
             }
         }
 
-        // Exit Button Events
         private void ExitButton_Click(object sender, EventArgs e)
         {
             DigifficePeercompute_DisconnectFromPeercompute();
@@ -104,7 +160,6 @@ namespace Digiffice
             ExitButton.BackgroundImage = xBtnDefault;
         }
 
-        // Windowmsg Events
         private void Windowmsg_Paint(object sender, PaintEventArgs e)
         {
             // Center Windowmsg Label
@@ -119,20 +174,17 @@ namespace Digiffice
             Windowmsg.Location = new Point(centerX, Windowmsg.Location.Y);
         }
 
-        // Digiffice Button Events
         private void DigifficeButton_Click(object sender, EventArgs e)
         {
             DigifficePeercompute_DisconnectFromPeercompute();
             this.Close();
         }
 
-        // Form Events
         private void DigifficePeercompute_Resize(object sender, EventArgs e)
         {
             PeercomputeLeftBarPanel.Size = new Size(PeercomputeLeftBarContainerPanel.Width - 1, PeercomputeLeftBarContainerPanel.Height - 42);
         }
 
-        // Peercompute label (Left Bar) Events
         private void DigifficePeercompute_PeercomputeEntryControlClick(object sender, EventArgs e, string PeercomputeDirectory)
         {
             Control senderControl = (Control)sender;
@@ -184,20 +236,6 @@ namespace Digiffice
             }
         }
 
-        // Peercompute Functions
-        private void DigifficePeercompute_DisconnectFromPeercompute()
-        {
-            if (currentPeercomputeType == "P2P")
-            {
-                _P2PNode.disconnectLocalP2PNode();
-            }
-            else if (currentPeercomputeType == "CLIENTSERVER")
-            {
-                // Disconnect from client-server.
-            }
-        }
-
-        // PeercomputesTab Events
         private void PeercomputesTab_Click(object sender, EventArgs e)
         {
             if (selectedLeftbarTab != null)
@@ -223,7 +261,6 @@ namespace Digiffice
             }
         }
 
-        // OnlineUsersTab Events
         private void OnlineUsersTab_Click(object sender, EventArgs e)
         {
             if (selectedLeftbarTab != null)
@@ -240,20 +277,17 @@ namespace Digiffice
 
         }
 
-        // Events for NewPeercomputeBtn
         private void NewPeercomputeBtn_Click(object sender, EventArgs e)
         {
             NewPeercomputeCreationForm newPeercomputeCreationForm = new NewPeercomputeCreationForm();
             DialogResult result = newPeercomputeCreationForm.ShowDialog();
         }
 
-        // Events For Scrollbar
         private void CustomVScrollBar_Scroll(object sender, EventArgs e)
         {
 
         }
 
-        // Control Creation Methods
         private void DigifficePeercompute_CreatePeercomputeEntryControl(int _xOffset, int _yOffset, string directory, Control parentControl, bool clickable, bool setAsCurrentlySelected)
         {
             // Create Parent container panel for each Peercompute entry (to allow for better formatting and click events)
@@ -320,26 +354,6 @@ namespace Digiffice
 
             // Add Picture Box to form
             PeercomputeEntryPanel.Controls.Add(PeercomputePictureBox);
-        }
-
-        // Prerequisite Functions
-        private void DigifficePeercompute_Prerequisite()
-        {
-            // Create Scrollbar
-            CustomVScrollBar scrollbarV = new CustomVScrollBar(new Point(PeercomputeLeftBarContainerPanel.Right, PeercomputeLeftBarContainerPanel.Top + (PeercomputeLeftBarContainerPanel.Height - PeercomputeLeftBarPanel.Height) - 1), new Size(30, PeercomputeLeftBarPanel.Height),
-                Color.LightGray, Color.LightGray, Color.LightGray, Color.Transparent,
-                null, Properties.Resources.VScrollBar_UpScrollBtn, Properties.Resources.VScrollBar_DownScrollBtn, Properties.Resources.CustomVScrollBar_1);
-            // Todo: Set scrollbar range based on number of Peercomputes and their heights
-            scrollbarV.setMinMaxRange(0, 0);
-            scrollbarV.addControlstoControl(this);
-
-            // Create Scrollbar Border
-            Panel scrollbarBorder = new Panel();
-            scrollbarBorder.Size = new Size(31, PeercomputesPanelBorder.Height);
-            scrollbarBorder.Location = new Point(PeercomputeLeftBarContainerPanel.Right, PeercomputeLeftBarContainerPanel.Top + (PeercomputeLeftBarContainerPanel.Height - PeercomputeLeftBarPanel.Height) - 2);
-            scrollbarBorder.BackColor = Color.Navy;
-            this.Controls.Add(scrollbarBorder);
-            scrollbarBorder.SendToBack();
         }
     }
 }

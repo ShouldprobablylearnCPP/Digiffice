@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
 {
+    //
+    //
+    // Constructor
+    //
+    //
+
     public class CustomVScrollBar
     {
         public Control ctrlToAdd;
@@ -90,7 +96,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
             ctrlToAdd = ScrollBarBgPnl;
         }
 
-        // Event Handlers
+        //
+        //
+        // View
+        //
+        //
 
         public void ScrollBarBgPnl_Click(object sender, MouseEventArgs e)
         {
@@ -154,6 +164,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.CustomControls
         {
             form.Controls.Add(ctrlToAdd);
         }
+
+        //
+        //
+        // Presenter
+        //
+        //
 
         public void setMinMaxRange(int min, int max)
         {

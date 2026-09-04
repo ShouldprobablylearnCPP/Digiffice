@@ -120,7 +120,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                     if (chapterGroupLine.Contains("|NUM: "))
                                     {
-                                        // Read the number property - catch any exceptions that may occur during parsing
                                         int num;
                                         try
                                         {
@@ -138,7 +137,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                     if (chapterGroupLine.Contains("|GROUPCHAPTERS: ["))
                                     {
-                                        // Add chapters into the chapter group - catch any exceptions that may occur during parsing
                                         string chaptersStr = chapterGroupLine.Substring(chapterGroupLine.IndexOf("|GROUPCHAPTERS: [") + 17); // Don't remove the trailing ']' so we can check for it in the loop
 
                                         bool readingChapters = true;
@@ -616,7 +614,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                 {
                                     if (richTextBoxLine.Contains("|PARENTPAGENUM: "))
                                     {
-                                        // Check for -1 which indicates no parent chapter group
+                                        // Check for -1 which indicates no parent page
                                         string parentPageNumStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|PARENTPAGENUM: ") + 16).Trim();
 
                                         if (int.TryParse(parentPageNumStr, out int parentPageNum))
@@ -630,7 +628,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                     if (richTextBoxLine.Contains("|PARENTSUBPAGENUM: "))
                                     {
-                                        // Check for -1 which indicates no parent chapter group
+                                        // Check for -1 which indicates no parent subpage
                                         string parentSubpageNumStr = richTextBoxLine.Substring(richTextBoxLine.IndexOf("|PARENTSUBPAGENUM: ") + 19).Trim();
 
                                         if (int.TryParse(parentSubpageNumStr, out int parentSubpageNum))
@@ -730,7 +728,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                 {
                                     if (dspLine.Contains("|PARENTPAGENUM: "))
                                     {
-                                        // Check for -1 which indicates no parent chapter group
+                                        // Check for -1 which indicates no parent page
                                         string parentPageNumStr = dspLine.Substring(dspLine.IndexOf("|PARENTPAGENUM: ") + 16).Trim();
 
                                         if (int.TryParse(parentPageNumStr, out int parentPageNum))
@@ -744,7 +742,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                     if (dspLine.Contains("|PARENTSUBPAGENUM: "))
                                     {
-                                        // Check for -1 which indicates no parent chapter group
+                                        // Check for -1 which indicates no parent subpage
                                         string parentSubpageNumStr = dspLine.Substring(dspLine.IndexOf("|PARENTSUBPAGENUM: ") + 19).Trim();
 
                                         if (int.TryParse(parentSubpageNumStr, out int parentSubpageNum))

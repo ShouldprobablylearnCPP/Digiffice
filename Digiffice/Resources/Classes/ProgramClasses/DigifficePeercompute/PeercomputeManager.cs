@@ -56,6 +56,12 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
             }
         }
 
+        //
+        //
+        // View
+        //
+        //
+
         public void MapPeercompute(string PeercomputeDirectory, Control parentControl)
         {
             string PeercomputeType = GetPeercomputeType(PeercomputeDirectory);
@@ -71,6 +77,10 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
                 MapP2PPeercompute(PeercomputeDirectory, parentControl);
             }
         }
+
+        //
+        // P2P Peercompute Mapping
+        //
 
         public void MapP2PPeercompute(string PeercomputeDirectory, Control parentControl)
         {
@@ -200,7 +210,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
             parentControl.Controls.Add(elementHost);
         }
 
-        // Real-Time Peercompute Functions
         public void MapP2PPeercomputeSubdirectory(WPFDataGrid dataGrid, string subdirectoryPath, int nestLevel)
         {
             // Get List of Files and Directories in the subdirectory
@@ -273,7 +282,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute
             }
         }
 
-        // Events
         public void PeercomputeMap_DirectoryDoubleClicked(object sender, EventArgs e)
         {
             DataGridRow senderRow = (DataGridRow)sender;

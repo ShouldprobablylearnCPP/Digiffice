@@ -23,7 +23,13 @@ namespace Digiffice
         string[] programVersions = new string[2];
 
         // Program Button Group
-        Panel programOpen_Button = new Panel();
+        Panel programOpenButton = new Panel();
+
+        //
+        //
+        // Form Constructor
+        //
+        //
 
         public Homepage(nonprotected_AccountData nonprotected_AccData)
         {
@@ -72,7 +78,12 @@ namespace Digiffice
             Homepage_PlayStartupSound();
         }
 
-        // Fill Event Handler List
+        //
+        //
+        // Model
+        //
+        //
+
         private void Fill_Lists()
         {
             // Event Handlers
@@ -100,12 +111,17 @@ namespace Digiffice
             programVersions[1] = "0.1.2";
         }
 
+        //
+        //
+        // View
+        //
+        //
+
         private void Homepanel_Paint(object sender, PaintEventArgs e)
         {
             Homepanel.Size = new Size(Screen.PrimaryScreen.Bounds.Width, 59);
         }
 
-        // Exit Button Events
         private void ExitButton_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -121,12 +137,11 @@ namespace Digiffice
             ExitButton.BackgroundImage = xBtnDefault;
         }
 
-        // Homepage Setup Functions
         private void Homepage_ProgramButtons_Setup(int btns)
         {
             for (int i = 0; i < btns; i++)
             {
-                ProgramOpen_Button_PrepaintProperties(i);
+                programOpenButton_PrepaintProperties(i);
             }
         }
 
@@ -136,7 +151,6 @@ namespace Digiffice
             player.Play();
         }
 
-        // Button Events
         private void TourDigifficeBtn_Click(object sender, EventArgs e)
         {
 
@@ -154,27 +168,7 @@ namespace Digiffice
             settingsMenuForm.Show();
         }
 
-        // Program Button Group Functions
-        private void ProgramOpen_Button_PrepaintProperties(int idx)
-        {
-            programOpen_Button.Name = "ProgramOpen_Button_" + idx;
-            programOpen_Button.Tag = programNames[idx];
-            programOpen_Button.Size = new Size(400, 70);
-            programOpen_Button.Text = "";
-            programOpen_Button.BackColor = Color.WhiteSmoke;
-            programOpen_Button.Cursor = Cursors.Hand;
-            programOpen_Button.BorderStyle = BorderStyle.FixedSingle;
-            int yLocation = (ProgramsPanel.Location.Y + (ProgramsPanel.Height + 6)) + ((programOpen_Button.Size.Height + 6) * idx);
-            programOpen_Button.Location = new Point(ProgramsPanel.Location.X, yLocation);
-            programOpen_Button.Paint += ProgramOpenButton_Paint;
-            programOpen_Button.Click += ProgramClickEventHandlers[idx];
-            programOpen_Button.MouseEnter += ProgramMouseEnterEventHandlers[idx];
-            programOpen_Button.MouseLeave += ProgramMouseLeaveEventHandlers[idx];
-            this.Controls.Add(programOpen_Button);
-            programOpen_Button = new Panel();
-        }
-
-        private void ProgramOpen_Button_PaintProperties(string programToOpen, Panel btn)
+        private void programOpenButton_PaintProperties(string programToOpen, Panel btn)
         {
             // icon panel
             Panel iconPanel = new Panel();
@@ -208,10 +202,14 @@ namespace Digiffice
         {
             Panel currentButton = (Panel)sender;
             string program = sender.GetType().GetProperty("Tag").GetValue(sender, null).ToString();
-            ProgramOpen_Button_PaintProperties(program, currentButton);
+            programOpenButton_PaintProperties(program, currentButton);
         }
 
-        // Digiffice Allnote Events
+        //
+        //
+        // Digiffice Allnote Events (View)
+        //
+        //
 
         private void DigifficeAllnote_Open(object sender, EventArgs e)
         {
@@ -242,7 +240,11 @@ namespace Digiffice
             btn.BackColor = Color.WhiteSmoke;
         }
 
-        // Digiffice Peerspace Events
+        //
+        //
+        // Digiffice Peercompute Events (View)
+        //
+        //
 
         private void DigifficePeercompute_Open(object sender, EventArgs e)
         {
@@ -271,6 +273,31 @@ namespace Digiffice
 
             // set back colour
             btn.BackColor = Color.WhiteSmoke;
+        }
+
+        //
+        //
+        // Presenter
+        //
+        //
+
+        private void programOpenButton_PrepaintProperties(int idx)
+        {
+            programOpenButton.Name = "programOpenButton_" + idx;
+            programOpenButton.Tag = programNames[idx];
+            programOpenButton.Size = new Size(400, 70);
+            programOpenButton.Text = "";
+            programOpenButton.BackColor = Color.WhiteSmoke;
+            programOpenButton.Cursor = Cursors.Hand;
+            programOpenButton.BorderStyle = BorderStyle.FixedSingle;
+            int yLocation = (ProgramsPanel.Location.Y + (ProgramsPanel.Height + 6)) + ((programOpenButton.Size.Height + 6) * idx);
+            programOpenButton.Location = new Point(ProgramsPanel.Location.X, yLocation);
+            programOpenButton.Paint += ProgramOpenButton_Paint;
+            programOpenButton.Click += ProgramClickEventHandlers[idx];
+            programOpenButton.MouseEnter += ProgramMouseEnterEventHandlers[idx];
+            programOpenButton.MouseLeave += ProgramMouseLeaveEventHandlers[idx];
+            this.Controls.Add(programOpenButton);
+            programOpenButton = new Panel();
         }
     }
 }

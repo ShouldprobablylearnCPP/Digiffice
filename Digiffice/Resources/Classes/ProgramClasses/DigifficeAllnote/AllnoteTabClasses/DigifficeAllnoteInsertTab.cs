@@ -8,15 +8,11 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
 {
     public class DigifficeAllnoteInsertTab
     {
-        // Class Elements
+        // Class Variables
         Button InsertImageBtn;
         Button InsertTableBtn;
 
-        // Prerequisite variables
-        public EventHandler InsertImageBtn_Click;
-        public EventHandler InsertTableBtn_Click;
-
-        public void InitialiseUI(Panel rbnPnl)
+        public void InitialiseUI(Panel rbnPnl, EventHandler InsertImageBtn_Click, EventHandler InsertTableBtn_Click)
         {
             // Check prerequisites
             if (InsertImageBtn_Click == null)
@@ -67,12 +63,6 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             InsertImageBtn.Click += InsertImageBtn_Click;
 
             rbnPnl.Controls.Add(InsertImageBtn);
-        }
-
-        public void Prerequisities_InitialiseUI(EventHandler insertImgBtnClick, EventHandler insertTableBtnClick)
-        {
-            InsertImageBtn_Click = insertImgBtnClick;
-            InsertTableBtn_Click = insertTableBtnClick;
         }
     }
 }
