@@ -979,9 +979,8 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            fileTabContents.Prerequisites_InitialiseUI(NewAllnoteFileBtn_Click, SaveNotebookBtn_Click, OpenNotebookBtn_Click);
+            fileTabContents.InitialiseUI(RibbonPanel, NewAllnoteFileBtn_Click, SaveNotebookBtn_Click, OpenNotebookBtn_Click);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            fileTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = FileTab;
         }
 
@@ -1013,9 +1012,8 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            insertTabContents.Prerequisities_InitialiseUI(InsertImageBtn_Click, InsertTableBtn_Click);
+            insertTabContents.InitialiseUI(RibbonPanel, InsertImageBtn_Click, InsertTableBtn_Click);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            insertTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = InsertTab;
         }
         private void DrawTab_Click(object sender, EventArgs e)
@@ -1031,9 +1029,8 @@ namespace Digiffice
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteDrawTab drawTabContents = new DigifficeAllnoteDrawTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            drawTabContents.Prerequisities_InitialiseUI(EnterExitDrawingModeBtn_Click);
+            drawTabContents.InitialiseUI(RibbonPanel, EnterExitDrawingModeBtn_Click);
 #pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            drawTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = DrawTab;
         }
         private void HistoryTab_Click(object sender, EventArgs e)
