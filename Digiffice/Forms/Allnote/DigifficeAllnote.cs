@@ -35,7 +35,9 @@ using static Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad.Digiffic
 using Application = System.Windows.Forms.Application;
 using Button = System.Windows.Forms.Button;
 using Color = System.Drawing.Color;
+using ComboBox = System.Windows.Forms.ComboBox;
 using Control = System.Windows.Forms.Control;
+using FontFamily = System.Drawing.FontFamily;
 using FontStyle = System.Drawing.FontStyle;
 using HorizontalAlignment = System.Windows.Forms.HorizontalAlignment;
 using Image = System.Drawing.Image;
@@ -59,7 +61,6 @@ namespace Digiffice
         WPFDigifficeAllnoteInkCanvas globalInkCanvas;
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
-        Control currentSelectedTab = null;
         nonprotected_AccountData np_AC = new nonprotected_AccountData();
 
         // Border Panels
@@ -70,14 +71,20 @@ namespace Digiffice
         Color notebook_ChapterCol = Color.Red;
 
         // Editor Variables
+        DigifficeAllnoteTextFormatManager textFormatManager = new DigifficeAllnoteTextFormatManager();
         DigifficeAllnoteEditorFile editorNotebook;
         DigifficeAllnoteEditorFile notebookAtLastSave;
         DigifficeAllnoteEditorFile.Chapter currentChapter = new DigifficeAllnoteEditorFile.Chapter();
         DigifficeAllnoteEditorFile.Page? currentPage = null;
+        Control currentSelectedTab = null;
         Label currentSelectedPage_Lbl = null;
         CustomHScrollBar hScrollBar = null;
         CustomVScrollBar vScrollBar = null;
+        RichTextBox activeRtb = null;
         string openFilePath = null;
+
+        // Editor Tabs
+        DigifficeAllnoteHomeTab homeTab;
 
         // Editing variables
         bool allowedToCreateTextBoxOnPage = true;
@@ -166,6 +173,8 @@ namespace Digiffice
             vScrollBar = pageVScroll;
 
             DigifficeAllnote_IdlebarSetup();
+
+            textFormatManager.setDefaultTextFormat();
         }
 
         //
@@ -676,10 +685,16 @@ namespace Digiffice
                 // Show Home Tab
                 if (currentSelectedTab != HomeTab)
                 {
+                    textFormatManager.updateTextFormatManager(newRichTextBox);
                     HomeTab_Click(HomeTab, new EventArgs());
                 }
 
                 DigifficeAllnote_ChangeEditingVariables(false, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
+            };
+            newRichTextBox.SelectionChanged += (s, e) =>
+            {
+                textFormatManager.updateTextFormatManager(newRichTextBox);
+                textFormatManager.updateTextFormatMenu(homeTab.retrieveTextFormattingControls());
             };
             newRichTextBox.KeyDown += (s, e) =>
             {
@@ -996,8 +1011,13 @@ namespace Digiffice
             // Instantiate Home Tab Contents
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteHomeTab homeTabContents = new DigifficeAllnoteHomeTab();
-            homeTabContents.InitialiseUI(RibbonPanel);
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            homeTabContents.InitialiseUI(RibbonPanel, fontFamilyComboBox_SelectionChangeCommited, fontSizeComboBox_SelectionChangeCommited);
+#pragma warning restore CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            textFormatManager.updateTextFormatMenu(homeTabContents.retrieveTextFormattingControls());
+
             currentSelectedTab = HomeTab;
+            homeTab = homeTabContents;
         }
         private void InsertTab_Click(object sender, EventArgs e)
         {
@@ -1207,6 +1227,36 @@ namespace Digiffice
                     DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
                 }
             };
+        }
+
+        public void fontFamilyComboBox_SelectionChangeCommited(object sender, EventArgs e)
+        {
+            try
+            {
+                ComboBox senderCtrl = (ComboBox)sender;
+
+                textFormatManager.fontFamily = new FontFamily(senderCtrl.Text);
+                textFormatManager.updateSelectedText((RichTextBox)this.ActiveControl);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public void fontSizeComboBox_SelectionChangeCommited(object sender, EventArgs e)
+        {
+            try
+            {
+                ComboBox senderCtrl = (ComboBox)sender;
+
+                textFormatManager.txtSize = int.Parse(senderCtrl.Text);
+                textFormatManager.updateSelectedText((RichTextBox)this.ActiveControl);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         //

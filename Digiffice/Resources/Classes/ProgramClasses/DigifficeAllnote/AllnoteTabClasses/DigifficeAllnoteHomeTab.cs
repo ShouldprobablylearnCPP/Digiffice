@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,36 +11,38 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
     {
 
         // Class Variables
-        public ComboBox fontComboBox = new ComboBox();
+        public ComboBox fontFamilyComboBox = new ComboBox();
         public ComboBox fontSizeComboBox = new ComboBox();
         public List<string> fontList = new List<string>();
         public List<string> fontSizeList = new List<string>();
 
-        public void InitialiseUI(Panel rbnPnl)
+        public void InitialiseUI(Panel rbnPnl, EventHandler fontFamilyComboBox_SelectionChangeCommited, EventHandler fontSizeComboBox_SelectionChangeCommitted)
         {
             // Check Prerequisites
 
             // Fill Lists
-            UpdateFontList(new List<string> { "Placeholder" });
+            UpdateFontList(new List<string> { "Roboto" });
             UpdateFontSizeList(new List<string> { "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72" });
 
             // Todo: Make Controls look aero-style
 
-            // fontComboBox
-            fontComboBox.Name = "FontComboBox";
-            fontComboBox.Enabled = true;
+            // fontFamilyComboBox
+            fontFamilyComboBox.Name = "FontFamilyComboBox";
+            fontFamilyComboBox.Enabled = true;
 
-            fontComboBox.Size = new Size(150, 30);
-            fontComboBox.Location = new Point(20, 20);
-            fontComboBox.BackColor = SystemColors.Control;
-            fontComboBox.ForeColor = SystemColors.ControlText;
-            fontComboBox.Text = fontList[0];
-            fontComboBox.Font = new Font("Roboto", 8, FontStyle.Regular);
-            fontComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            fontFamilyComboBox.Size = new Size(150, 30);
+            fontFamilyComboBox.Location = new Point(20, 20);
+            fontFamilyComboBox.BackColor = SystemColors.Control;
+            fontFamilyComboBox.ForeColor = SystemColors.ControlText;
+            fontFamilyComboBox.Text = fontList[0];
+            fontFamilyComboBox.Font = new Font("Roboto", 8, FontStyle.Regular);
+            fontFamilyComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            fontComboBox.FlatStyle = FlatStyle.Standard;
+            fontFamilyComboBox.FlatStyle = FlatStyle.Standard;
 
-            rbnPnl.Controls.Add(fontComboBox);
+            fontFamilyComboBox.SelectionChangeCommitted += fontFamilyComboBox_SelectionChangeCommited;
+
+            rbnPnl.Controls.Add(fontFamilyComboBox);
 
             // fontSizeComboBox
             fontSizeComboBox.Name = "FontSizeComboBox";
@@ -55,15 +58,17 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             
             fontSizeComboBox.FlatStyle = FlatStyle.Standard;
 
+            fontSizeComboBox.SelectionChangeCommitted += fontSizeComboBox_SelectionChangeCommitted;
+
             rbnPnl.Controls.Add(fontSizeComboBox);
         }
 
         public void UpdateFontList(List<string> newFontList)
         {
             fontList = newFontList;
-            fontComboBox.Items.Clear();
-            fontComboBox.Items.AddRange(fontList.ToArray());
-            fontComboBox.Text = fontList.FirstOrDefault();
+            fontFamilyComboBox.Items.Clear();
+            fontFamilyComboBox.Items.AddRange(fontList.ToArray());
+            fontFamilyComboBox.Text = fontList.FirstOrDefault();
         }
 
         public void UpdateFontSizeList(List<string> newFontSizeList)
@@ -72,6 +77,14 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTab
             fontSizeComboBox.Items.Clear();
             fontSizeComboBox.Items.AddRange(fontSizeList.ToArray());
             fontSizeComboBox.Text = fontSizeList.FirstOrDefault();
+        }
+
+        public List<Control> retrieveTextFormattingControls()
+        {
+            List<Control> controls = new List<Control>();
+            controls.Add(fontFamilyComboBox);
+            controls.Add(fontSizeComboBox);
+            return controls;
         }
     }
 }
