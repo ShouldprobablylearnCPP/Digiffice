@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -76,11 +77,11 @@ namespace Digiffice
         DigifficeAllnoteEditorFile notebookAtLastSave;
         DigifficeAllnoteEditorFile.Chapter currentChapter = new DigifficeAllnoteEditorFile.Chapter();
         DigifficeAllnoteEditorFile.Page? currentPage = null;
+        RichTextBox activeRtb;
         Control currentSelectedTab = null;
         Label currentSelectedPage_Lbl = null;
         CustomHScrollBar hScrollBar = null;
         CustomVScrollBar vScrollBar = null;
-        RichTextBox activeRtb = null;
         string openFilePath = null;
 
         // Editor Tabs
@@ -682,6 +683,8 @@ namespace Digiffice
             };
             newRichTextBox.GotFocus += (s, e) =>
             {
+                activeRtb = newRichTextBox;
+
                 // Show Home Tab
                 if (currentSelectedTab != HomeTab)
                 {
@@ -1236,7 +1239,7 @@ namespace Digiffice
                 ComboBox senderCtrl = (ComboBox)sender;
 
                 textFormatManager.fontFamily = new FontFamily(senderCtrl.Text);
-                textFormatManager.updateSelectedText((RichTextBox)this.ActiveControl);
+                textFormatManager.updateSelectedText(activeRtb);
             }
             catch (Exception ex)
             {
@@ -1251,7 +1254,7 @@ namespace Digiffice
                 ComboBox senderCtrl = (ComboBox)sender;
 
                 textFormatManager.txtSize = int.Parse(senderCtrl.Text);
-                textFormatManager.updateSelectedText((RichTextBox)this.ActiveControl);
+                textFormatManager.updateSelectedText(activeRtb);
             }
             catch (Exception ex)
             {

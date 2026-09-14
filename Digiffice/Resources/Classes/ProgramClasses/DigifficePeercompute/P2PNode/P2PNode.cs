@@ -435,7 +435,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNod
                         }
                         catch (Exception ex2)
                         {
-                            MessageBox.Show("Error with p2p session. Source: StartP2PSession(). msg: " + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Error with p2p session. Source: StartP2PSession(). msg: " + ex2.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             break;
                         }
                     }
