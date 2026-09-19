@@ -340,11 +340,9 @@ namespace Digiffice
             WorkspacePanel.Controls.Add(SectionBG_Borderpnl);
         }
 
-        private void DigifficeAllnote_EditSizeOfRichTextBox(RichTextBox richTextBox)
+        private void DigifficeAllnote_EditHeightOfRichTextBox(RichTextBox richTextBox, ContentsResizedEventArgs e)
         {
-            int lineCount = richTextBox.GetLineFromCharIndex(richTextBox.TextLength) + 1;
-            int newHeight = (lineCount * richTextBox.Font.Height);
-            richTextBox.Height = newHeight;
+            richTextBox.Height = e.NewRectangle.Height;
         }
 
         public DataGridView DigifficeAllnote_Table(int rows, int cols, bool addToCtrl)
@@ -628,7 +626,6 @@ namespace Digiffice
                             // Gets RichTextBox and does necessary size changes
                             RichTextBox rtb = (RichTextBox)ctrl;
                             rtb.Size = new Size(newPanel.Width - 2, rtb.Height);
-                            DigifficeAllnote_EditSizeOfRichTextBox(rtb);
                             newPanel.Height = rtb.Height + 11;
                         }
                         catch (InvalidCastException)
@@ -671,14 +668,10 @@ namespace Digiffice
             // newRichTextBox events
             newRichTextBox.TextChanged += (s, e) =>
             {
-                DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
-                newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
                 DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
-
             };
             newRichTextBox.SizeChanged += (s, e) =>
             {
-                DigifficeAllnote_EditSizeOfRichTextBox(newRichTextBox);
                 DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
             };
             newRichTextBox.GotFocus += (s, e) =>
@@ -707,6 +700,11 @@ namespace Digiffice
                     this.ActiveControl = null;
                     DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
                 }
+            };
+            newRichTextBox.ContentsResized += (s, e) =>
+            {
+                DigifficeAllnote_EditHeightOfRichTextBox(newRichTextBox, e);
+                newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
             };
             // Add RichTextBox to Parent Panel
             newPanel.Controls.Add(newRichTextBox);
