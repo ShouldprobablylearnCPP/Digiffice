@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
- using System.IO;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
@@ -992,13 +992,7 @@ namespace Digiffice
             FileTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate File Tab Contents
-
-            foreach (Control ctrl in RibbonPanel.Controls)
-            {
-                ctrl.Dispose();
-            }
             RibbonPanel.Controls.Clear();
-
             DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             fileTabContents.InitialiseUI(RibbonPanel, NewAllnoteFileBtn_Click, SaveNotebookBtn_Click, OpenNotebookBtn_Click);
@@ -1016,13 +1010,7 @@ namespace Digiffice
             HomeTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Home Tab Contents
-
-            foreach (Control ctrl in RibbonPanel.Controls)
-            {
-                ctrl.Dispose();
-            }
             RibbonPanel.Controls.Clear();
-
             DigifficeAllnoteHomeTab homeTabContents = new DigifficeAllnoteHomeTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             homeTabContents.InitialiseUI(RibbonPanel, fontFamilyComboBox_SelectionChangeCommited, fontSizeComboBox_SelectionChangeCommited);
@@ -1042,13 +1030,7 @@ namespace Digiffice
             InsertTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Insert Tab Contents
-
-            foreach (Control ctrl in RibbonPanel.Controls)
-            {
-                ctrl.Dispose();
-            }
             RibbonPanel.Controls.Clear();
-
             DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             insertTabContents.InitialiseUI(RibbonPanel, InsertImageBtn_Click, InsertTableBtn_Click);
@@ -1065,13 +1047,7 @@ namespace Digiffice
             DrawTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Draw Tab Contents
-
-            foreach (Control ctrl in RibbonPanel.Controls)
-            {
-                ctrl.Dispose();
-            }
             RibbonPanel.Controls.Clear();
-
             DigifficeAllnoteDrawTab drawTabContents = new DigifficeAllnoteDrawTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
             drawTabContents.InitialiseUI(RibbonPanel, EnterExitDrawingModeBtn_Click);
@@ -1088,13 +1064,7 @@ namespace Digiffice
             HistoryTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate History Tab Contents
-
-            foreach (Control ctrl in RibbonPanel.Controls)
-            {
-                ctrl.Dispose();
-            }
             RibbonPanel.Controls.Clear();
-
             DigifficeAllnoteHistoryTab historyTabContents = new DigifficeAllnoteHistoryTab();
             historyTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = HistoryTab;
@@ -1109,13 +1079,7 @@ namespace Digiffice
             ReviewTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Review Tab Contents
-
-            foreach (Control ctrl in RibbonPanel.Controls)
-            {
-                ctrl.Dispose();
-            }
             RibbonPanel.Controls.Clear();
-
             DigifficeAllnoteReviewTab reviewTabContents = new DigifficeAllnoteReviewTab();
             reviewTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = ReviewTab;
@@ -1130,13 +1094,7 @@ namespace Digiffice
             ViewTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate View Tab Contents
-
-            foreach (Control ctrl in RibbonPanel.Controls)
-            {
-                ctrl.Dispose();
-            }
             RibbonPanel.Controls.Clear();
-
             DigifficeAllnoteViewTab viewTabContents = new DigifficeAllnoteViewTab();
             viewTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = ViewTab;
@@ -1151,13 +1109,7 @@ namespace Digiffice
             HelpTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Help Tab Contents
-
-            foreach (Control ctrl in RibbonPanel.Controls)
-            {
-                ctrl.Dispose();
-            }
             RibbonPanel.Controls.Clear();
-
             DigifficeAllnoteHelpTab helpTabContents = new DigifficeAllnoteHelpTab();
             helpTabContents.InitialiseUI(RibbonPanel);
             currentSelectedTab = HelpTab;
@@ -1415,10 +1367,6 @@ namespace Digiffice
             Panel inspector_Pages_BorderCover = SectionBGPages_BorderCover;
 
             // Clear controls
-            foreach (Control ctrl in SectionBG_Pages.Controls)
-            {
-                ctrl.Dispose();
-            }
             SectionBG_Pages.Controls.Clear();
 
             // Add Border Cover
@@ -1469,13 +1417,7 @@ namespace Digiffice
 
         private void DigifficeAllnote_ShowChaptersInInspector(DigifficeAllnoteEditorFile file)
         {
-
-            foreach (Control ctrl in SectionBG_Chapters.Controls)
-            {
-                ctrl.Dispose();
-            }
             SectionBG_Chapters.Controls.Clear();
-
             // Chapters from file
             for (int i = 0; i < file.chapters.Count;)
             {
@@ -1612,24 +1554,9 @@ namespace Digiffice
         private void DigifficeAllnote_CloseNotebook()
         {
             // Clear Editor
-            foreach (Control ctrl in nonPageBg.Controls)
-            {
-                ctrl.Dispose();
-            }
             nonPageBg.Controls.Clear();
-
-            foreach (Control ctrl in SectionBG_Chapters.Controls)
-            {
-                ctrl.Dispose();
-            }
             SectionBG_Chapters.Controls.Clear();
-
-            foreach (Control ctrl in SectionBG_Pages.Controls)
-            {
-                ctrl.Dispose();
-            }
             SectionBG_Pages.Controls.Clear();
-
             // Clear Editor Variables
             editorNotebook = null;
             notebookAtLastSave = null;
