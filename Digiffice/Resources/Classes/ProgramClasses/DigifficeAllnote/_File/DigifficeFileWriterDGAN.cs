@@ -165,67 +165,61 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                     writer.Write("(ELEMENTS)" + Environment.NewLine);
                     foreach (DigifficeAllnoteEditorFile.Page page in file.filePages)
                     {
-                        // Write elements from page
-                        foreach (Panel pnl in page.pageElements.OfType<Panel>())
+                        foreach (DigifficeAllnoteElements.ElementHeader eHeader in page.pageElements)
                         {
-                            if (pnl.Tag is not null and (object)"NewPnl_RTB")
+                            switch (eHeader.elementType)
                             {
-                                RichTextBox rtb = pnl.Controls.OfType<RichTextBox>().FirstOrDefault();
-                                if (rtb == null)
-                                {
-                                    throw new Exception("Intended rtb Panel does not contain a RichTextBox.");
-                                }
-                                writer.Write("/RICHTEXTBOX" + Environment.NewLine);
-                                writer.Write("|PARENTPAGENUM: " + page.pageNum + Environment.NewLine);
-                                writer.Write("|PARENTSUBPAGENUM: -1" + Environment.NewLine); // RTB is not in subpage, set to -1
-                                writer.Write("|PAGEPOS: " + pnl.Location + Environment.NewLine);
-                                writer.Write("|SIZE: " + pnl.Size + Environment.NewLine);
-                                writer.Write("|RTF: " + rtb.Rtf + Environment.NewLine);
-                                writer.Write("\\" + Environment.NewLine);
-                                writer.Write(Environment.NewLine);
-                            }
-                        }
+                                case DigifficeAllnoteElements.ElementTypes.RTB:
+                                    // Write RTB element
+                                    DigifficeAllnoteElements.RTBElement rtbElement = (DigifficeAllnoteElements.RTBElement)eHeader.element;
+                                    writer.Write("/RICHTEXTBOX" + Environment.NewLine);
+                                    writer.Write("|PARENTPAGENUM: " + page.pageNum + Environment.NewLine);
+                                    writer.Write("|PARENTSUBPAGENUM: -1" + Environment.NewLine); // RTB is not in subpage, set to -1
+                                    writer.Write("|PAGEPOS: " + rtbElement.location + Environment.NewLine);
+                                    writer.Write("|SIZE: " + rtbElement.pnlSize + Environment.NewLine);
+                                    writer.Write("|RTF: " + rtbElement.rtf + Environment.NewLine);
+                                    writer.Write("\\" + Environment.NewLine);
+                                    writer.Write(Environment.NewLine);
+                                    break;
 
-                        // Elementhosts
-                        foreach (ElementHost item in page.pageElements.OfType<ElementHost>())
-                        {
-                            // Write based on type of elementhost child control
-                            if (item.Child is DraggableSizablePicturebox dsp)
-                            {
-                                writer.Write("/DRAGGABLESIZABLEPICTUREBOX" + Environment.NewLine);
-                                writer.Write("|PARENTPAGENUM: " + page.pageNum + Environment.NewLine);
-                                writer.Write("|PARENTSUBPAGENUM: -1"); // DraggableSizablePicturebox is in page, set to -1
-                                writer.Write("|PAGEPOS: " + item.Location + Environment.NewLine);
-                                writer.Write("|SIZE: " + item.Size + Environment.NewLine);
-                                BitmapEncoder encoder = getFormatFromImageSource(dsp);
-                                string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper().Trim();
-                                var bitmapSource = dsp.baseImg.Source as BitmapSource;
-                                if (bitmapSource != null)
-                                {
-                                    encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-                                }
-                                else
-                                {
-                                    throw new Exception("Unable to get BitmapSource from DraggableSizablePicturebox image.");
-                                }
+                                case DigifficeAllnoteElements.ElementTypes.DraggableSizablePictureBox:
+                                    // Write DraggableSizablePicturebox element
+                                    DigifficeAllnoteElements.DraggableSizablePictureBoxElement dspElement = (DigifficeAllnoteElements.DraggableSizablePictureBoxElement)eHeader.element;
+                                    writer.Write("/DRAGGABLESIZABLEPICTUREBOX" + Environment.NewLine);
+                                    writer.Write("|PARENTPAGENUM: " + page.pageNum + Environment.NewLine);
+                                    writer.Write("|PARENTSUBPAGENUM: -1" + Environment.NewLine); // DraggableSizablePicturebox is not in subpage, set to -1
+                                    writer.Write("|PAGEPOS: " + dspElement.location + Environment.NewLine);
+                                    writer.Write("|SIZE: " + dspElement.size + Environment.NewLine);
+                                    BitmapEncoder encoder = getFormatFromElementFmt(dspElement.fmt);
+                                    string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper().Trim();
+                                    var bitmapSource = dspElement.image as BitmapSource;
+                                    if (bitmapSource != null)
+                                    {
+                                        encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("Unable to get BitmapSource from DraggableSizablePicturebox image.");
+                                    }
 
-                                byte[] imgBytes;
-                                using (MemoryStream ms = new MemoryStream())
-                                {
-                                    encoder.Save(ms);
-                                    imgBytes = ms.ToArray();
-                                }
+                                    byte[] imgBytes;
+                                    using (MemoryStream ms = new MemoryStream())
+                                    {
+                                        encoder.Save(ms);
+                                        imgBytes = ms.ToArray();
+                                    }
 
-                                writer.Write("|IMGFMT: " + imgFormat + Environment.NewLine);
-                                writer.Write("|IMGSRC: " + Environment.NewLine);
+                                    writer.Write("|IMGFMT: " + imgFormat + Environment.NewLine);
+                                    writer.Write("|IMGSRC: " + Environment.NewLine);
 
-                                writer.Write(imgBytes.Length);
-                                writer.Write(imgBytes); // Write binary image data directly to the file
+                                    writer.Write(imgBytes.Length);
+                                    writer.Write(imgBytes); // Write binary image data directly to the file
 
-                                writer.Write(Environment.NewLine);
+                                    writer.Write(Environment.NewLine);
 
-                                writer.Write("\\" + Environment.NewLine);
-                                writer.Write(Environment.NewLine);
+                                    writer.Write("\\" + Environment.NewLine);
+                                    writer.Write(Environment.NewLine);
+                                    break;
                             }
                         }
                     }
@@ -233,65 +227,58 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                     // Write elements from subpage(s)
                     foreach (DigifficeAllnoteEditorFile.SubPage subPage in file.fileSubPages)
                     {
-                        foreach (Panel pnl in subPage.subPageElements.OfType<Panel>())
+                        foreach (DigifficeAllnoteElements.ElementHeader eHeader in subPage.subPageElements)
                         {
-                            if (pnl.Tag is not null and (object)"NewPnl_RTB")
+                            switch (eHeader.elementType)
                             {
-                                RichTextBox rtb = pnl.Controls.OfType<RichTextBox>().FirstOrDefault();
-                                if (rtb == null)
-                                {
-                                    throw new Exception("Intended rtb Panel does not contain a RichTextBox.");
-                                }
-                                writer.Write("/RICHTEXTBOX" + Environment.NewLine);
-                                writer.Write("|PARENTPAGENUM: -1" + Environment.NewLine); // RTB is in subpage, set parent page num to -1
-                                writer.Write("|PARENTSUBPAGENUM: " + subPage.subPageNum + Environment.NewLine);
-                                writer.Write("|PAGEPOS: " + pnl.Location + Environment.NewLine);
-                                writer.Write("|SIZE: " + pnl.Size + Environment.NewLine);
-                                writer.Write("|RTF: " + rtb.Rtf + Environment.NewLine);
-                                writer.Write("\\" + Environment.NewLine);
-                                writer.Write(Environment.NewLine);
-                            }
-                        }
-                        // Elementhosts
-                        foreach (ElementHost item in subPage.subPageElements.OfType<ElementHost>())
-                        {
-                            // Write based on type of elementhost child control
-                            if (item.Child is DraggableSizablePicturebox dsp)
-                            {
-                                writer.Write("/DRAGGABLESIZABLEPICTUREBOX" + Environment.NewLine);
-                                writer.Write("|PARENTPAGENUM: -1" + Environment.NewLine); // DraggableSizablePicturebox is in subpage, set parent page num to -1
-                                writer.Write("|PARENTSUBPAGENUM: " + subPage.subPageNum + Environment.NewLine);
-                                writer.Write("|PAGEPOS: " + item.Location + Environment.NewLine);
-                                writer.Write("|SIZE: " + item.Size + Environment.NewLine);
-                                BitmapEncoder encoder = getFormatFromImageSource(dsp);
-                                string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper().Trim();
-                                var bitmapSource = dsp.baseImg.Source as BitmapSource;
-                                if (bitmapSource != null)
-                                {
-                                    encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-                                }
-                                else
-                                {
-                                    throw new Exception("Unable to get BitmapSource from DraggableSizablePicturebox image.");
-                                }
+                                case DigifficeAllnoteElements.ElementTypes.RTB:
+                                    // Write RTB element
+                                    DigifficeAllnoteElements.RTBElement rtbElement = (DigifficeAllnoteElements.RTBElement)eHeader.element;
+                                    writer.Write("/RICHTEXTBOX" + Environment.NewLine);
+                                    writer.Write("|PARENTPAGENUM: -1" + Environment.NewLine); // RTB is in subpage, set parent page num to -1
+                                    writer.Write("|PARENTSUBPAGENUM: " + subPage.subPageNum + Environment.NewLine);
+                                    writer.Write("|PAGEPOS: " + rtbElement.location + Environment.NewLine);
+                                    writer.Write("|SIZE: " + rtbElement.pnlSize + Environment.NewLine);
+                                    writer.Write("|RTF: " + rtbElement.rtf + Environment.NewLine);
+                                    writer.Write("\\" + Environment.NewLine);
+                                    writer.Write(Environment.NewLine);
+                                    break;
 
-                                byte[] imgBytes;
-                                using (MemoryStream ms = new MemoryStream())
-                                {
-                                    encoder.Save(ms);
-                                    imgBytes = ms.ToArray();
-                                }
+                                case DigifficeAllnoteElements.ElementTypes.DraggableSizablePictureBox:
+                                    // Write DraggableSizablePicturebox element
+                                    DigifficeAllnoteElements.DraggableSizablePictureBoxElement dspElement = (DigifficeAllnoteElements.DraggableSizablePictureBoxElement)eHeader.element;
+                                    writer.Write("/DRAGGABLESIZABLEPICTUREBOX" + Environment.NewLine);
+                                    writer.Write("|PARENTPAGENUM: -1" + Environment.NewLine); // DraggableSizablePicturebox is in subpage, set parent page num to -1
+                                    writer.Write("|PARENTSUBPAGENUM: " + subPage.subPageNum + Environment.NewLine);
+                                    writer.Write("|PAGEPOS: " + dspElement.location + Environment.NewLine);
+                                    writer.Write("|SIZE: " + dspElement.size + Environment.NewLine);
+                                    BitmapEncoder encoder = getFormatFromElementFmt(dspElement.fmt);
+                                    string imgFormat = encoder.GetType().Name.Replace("BitmapEncoder", "").ToUpper().Trim();
+                                    var bitmapSource = dspElement.image as BitmapSource;
+                                    if (bitmapSource != null)
+                                    {
+                                        encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("Unable to get BitmapSource from DraggableSizablePicturebox image.");
+                                    }
 
-                                writer.Write("|IMGFMT: " + imgFormat + Environment.NewLine);
-                                writer.Write("|IMGSRC: " + Environment.NewLine);
+                                    byte[] imgBytes;
+                                    using (MemoryStream ms = new MemoryStream())
+                                    {
+                                        encoder.Save(ms);
+                                        imgBytes = ms.ToArray();
+                                    }
 
-                                writer.Write(imgBytes.Length);
-                                writer.Write(imgBytes); // Write binary image data directly to the file
-
-                                writer.Write(Environment.NewLine);
-
-                                writer.Write("\\" + Environment.NewLine);
-                                writer.Write(Environment.NewLine);
+                                    writer.Write("|IMGFMT: " + imgFormat + Environment.NewLine);
+                                    writer.Write("|IMGSRC: " + Environment.NewLine);
+                                    writer.Write(imgBytes.Length);
+                                    writer.Write(imgBytes); // Write binary image data directly to the file
+                                    writer.Write(Environment.NewLine);
+                                    writer.Write("\\" + Environment.NewLine);
+                                    writer.Write(Environment.NewLine);
+                                    break;
                             }
                         }
                     }
@@ -307,9 +294,9 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
         }
 
         // Feeder Methods
-        public BitmapEncoder getFormatFromImageSource(DraggableSizablePicturebox dsp)
+        public BitmapEncoder getFormatFromElementFmt(string fmt)
         {
-            string ext = dsp.Tag as string;
+            string ext = fmt;
 
             if (ext == ".png")
             {

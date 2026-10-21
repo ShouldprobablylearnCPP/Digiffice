@@ -34,6 +34,8 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
         List<DigifficeAllnoteEditorFile.Page> pagesToAddToChapters = new List<DigifficeAllnoteEditorFile.Page>();
         List<DigifficeAllnoteEditorFile.SubPage> subPagesToAddToPages = new List<DigifficeAllnoteEditorFile.SubPage>();
 
+        DigifficeAllnoteElements elements = new DigifficeAllnoteElements();
+
         public DigifficeAllnoteEditorFile ReadDGANFile(string filePath, Digiffice.DigifficeAllnote digifficeAllnoteForm)
         {
             using (FileStream fs = File.OpenRead(filePath))
@@ -595,11 +597,23 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
 
                                     if (parentSubPageForElement != null)
                                     {
-                                        parentSubPageForElement.subPageElements.Add(rtbpnl);
+                                        DigifficeAllnoteElements.ElementHeader rtbElementHeader = new DigifficeAllnoteElements.ElementHeader
+                                        {
+                                            elementType = DigifficeAllnoteElements.ElementTypes.RTB,
+                                            element = elements.convertControlToRTB(rtbpnl, rtb)
+                                        };
+                                        DigifficeAllnoteElements.RTBElement rtbElement = elements.convertControlToRTB(rtbpnl, rtb);
+                                        parentSubPageForElement.subPageElements.Add(rtbElementHeader);
                                     }
                                     else if (parentPageForElement != null)
                                     {
-                                        parentPageForElement.pageElements.Add(rtbpnl);
+                                        DigifficeAllnoteElements.ElementHeader rtbElementHeader = new DigifficeAllnoteElements.ElementHeader
+                                        {
+                                            elementType = DigifficeAllnoteElements.ElementTypes.RTB,
+                                            element = elements.convertControlToRTB(rtbpnl, rtb)
+                                        };
+                                        DigifficeAllnoteElements.RTBElement rtbElement = elements.convertControlToRTB(rtbpnl, rtb);
+                                        parentPageForElement.pageElements.Add(rtbElementHeader);
                                     }
                                     else
                                     {
@@ -709,11 +723,23 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                 {
                                     if (parentSubPageForElement != null)
                                     {
-                                        parentSubPageForElement.subPageElements.Add(draggableSizablePictureBoxHost);
+                                        DigifficeAllnoteElements.ElementHeader dspElementHeader = new DigifficeAllnoteElements.ElementHeader
+                                        {
+                                            elementType = DigifficeAllnoteElements.ElementTypes.DraggableSizablePictureBox,
+                                            element = elements.convertControlToDSPB(draggableSizablePictureBoxHost)
+                                        };
+                                        DigifficeAllnoteElements.DraggableSizablePictureBoxElement dspbElement = elements.convertControlToDSPB(draggableSizablePictureBoxHost);
+                                        parentSubPageForElement.subPageElements.Add(dspElementHeader);
                                     }
                                     else if (parentPageForElement != null)
                                     {
-                                        parentPageForElement.pageElements.Add(draggableSizablePictureBoxHost);
+                                        DigifficeAllnoteElements.ElementHeader dspElementHeader = new DigifficeAllnoteElements.ElementHeader
+                                        {
+                                            elementType = DigifficeAllnoteElements.ElementTypes.DraggableSizablePictureBox,
+                                            element = elements.convertControlToDSPB(draggableSizablePictureBoxHost)
+                                        };
+                                        DigifficeAllnoteElements.DraggableSizablePictureBoxElement dspbElement = elements.convertControlToDSPB(draggableSizablePictureBoxHost);
+                                        parentPageForElement.pageElements.Add(dspElementHeader);
                                     }
                                     else
                                     {
@@ -825,7 +851,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                                                 MessageBox.Show($"Error loading image: {ex.Message}");
                                             }
 
-                                            draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox("." + imgFormat, bitmapSource, false);
+                                            draggableSizablePictureBoxHost = digifficeAllnoteForm.DigifficeAllnote_DefaultDraggableSizablePictureBox(new Control(), "." + imgFormat, bitmapSource, false);
                                             draggableSizablePictureBoxHost.Location = imgLocation;
                                             draggableSizablePictureBoxHost.Size = imgSize;
                                         }
@@ -892,7 +918,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote._File
                     {
                         if (comparitive.parentPage == page)
                         {
-                            page.pageElements.Add(subPage);
+                            page.pageSubPages.Add(subPage);
                             subPage.parentPage = page;
                             break;
                         }

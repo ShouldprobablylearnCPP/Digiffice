@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote;
 
 namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad
 {
@@ -25,7 +26,8 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad
             public string pageTitle { get; set; }
             public DateTime CreatedDateTime { get; set; } = DateTime.Now;
             public int pageNum { get; set; } = -1;
-            public List<object> pageElements { get; set; } = new List<object>();
+            public List<SubPage> pageSubPages { get; set; } = new List<SubPage>();
+            public List<DigifficeAllnoteElements.ElementHeader> pageElements { get; set; } = new List<DigifficeAllnoteElements.ElementHeader>();
             public Chapter parentChapter { get; set; }
 
             public Page()
@@ -39,7 +41,7 @@ namespace Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad
             public string subPageTitle { get; set; }
             public DateTime CreatedDateTime { get; set; } = DateTime.Now;
             public int subPageNum { get; set; } = -1;
-            public List<object> subPageElements { get; set; } = new List<object>();
+            public List<DigifficeAllnoteElements.ElementHeader> subPageElements { get; set; } = new List<DigifficeAllnoteElements.ElementHeader>();
             public Page parentPage { get; set; }
 
             public SubPage()

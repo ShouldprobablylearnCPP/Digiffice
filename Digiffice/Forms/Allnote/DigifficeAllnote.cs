@@ -1,23 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
+﻿using System.Drawing.Drawing2D;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Numerics;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -30,9 +14,6 @@ using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
 using Digiffice.Resources.Classes.ProgramClasses.Idlebars;
 using Digiffice.Resources.Classes.ProgramClasses.UserPrefs;
 using DigifficeWPFControls;
-using DigifficeWPFControls;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad.DigifficeAllnoteEditorFile;
 using Application = System.Windows.Forms.Application;
 using Button = System.Windows.Forms.Button;
 using Color = System.Drawing.Color;
@@ -63,6 +44,7 @@ namespace Digiffice
         Image xBtnDefault = Properties.Resources.XbtnDefault;
         Image xBtnHover = Properties.Resources.XbtnHover;
         nonprotected_AccountData np_AC = new nonprotected_AccountData();
+        DigifficeAllnoteElements elements = new DigifficeAllnoteElements();
 
         // Border Panels
         Panel SectionBG_Borderpnl = new Panel();
@@ -347,9 +329,16 @@ namespace Digiffice
             richTextBox.Height = e.NewRectangle.Height;
         }
 
-        public DataGridView DigifficeAllnote_Table(int rows, int cols, bool addToCtrl)
+        //
+        //
+        // TODO: Change control used
+        //
+        //
+        public DataGridView DigifficeAllnote_Table(Control pagebg, int rows, int cols, bool addToCtrl)
         {
-            Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
+            // Define Correlating Element
+            DigifficeAllnoteElements.ElementHeader eHeader = new DigifficeAllnoteElements.ElementHeader();
+            eHeader.elementType = DigifficeAllnoteElements.ElementTypes.InsertTable;
 
             Panel parentPnl = new Panel();
             parentPnl.Tag = "NewPnl_Table";
@@ -398,7 +387,7 @@ namespace Digiffice
                 DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
 
                 // Remove parentPnl
-                currentPage.pageElements.Remove(parentPnl);
+                currentPage.pageElements.Remove(eHeader);
                 pagebg.Controls.Remove(parentPnl);
                 parentPnl.Dispose();
             };
@@ -450,13 +439,23 @@ namespace Digiffice
             if (addToCtrl)
             {
                 pagebg.Controls.Add(parentPnl);
+                eHeader.element = elements.convertControlToInsertTable(parentPnl, table);
+                currentPage.pageElements.Add(eHeader);
             }
 
             return table;
         }
 
-        public ElementHost DigifficeAllnote_DefaultDraggableSizablePictureBox(string fmt, BitmapSource bmpImg, bool addToCtrl)
+        public ElementHost DigifficeAllnote_DefaultDraggableSizablePictureBox(Control pagebg, string fmt, BitmapSource bmpImg, bool addToCtrl, DigifficeAllnoteElements.ElementHeader existingEHeader = null)
         {
+            // Define Correlating Element
+            DigifficeAllnoteElements.ElementHeader eHeader = existingEHeader ?? new DigifficeAllnoteElements.ElementHeader();
+
+            if (existingEHeader == null)
+            {
+                eHeader.elementType = DigifficeAllnoteElements.ElementTypes.DraggableSizablePictureBox;
+            }
+
             // Create DraggableSizablePicturebox
             ElementHost elementHost = new ElementHost();
             elementHost.Location = new Point(200, 200);
@@ -484,6 +483,7 @@ namespace Digiffice
                     int newX = elementInitPoint.X + (mousePos.X - mouseInitPoint.X);
                     int newY = elementInitPoint.Y + (mousePos.Y - mouseInitPoint.Y);
                     elementHost.Location = new Point(newX, newY);
+                    eHeader.element = elements.convertControlToDSPB(elementHost);
                 }
 
                 if (draggableSizablePicturebox.IsDragReady && Math.Abs(mouseInitPoint.X - Cursor.Position.X) > 5 && Math.Abs(mouseInitPoint.Y - Cursor.Position.Y) > 5)
@@ -501,41 +501,68 @@ namespace Digiffice
                 }
             };
 
+            draggableSizablePicturebox.MouseRightButtonDown += (s, e) =>
+            {
+                if (draggableSizablePicturebox.IsTransforming)
+                {
+                    // Open Context Menu
+                }
+            };
+
             // Set ElementHost child
             elementHost.Child = draggableSizablePicturebox;
 
             if (addToCtrl)
             {
                 // Add PictureBox to current page
-                Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
                 pagebg.Controls.Add(elementHost);
-            }
-
-            // Add PictureBox to currentPage's pageElements for saving/loading purposes
-            if (addToCtrl)
-            {
-                currentPage.pageElements.Add(elementHost);
+                eHeader.element = elements.convertControlToDSPB(elementHost);
+                currentPage.pageElements.Add(eHeader);
                 elementHost.BringToFront();
             }
 
             return elementHost;
         }
 
-        public Panel DigifficeAllnote_DefaultRTBPnl(Control pagebg, bool addToCtrl)
+        private void DraggableSizablePicturebox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            throw new NotImplementedException();
+        }
+
+        public ElementHost DigifficeAllnote_NonDefaultDraggableSizablePictureBox(Control pagebg, string fmt, BitmapSource imageSource, bool addToCtrl, Point location, DigifficeAllnoteElements.ElementHeader eHeader)
+        {
+            ElementHost host = DigifficeAllnote_DefaultDraggableSizablePictureBox(pagebg, fmt, imageSource, addToCtrl, eHeader);
+            DraggableSizablePicturebox dspb = (DraggableSizablePicturebox)host.Child;
+
+            host.Location = location;
+            dspb.Tag = fmt;
+            dspb.baseImg.Source = imageSource;
+            return host;
+        }
+
+        public Panel DigifficeAllnote_DefaultRTBPnl(Control pagebg, bool addToCtrl, DigifficeAllnoteElements.ElementHeader existingEHeader = null)
+        {
+            // Define Correlating Element
+            DigifficeAllnoteElements.ElementHeader eHeader = existingEHeader ?? new DigifficeAllnoteElements.ElementHeader();
+
+            if (existingEHeader == null)
+            {
+                eHeader.elementType = DigifficeAllnoteElements.ElementTypes.RTB;
+            }
+
+            // Create Control instances
+            Panel newPanel = new Panel();
+            Button removeBtn = new Button();
+            Panel xResizeArrows = new Panel();
+            RichTextBox newRichTextBox = new RichTextBox();
+
             // Creates Parent panel
             Point clickLocation = pagebg.PointToClient(Cursor.Position);
-            Panel newPanel = new Panel();
             newPanel.Tag = "NewPnl_RTB"; // Create tag for identifying panels that contain RichTextBoxes for future reference (eg. when saving/loading file)
             newPanel.Location = clickLocation;
             newPanel.Size = new Size(200, 10);
             newPanel.BackColor = Color.FromArgb(255, 185, 209, 234);
             newPanel.BorderStyle = BorderStyle.None;
-
-            if (addToCtrl)
-            {
-                pagebg.Controls.Add(newPanel);
-            }
 
             // Make Parent Panel Draggable
             bool isDragging = false;
@@ -556,11 +583,11 @@ namespace Digiffice
                     int newX = newPanel.Location.X + e.X - (newPanel.Width / 2);
                     int newY = newPanel.Location.Y + e.Y;
                     newPanel.Location = new Point(newX, newY);
+                    eHeader.element = elements.convertControlToRTB(newPanel, newRichTextBox); // Update elementHeader
                 }
             };
 
             // Create Remove Button
-            Button removeBtn = new Button();
             removeBtn.Size = new Size(8, 8);
             removeBtn.Location = new Point(1, 1);
             removeBtn.FlatStyle = FlatStyle.Flat;
@@ -579,14 +606,13 @@ namespace Digiffice
                 DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
 
                 // Remove newPanel
-                currentPage.pageElements.Remove(newPanel);
+                currentPage.pageElements.Remove(eHeader);
                 pagebg.Controls.Remove(newPanel);
                 newPanel.Dispose();
             };
             newPanel.Controls.Add(removeBtn);
 
             // Create Resize X Arrows
-            Panel xResizeArrows = new Panel();
             xResizeArrows.Size = new Size(16, 8);
             xResizeArrows.Location = new Point(newPanel.Width - (xResizeArrows.Width + 1), 1);
             xResizeArrows.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -649,13 +675,14 @@ namespace Digiffice
 
                         }
                     }
+
+                    eHeader.element = elements.convertControlToRTB(newPanel, newRichTextBox); // Update elementHeader
                 }
             };
 
             newPanel.Controls.Add(xResizeArrows);
 
             // Creates RichTextBox at clicked location
-            RichTextBox newRichTextBox = new RichTextBox();
             newRichTextBox.Name = "RichTextBox";
             newRichTextBox.Location = new Point(1, 10);
             newRichTextBox.Size = new Size(198, new Font("Roboto", 10, FontStyle.Regular).Height);
@@ -671,10 +698,12 @@ namespace Digiffice
             newRichTextBox.TextChanged += (s, e) =>
             {
                 DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
+                eHeader.element = elements.convertControlToRTB(newPanel, newRichTextBox); // Update elementHeader
             };
             newRichTextBox.SizeChanged += (s, e) =>
             {
                 DigifficeAllnote_ChangeEditingVariables(allowedToCreateTextBoxOnPage, false, isInDrawingMode);
+                eHeader.element = elements.convertControlToRTB(newPanel, newRichTextBox); // Update elementHeader
             };
             newRichTextBox.GotFocus += (s, e) =>
             {
@@ -707,6 +736,7 @@ namespace Digiffice
             {
                 DigifficeAllnote_EditHeightOfRichTextBox(newRichTextBox, e);
                 newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
+                eHeader.element = elements.convertControlToRTB(newPanel, newRichTextBox); // Update elementHeader
             };
             // Add RichTextBox to Parent Panel
             newPanel.Controls.Add(newRichTextBox);
@@ -720,7 +750,9 @@ namespace Digiffice
             if (addToCtrl)
             {
                 // Adds new RichTextBox to Page Elements
-                currentPage.pageElements.Add(newPanel);
+                pagebg.Controls.Add(newPanel);
+                eHeader.element = elements.convertControlToRTB(newPanel, newRichTextBox);
+                currentPage.pageElements.Add(eHeader);
             }
 
             // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
@@ -729,6 +761,19 @@ namespace Digiffice
             return newPanel;
         }
 
+        public Panel DigifficeAllnote_NonDefaultRTBPnl(Control pageBg, bool addToCtrl, string rtf, Size pnlSize, Size rtbSize, Point location, DigifficeAllnoteElements.ElementHeader existingHeader)
+        {
+            Panel newPnl = DigifficeAllnote_DefaultRTBPnl(pageBg, addToCtrl, existingHeader);
+
+            newPnl.Location = location;
+            newPnl.Size = pnlSize;
+            RichTextBox richTextBox = (RichTextBox)newPnl.Controls.Find("RichTextBox", true)[0];
+            richTextBox.Size = rtbSize;
+            richTextBox.Rtf = rtf;
+
+            return newPnl;
+        }
+        
         private void EnterExitDrawingModeBtn_Click(object sender, EventArgs e)
         {
             if (!isInDrawingMode)
@@ -770,7 +815,7 @@ namespace Digiffice
 
                     bmpImg.EndInit();
 
-                    ElementHost dspElementHost = DigifficeAllnote_DefaultDraggableSizablePictureBox(Path.GetExtension(chosenImagePath).ToLower(), bmpImg, true);
+                    ElementHost dspElementHost = DigifficeAllnote_DefaultDraggableSizablePictureBox(nonPageBg.Controls.Find("PageBG", true)[0], Path.GetExtension(chosenImagePath).ToLower(), bmpImg, true);
                 }
 
                 openFileDialog.Dispose();
@@ -784,7 +829,7 @@ namespace Digiffice
 
             if (dialogResult == DialogResult.OK)
             {
-                DataGridView tableDataGridView = DigifficeAllnote_Table(insertTableForm.Rows, insertTableForm.Cols, true);
+                DataGridView tableDataGridView = DigifficeAllnote_Table(nonPageBg.Controls.Find("PageBG", true)[0], insertTableForm.Rows, insertTableForm.Cols, true);
             }
 
             insertTableForm.Dispose();
@@ -1121,16 +1166,16 @@ namespace Digiffice
             currentSelectedTab = HelpTab;
         }
 
-        private void DigifficeAllnote_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page currentPage)
+        private void DigifficeAllnote_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page pageToShow)
         {
             // Clear and Dispose of controls
             foreach (Control ctrl in nonPageBg.Controls)
             {
-                if (ctrl is Panel panelCtrl)
+                if (ctrl is Panel _pagebg)
                 {
-                    for (int i = panelCtrl.Controls.Count - 1; i >= 0; i--)
+                    for (int i = _pagebg.Controls.Count - 1; i >= 0; i--)
                     {
-                        Control child = panelCtrl.Controls[i];
+                        Control child = _pagebg.Controls[i];
                         if (child is ElementHost host) // Dispose of wpf control
                         {
                             if (host.Child is FrameworkElement fe)
@@ -1167,6 +1212,7 @@ namespace Digiffice
             nonPageBg.Controls.Clear();
             globalInkCanvas = null;
 
+            // Force garbage collection to free up memory used by disposed controls
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
@@ -1174,8 +1220,8 @@ namespace Digiffice
             Panel pagebg = new Panel();
             pagebg.Name = "PageBG";
             pagebg.BackColor = Color.FromArgb(255, 249, 251, 255);
-            int sizex = Convertcm_pixels(currentPage.pageSize.X);
-            int sizey = Convertcm_pixels(currentPage.pageSize.Y);
+            int sizex = Convertcm_pixels(pageToShow.pageSize.X);
+            int sizey = Convertcm_pixels(pageToShow.pageSize.Y);
             pagebg.Size = new Size(sizex, sizey);
             Point pagebgPos = new Point(0, 0);
             pagebg.Location = pagebgPos;
@@ -1193,7 +1239,7 @@ namespace Digiffice
             SectionBG.Controls.Add(nonPageBG_Borderpnl);
 
             // Show Page Title and Created DateTime
-            DigifficeAllnote_ShowPageTitleAndDatetime(currentPage);
+            DigifficeAllnote_ShowPageTitleAndDatetime(pageToShow);
 
             // Create InkCanvas
             ElementHost inkCanvasHost = new ElementHost();
@@ -1237,15 +1283,25 @@ namespace Digiffice
             globalInkCanvas = inkCanvas;
 
             // Load page elements
-            foreach (var item in currentPage.pageElements)
+            foreach (DigifficeAllnoteElements.ElementHeader eHeader in pageToShow.pageElements.ToList())
             {
                 // Create control for control checker
-                Control itemCtrl;
                 try
                 {
-                    itemCtrl = (Control)item;
-                    pagebg.Controls.Add(itemCtrl);
-                    itemCtrl.Show();
+                    switch (eHeader.elementType)
+                    {
+                        case DigifficeAllnoteElements.ElementTypes.RTB:
+                            DigifficeAllnoteElements.RTBElement rtbElement = (DigifficeAllnoteElements.RTBElement)eHeader.element;
+                            Panel rtbPnl = DigifficeAllnote_NonDefaultRTBPnl(pagebg, false, rtbElement.rtf, rtbElement.pnlSize, rtbElement.rtbSize, rtbElement.location, eHeader);
+                            pagebg.Controls.Add(rtbPnl);
+                            break;
+
+                        case DigifficeAllnoteElements.ElementTypes.DraggableSizablePictureBox:
+                            DigifficeAllnoteElements.DraggableSizablePictureBoxElement dspElement = (DigifficeAllnoteElements.DraggableSizablePictureBoxElement)eHeader.element;
+                            ElementHost dspElementHost = DigifficeAllnote_NonDefaultDraggableSizablePictureBox(pagebg, dspElement.fmt, dspElement.image, false, dspElement.location, eHeader);
+                            pagebg.Controls.Add(dspElementHost);
+                            break;
+                    }
                 }
                 catch (InvalidCastException)
                 {
@@ -1278,6 +1334,8 @@ namespace Digiffice
                     DigifficeAllnote_ChangeEditingVariables(true, allnoteFile_SavedAfterLatestChange, isInDrawingMode);
                 }
             };
+
+            currentPage = pageToShow;
         }
 
         public void fontFamilyComboBox_SelectionChangeCommited(object sender, EventArgs e)

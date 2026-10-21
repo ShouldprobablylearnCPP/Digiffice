@@ -1,3 +1,6 @@
+using System.Windows.Interop;
+using System.Windows.Media;
+
 namespace Digiffice
 {
     internal static class Program
@@ -13,6 +16,7 @@ namespace Digiffice
             ApplicationConfiguration.Initialize();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             Application.Run(new Register());
         }
     }
