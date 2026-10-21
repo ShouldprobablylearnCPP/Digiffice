@@ -245,6 +245,8 @@ namespace Digiffice
                 continueBool = false;
             }
 
+            openFileDialog.Dispose();
+
             if (continueBool)
             {
                 DigifficeFileReaderDGAN fileReader = new DigifficeFileReaderDGAN();
@@ -524,11 +526,6 @@ namespace Digiffice
             return elementHost;
         }
 
-        private void DraggableSizablePicturebox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         public ElementHost DigifficeAllnote_NonDefaultDraggableSizablePictureBox(Control pagebg, string fmt, BitmapSource imageSource, bool addToCtrl, Point location, DigifficeAllnoteElements.ElementHeader eHeader)
         {
             ElementHost host = DigifficeAllnote_DefaultDraggableSizablePictureBox(pagebg, fmt, imageSource, addToCtrl, eHeader);
@@ -608,6 +605,9 @@ namespace Digiffice
                 // Remove newPanel
                 currentPage.pageElements.Remove(eHeader);
                 pagebg.Controls.Remove(newPanel);
+
+                // Remove Event handlers
+
                 newPanel.Dispose();
             };
             newPanel.Controls.Add(removeBtn);
