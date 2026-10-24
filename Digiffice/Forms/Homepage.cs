@@ -26,6 +26,10 @@ namespace Digiffice
         Panel programOpenButton = new Panel();
 
         //
+        // Override
+        //
+
+        //
         //
         // Form Constructor
         //
@@ -158,8 +162,10 @@ namespace Digiffice
 
         private void MoreProgramsBtn_Click(object sender, EventArgs e)
         {
-            MoreProgramsForm moreProgramsForm = new MoreProgramsForm();
-            moreProgramsForm.ShowDialog();
+            using (MoreProgramsForm moreProgramsForm = new MoreProgramsForm())
+            {
+                moreProgramsForm.ShowDialog();
+            }
         }
 
         private void SettingsBtn_Click(object sender, EventArgs e)
@@ -213,11 +219,7 @@ namespace Digiffice
 
         private void DigifficeAllnote_Open(object sender, EventArgs e)
         {
-            DigifficeAllnote_Splashscreen splashscreen = new DigifficeAllnote_Splashscreen(programVersions[0]);
-            splashscreen.BringToFront();
-            splashscreen.Show();
-
-            DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(np_AC, splashscreen);
+            DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(np_AC, new DigifficeAllnote_Splashscreen(programVersions[0]));
             DigifficeAllnote.SuspendLayout(); // Suspend layout to prevent rendering issues during load
             DigifficeAllnote.Show();
         }
@@ -248,11 +250,8 @@ namespace Digiffice
 
         private void DigifficePeercompute_Open(object sender, EventArgs e)
         {
-            DigifficePeercompute_Splashscreen splashscreen = new DigifficePeercompute_Splashscreen(programVersions[1]);
-            splashscreen.BringToFront();
-            splashscreen.Show();
 
-            DigifficePeercompute DigifficePeercompute = new DigifficePeercompute(np_AC, splashscreen);
+            DigifficePeercompute DigifficePeercompute = new DigifficePeercompute(np_AC, new DigifficePeercompute_Splashscreen(programVersions[1]));
             DigifficePeercompute.SuspendLayout(); // Suspend layout to prevent rendering issues during load
             DigifficePeercompute.Show();
         }

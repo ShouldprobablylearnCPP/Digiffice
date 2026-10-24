@@ -100,6 +100,9 @@ namespace Digiffice
 
         public DigifficeAllnote(nonprotected_AccountData nonprotected_AccountData, DigifficeAllnote_Splashscreen splashscreen)
         {
+            splashscreen.Show();
+            splashscreen.BringToFront();
+
             // Hide form until fully loaded to prevent flickering
             this.Opacity = 0;
             this.Shown += (s, e) =>
@@ -744,15 +747,13 @@ namespace Digiffice
             // Resize Parent Panel to prevent RichTextBox from being cut off
             newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
 
-            // Focuses on new RichTextBox
-            newRichTextBox.Focus();
-
             if (addToCtrl)
             {
                 // Adds new RichTextBox to Page Elements
                 pagebg.Controls.Add(newPanel);
                 eHeader.element = elements.convertControlToRTB(newPanel, newRichTextBox);
                 currentPage.pageElements.Add(eHeader);
+                newRichTextBox.Focus();
             }
 
             // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
@@ -1211,6 +1212,8 @@ namespace Digiffice
             }
             nonPageBg.Controls.Clear();
             globalInkCanvas = null;
+            activeRtb = null;
+            DigifficeAllnote_ChangeEditingVariables(true, false, isInDrawingMode);
 
             // Force garbage collection to free up memory used by disposed controls
             GC.Collect();

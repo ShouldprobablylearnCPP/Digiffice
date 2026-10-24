@@ -19,6 +19,8 @@ namespace Digiffice
         OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Users\\suzan\\OneDrive\\Documents\\DigifficeDatabase.accdb");
         OleDbCommand cmd = new OleDbCommand();
 
+        public Register registerForm { get; set; }
+
         //
         //
         // Form Constructor
@@ -92,8 +94,8 @@ namespace Digiffice
         private void labelCreateAccount_Click(object sender, EventArgs e)
         {
             con.Close();
-            new Register().Show();
             this.Hide();
+            registerForm.Show();
         }
 
         private void labelLoginOfflineClick_Click(object sender, EventArgs e)
@@ -103,7 +105,8 @@ namespace Digiffice
             nonprotected_Account.ac_username = "";
             nonprotected_Account.ac_offline = true;
             new Homepage(nonprotected_Account).Show();
-            this.Hide();
+            this.Close();
+            registerForm.Close();
         }
     }
 }

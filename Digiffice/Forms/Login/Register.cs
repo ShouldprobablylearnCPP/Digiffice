@@ -19,6 +19,8 @@ namespace Digiffice
         OleDbCommand cmd = new OleDbCommand();
         OleDbCommand checkCMD = new OleDbCommand();
 
+        public Login loginForm { get; set; }
+
         //
         //
         // Form Constructor
@@ -119,8 +121,8 @@ namespace Digiffice
         private void labelBackToLogin_Click(object sender, EventArgs e)
         {
             con.Close();
-            new Login().Show();
             this.Hide();
+            loginForm.Show();
         }
     }
 }

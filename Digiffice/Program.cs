@@ -17,7 +17,24 @@ namespace Digiffice
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
-            Application.Run(new Register());
+
+            Register registerForm = new Register();
+            Login loginForm = new Login();
+
+            registerForm.loginForm = loginForm;
+            loginForm.registerForm = registerForm;
+
+            var context = new OpenFormsContext(registerForm);
+
+            Application.Run(context);
+        }
+    }
+
+    public class OpenFormsContext : ApplicationContext
+    {
+        public OpenFormsContext(Register regForm)
+        {
+            regForm.Show();
         }
     }
 }

@@ -46,6 +46,9 @@ namespace Digiffice
 
         public DigifficePeercompute(nonprotected_AccountData nonprotected_AccountData, DigifficePeercompute_Splashscreen splashscreen)
         {
+            splashscreen.Show();
+            splashscreen.BringToFront();
+
             // Hide form until fully loaded to prevent flickering
             this.Opacity = 0;
             this.Shown += (s, e) =>
