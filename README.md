@@ -4,7 +4,7 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 - Digiffice will have no bloatware, making it very undemanding and easy to use. I hope that the simplicity of the program will create a good user experience.
 
 === 2 - Free to use and run ===
-- All versions of Digiffice will be completely free and open source. It will also have 0 advertisements, subscriptions or purchases, so there is no chance of a 'catch'. Every individual program that comes with it will be the exact same as the next person's (assuming you are on the same version).
+- All versions of Digiffice will be completely free and open source. It will also have 0 advertisements, subscriptions or purchases, so there is no 'catch' that you often find in other free apps. Every individual program that comes with it will be the exact same as the next person's (assuming you are on the same version).
 
 === 3 - Personal Reasons ===
 - As a solo developer, I am also creating Digiffice to refine my skills, learn new things, and overall become a better programmer and developer.
@@ -28,7 +28,7 @@ Digiffice is an open-source Office Program. It is currently pre-release, (in fac
 - The master branch and other branches will only contain the needed source code, which means IP addresses that connect to servers in the software will not be declared/present in the source code.
 
 === 4 - Licensing ===
-- Digiffice is under the GNU GPL 3.0 (GNU General Public License 3.0) license.
+- Digiffice is licensed under the GNU GPL 3.0 (GNU General Public License 3.0).
 
 # WHAT TO EXPECT
 
