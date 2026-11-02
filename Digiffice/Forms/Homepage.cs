@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Drawing.Text;
 using System.Media;
 using Digiffice.Resources.Classes.ProgramClasses;
+using Digiffice.Resources.Classes.ProgramClasses.Utility;
 
 namespace Digiffice
 {
@@ -24,6 +25,9 @@ namespace Digiffice
 
         // Program Button Group
         Panel programOpenButton = new Panel();
+
+        // Util
+        Utility util = new Utility();
 
         //
         // Override
@@ -170,7 +174,7 @@ namespace Digiffice
 
         private void SettingsBtn_Click(object sender, EventArgs e)
         {
-            SettingsMenuForm settingsMenuForm = new SettingsMenuForm();
+            SettingsMenuForm settingsMenuForm = new SettingsMenuForm(np_AC);
             settingsMenuForm.Show();
         }
 
@@ -185,9 +189,6 @@ namespace Digiffice
             iconPanel.BackColor = btn.BackColor;
             iconPanel.BackgroundImage = ProgramIcons[Array.IndexOf(programNames, programToOpen)];
             iconPanel.BackgroundImageLayout = ImageLayout.Stretch;
-            Controls.Add(iconPanel);
-            iconPanel.Enabled = false;
-            iconPanel.BringToFront();
 
             // program info label
             Label programInfoLabel = new Label();
@@ -199,7 +200,10 @@ namespace Digiffice
             programInfoLabel.Text = programInfos[Array.IndexOf(programNames, programToOpen)];
             programInfoLabel.Font = new Font("Roboto", 8, FontStyle.Bold);
             programInfoLabel.TextAlign = ContentAlignment.MiddleLeft;
-            Controls.Add(programInfoLabel);
+
+            Controls.AddRange(new Control[] { iconPanel, programInfoLabel });
+            iconPanel.Enabled = false;
+            iconPanel.BringToFront();
             programInfoLabel.Enabled = false;
             programInfoLabel.BringToFront();
         }
@@ -220,7 +224,7 @@ namespace Digiffice
         private void DigifficeAllnote_Open(object sender, EventArgs e)
         {
             DigifficeAllnote DigifficeAllnote = new DigifficeAllnote(np_AC, new DigifficeAllnote_Splashscreen(programVersions[0]));
-            DigifficeAllnote.SuspendLayout(); // Suspend layout to prevent rendering issues during load
+            util.RecursiveSuspendLayout(DigifficeAllnote); // Suspend layout to prevent rendering issues during load
             DigifficeAllnote.Show();
         }
 
@@ -252,7 +256,7 @@ namespace Digiffice
         {
 
             DigifficePeercompute DigifficePeercompute = new DigifficePeercompute(np_AC, new DigifficePeercompute_Splashscreen(programVersions[1]));
-            DigifficePeercompute.SuspendLayout(); // Suspend layout to prevent rendering issues during load
+            util.RecursiveSuspendLayout(DigifficePeercompute); // Suspend layout to prevent rendering issues during load
             DigifficePeercompute.Show();
         }
 

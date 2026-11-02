@@ -13,6 +13,7 @@ using Digiffice.Resources.Classes.ProgramClasses.CustomControls;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.ClientServerNode;
 using Digiffice.Resources.Classes.ProgramClasses.DigifficePeercompute.P2PNode;
+using Digiffice.Resources.Classes.ProgramClasses.Utility;
 using DigifficeWPFControls;
 
 namespace Digiffice
@@ -38,6 +39,9 @@ namespace Digiffice
         ClientServerClient _ClientServerClient;
         ClientServerServer _ClientServerHost;
 
+        // Util
+        Utility util = new Utility();
+
         //
         //
         // Form Constructor
@@ -54,22 +58,27 @@ namespace Digiffice
             this.Shown += (s, e) =>
             {
                 this.Opacity = 1;
-                this.ResumeLayout(); // Resume layout after form is shown to prevent flickering, and to improve load time.
+                util.RecursiveResumeLayout(this, false); // Resume layout after form is shown to prevent flickering, and to improve load time.
                 splashscreen.Close();
             };
+
+            // Dispose form when closed
+            this.FormClosed += (s, e) => this.Dispose();
+
+            // Initialize components
+            InitializeComponent();
 
             // Set dimensions
             this.ClientSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             this.Size = ClientSize;
-
-            // Initialize components
-            InitializeComponent();
 
             // Store non-protected account data
             _nonprotected_AccountData = nonprotected_AccountData;
 
             // Call Custom/Prerequesite Functions
             this.SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
+            this.DoubleBuffered = true;
+
             DigifficePeercompute_Prerequisite();
         }
 
@@ -130,6 +139,10 @@ namespace Digiffice
             if (Directory.Exists(digifficeGlobalVariables.globalDigifficePeercomputeDataPath))
             {
                 // Clear existing controls in the left bar panel
+                foreach (Control ctrl in PeercomputeLeftBarPanel.Controls)
+                {
+                    ctrl.Dispose();
+                }
                 PeercomputeLeftBarPanel.Controls.Clear();
                 string[] PeercomputeDirectories = Directory.GetDirectories(digifficeGlobalVariables.globalDigifficePeercomputeDataPath);
 
@@ -211,6 +224,10 @@ namespace Digiffice
             if (PeercomputeType == "P2P")
             {
                 // Remove controls from parent control
+                foreach (Control ctrl in CurrentPeercomputeDataPanel.Controls)
+                {
+                    ctrl.Dispose();
+                }
                 CurrentPeercomputeDataPanel.Controls.Clear();
 
                 DigifficePeercompute_DisconnectFromPeercompute();
@@ -227,6 +244,10 @@ namespace Digiffice
             else if (PeercomputeType == "CLIENTSERVER")
             {
                 // Remove controls from parent control
+                foreach (Control ctrl in CurrentPeercomputeDataPanel.Controls)
+                {
+                    ctrl.Dispose();
+                }
                 CurrentPeercomputeDataPanel.Controls.Clear();
 
                 DigifficePeercompute_DisconnectFromPeercompute();
@@ -277,7 +298,15 @@ namespace Digiffice
 
         private void OnlineUsersTabLabel_Paint(object sender, PaintEventArgs e)
         {
-
+            OnlineUsersTabLabel.Size = TextRenderer.MeasureText(OnlineUsersTabLabel.Text, OnlineUsersTabLabel.Font);
+            if (OnlineUsersTab == selectedLeftbarTab)
+            {
+                OnlineUsersTabLabel.Location = new Point((OnlineUsersTab.Width - OnlineUsersTabLabel.Width) / 2, (OnlineUsersTab.Height - OnlineUsersTabLabel.Height) / 2);
+            }
+            else
+            {
+                OnlineUsersTabLabel.Location = new Point((OnlineUsersTab.Width - OnlineUsersTabLabel.Width) / 2, (PeercomputesTab.Height - OnlineUsersTabLabel.Height) / 2 - 5); // Add 5px vertical
+            }
         }
 
         private void NewPeercomputeBtn_Click(object sender, EventArgs e)
@@ -293,8 +322,12 @@ namespace Digiffice
 
         private void DigifficePeercompute_CreatePeercomputeEntryControl(int _xOffset, int _yOffset, string directory, Control parentControl, bool clickable, bool setAsCurrentlySelected)
         {
-            // Create Parent container panel for each Peercompute entry (to allow for better formatting and click events)
+            // Control References
             Panel PeercomputeEntryPanel = new Panel();
+            PictureBox PeercomputePictureBox = new PictureBox();
+            Label PeercomputeNameLabel = new Label();
+
+            // Create Parent container panel for each Peercompute entry (to allow for better formatting and click events)
             PeercomputeEntryPanel.Tag = "PeercomputeEntryParentPanel";
             PeercomputeEntryPanel.Location = new Point(_xOffset, _yOffset);
             if (setAsCurrentlySelected)
@@ -306,7 +339,6 @@ namespace Digiffice
             parentControl.Controls.Add(PeercomputeEntryPanel);
 
             // Create image identifier for Peercompute type (p2p/client-server)
-            PictureBox PeercomputePictureBox = new PictureBox();
             PeercomputePictureBox.Location = new Point(5 + _xOffset, 0);
             PeercomputePictureBox.Size = new Size(30, 30); // Set size for the picture box
             PeercomputePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -314,7 +346,6 @@ namespace Digiffice
 
 
             // Create name label
-            Label PeercomputeNameLabel = new Label();
             PeercomputeNameLabel.Font = new Font("Roboto", 10, FontStyle.Bold);
             PeercomputeNameLabel.Text = Path.GetFileName(directory);
             PeercomputeNameLabel.TextAlign = ContentAlignment.MiddleLeft;
@@ -322,7 +353,6 @@ namespace Digiffice
             PeercomputeNameLabel.Size = new Size(parentControl.Width - PeercomputePictureBox.Width - 10, 30);
             PeercomputeNameLabel.BackColor = SystemColors.Control;
             PeercomputeNameLabel.ForeColor = Color.Black;
-            PeercomputeEntryPanel.Controls.Add(PeercomputeNameLabel);
 
             if (clickable)
             {
@@ -355,8 +385,8 @@ namespace Digiffice
                 throw new InvalidDataException("Invalid Peercompute type found in data file in Peercompute directory: " + directory + " Invalid data: " + PeercomputeType);
             }
 
-            // Add Picture Box to form
-            PeercomputeEntryPanel.Controls.Add(PeercomputePictureBox);
+            // Add Controls to panel
+            PeercomputeEntryPanel.Controls.AddRange(new Control[] { PeercomputeNameLabel, PeercomputePictureBox });
         }
     }
 }

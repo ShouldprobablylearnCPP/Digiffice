@@ -69,8 +69,7 @@
             Homepanel.BackColor = SystemColors.ControlLight;
             Homepanel.BackgroundImage = Properties.Resources.Panel;
             Homepanel.BackgroundImageLayout = ImageLayout.Stretch;
-            Homepanel.Controls.Add(ExitButton);
-            Homepanel.Controls.Add(Windowmsg);
+            Homepanel.Controls.AddRange(new Control[] { ExitButton, Windowmsg });
             Homepanel.Dock = DockStyle.Top;
             Homepanel.Location = new Point(0, 0);
             Homepanel.Name = "Homepanel";
@@ -130,15 +129,7 @@
             // TabSelectionPanel
             // 
             TabSelectionPanel.BackColor = SystemColors.GradientActiveCaption;
-            TabSelectionPanel.Controls.Add(HelpTab);
-            TabSelectionPanel.Controls.Add(ViewTab);
-            TabSelectionPanel.Controls.Add(ReviewTab);
-            TabSelectionPanel.Controls.Add(HistoryTab);
-            TabSelectionPanel.Controls.Add(DrawTab);
-            TabSelectionPanel.Controls.Add(InsertTab);
-            TabSelectionPanel.Controls.Add(HomeTab);
-            TabSelectionPanel.Controls.Add(FileTab);
-            TabSelectionPanel.Controls.Add(RibbonPanel);
+            TabSelectionPanel.Controls.AddRange(new Control[] { HelpTab, ViewTab, ReviewTab, HistoryTab, DrawTab, InsertTab, HomeTab, FileTab, RibbonPanel});
             TabSelectionPanel.ForeColor = SystemColors.ActiveCaptionText;
             TabSelectionPanel.Location = new Point(0, 59);
             TabSelectionPanel.Name = "TabSelectionPanel";
@@ -340,12 +331,7 @@
             // 
             SectionBG.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             SectionBG.BackColor = Color.DarkRed;
-            SectionBG.Controls.Add(CosmeticPanel_ButtonSeperator_SectionBG);
-            SectionBG.Controls.Add(CloseOpenSectionBGPagesBtn);
-            SectionBG.Controls.Add(NewPageBtn);
-            SectionBG.Controls.Add(SectionBG_Pages);
-            SectionBG.Controls.Add(CosmeticPanel_BetweenScrollbars);
-            SectionBG.Controls.Add(nonPageBg);
+            SectionBG.Controls.AddRange(new Control[] { CosmeticPanel_ButtonSeperator_SectionBG, CloseOpenSectionBGPagesBtn, NewPageBtn, SectionBG_Pages, CosmeticPanel_BetweenScrollbars, nonPageBg});
             SectionBG.Location = new Point(20, 60);
             SectionBG.Name = "SectionBG";
             SectionBG.Size = new Size(1430, 743);
@@ -456,11 +442,7 @@
             // 
             WorkspacePanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             WorkspacePanel.BackColor = Color.Transparent;
-            WorkspacePanel.Controls.Add(Idlebar);
-            WorkspacePanel.Controls.Add(SectionBG_Chapters_BorderCover);
-            WorkspacePanel.Controls.Add(SectionBG);
-            WorkspacePanel.Controls.Add(SectionBG_Chapters);
-            WorkspacePanel.Controls.Add(NewChapterBtn);
+            WorkspacePanel.Controls.AddRange(new Control[] { Idlebar, SectionBG_Chapters_BorderCover, SectionBG, SectionBG_Chapters, NewChapterBtn});
             WorkspacePanel.Location = new Point(250, 257);
             WorkspacePanel.Name = "WorkspacePanel";
             WorkspacePanel.Size = new Size(1670, 823);
@@ -481,11 +463,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
-            Controls.Add(WorkspacePanel);
-            Controls.Add(LeftInfoPanel);
-            Controls.Add(DigifficeButton);
-            Controls.Add(TabSelectionPanel);
-            Controls.Add(Homepanel);
+            Controls.AddRange(new Control[] { WorkspacePanel, LeftInfoPanel, DigifficeButton, TabSelectionPanel, Homepanel});
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DigifficeAllnote";

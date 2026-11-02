@@ -59,8 +59,7 @@
             Homepanel.BackColor = SystemColors.ControlLight;
             Homepanel.BackgroundImage = Properties.Resources.Panel;
             Homepanel.BackgroundImageLayout = ImageLayout.Stretch;
-            Homepanel.Controls.Add(ExitButton);
-            Homepanel.Controls.Add(Windowmsg);
+            Homepanel.Controls.AddRange(new Control[] { ExitButton, Windowmsg });
             Homepanel.Dock = DockStyle.Top;
             Homepanel.Location = new Point(0, 0);
             Homepanel.Name = "Homepanel";
@@ -122,11 +121,7 @@
             // 
             PeercomputeLeftBarContainerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             PeercomputeLeftBarContainerPanel.BackColor = Color.Transparent;
-            PeercomputeLeftBarContainerPanel.Controls.Add(NewPeercomputeBtn);
-            PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputeLeftBarPanel);
-            PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputesPanelBorder);
-            PeercomputeLeftBarContainerPanel.Controls.Add(PeercomputesTab);
-            PeercomputeLeftBarContainerPanel.Controls.Add(OnlineUsersTab);
+            PeercomputeLeftBarContainerPanel.Controls.AddRange(new Control[] { NewPeercomputeBtn, PeercomputeLeftBarPanel, PeercomputesPanelBorder, PeercomputesTab, OnlineUsersTab});
             PeercomputeLeftBarContainerPanel.Location = new Point(12, 99);
             PeercomputeLeftBarContainerPanel.Name = "PeercomputeLeftBarContainerPanel";
             PeercomputeLeftBarContainerPanel.Size = new Size(370, 969);
@@ -259,10 +254,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.DigifficeAppBG;
             ClientSize = new Size(1920, 1080);
-            Controls.Add(CurrentPeercomputeContainerPanel);
-            Controls.Add(PeercomputeLeftBarContainerPanel);
-            Controls.Add(DigifficeButton);
-            Controls.Add(Homepanel);
+            Controls.AddRange(new Control[] { CurrentPeercomputeContainerPanel, PeercomputeLeftBarContainerPanel, DigifficeButton, Homepanel});
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DigifficePeercompute";

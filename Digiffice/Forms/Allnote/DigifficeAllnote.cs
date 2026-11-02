@@ -13,6 +13,7 @@ using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllnote.AllnoteTabClas
 using Digiffice.Resources.Classes.ProgramClasses.DigifficeAllpad;
 using Digiffice.Resources.Classes.ProgramClasses.Idlebars;
 using Digiffice.Resources.Classes.ProgramClasses.UserPrefs;
+using Digiffice.Resources.Classes.ProgramClasses.Utility;
 using DigifficeWPFControls;
 using Application = System.Windows.Forms.Application;
 using Button = System.Windows.Forms.Button;
@@ -52,6 +53,9 @@ namespace Digiffice
 
         // Notebook Variables
         Color notebook_ChapterCol = Color.Red;
+
+        // Util
+        Utility util = new Utility();
 
         // Editor Variables
         DigifficeAllnoteTextFormatManager textFormatManager = new DigifficeAllnoteTextFormatManager();
@@ -108,22 +112,26 @@ namespace Digiffice
             this.Shown += (s, e) =>
             {
                 this.Opacity = 1;
-                this.ResumeLayout(); // Resume layout after form is shown to prevent flickering, and to improve load time.
+                util.RecursiveResumeLayout(this, false); // Resume layout after form is shown to prevent flickering, and to improve load time.
                 splashscreen.Close();
             };
 
+            this.FormClosed += (s, e) => this.Dispose();
+
             // Set nonprotected_AccountData
             np_AC = nonprotected_AccountData;
+
+            // Initialize components
+            InitializeComponent();
 
             // Set dimensions
             this.ClientSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             this.Size = ClientSize;
 
-            // Initialize components
-            InitializeComponent();
-
             // Call Custom/Prerequesite Functions
             this.SetStyle(ControlStyles.SupportsTransparentBackColor | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
+            this.DoubleBuffered = true;
+
             SetupBorderPanels();
             DigifficeAllnote_EditorPrerequisite();
             DigifficeAllnote_NewFile("NewNotebook");
@@ -542,6 +550,9 @@ namespace Digiffice
 
         public Panel DigifficeAllnote_DefaultRTBPnl(Control pagebg, bool addToCtrl, DigifficeAllnoteElements.ElementHeader existingEHeader = null)
         {
+            // Controls to add to panel
+            List<Control> newPnlControlsToAdd = new List<Control>();
+
             // Define Correlating Element
             DigifficeAllnoteElements.ElementHeader eHeader = existingEHeader ?? new DigifficeAllnoteElements.ElementHeader();
 
@@ -613,7 +624,7 @@ namespace Digiffice
 
                 newPanel.Dispose();
             };
-            newPanel.Controls.Add(removeBtn);
+            newPnlControlsToAdd.Add(removeBtn);
 
             // Create Resize X Arrows
             xResizeArrows.Size = new Size(16, 8);
@@ -683,7 +694,7 @@ namespace Digiffice
                 }
             };
 
-            newPanel.Controls.Add(xResizeArrows);
+            newPnlControlsToAdd.Add(xResizeArrows);
 
             // Creates RichTextBox at clicked location
             newRichTextBox.Name = "RichTextBox";
@@ -742,7 +753,7 @@ namespace Digiffice
                 eHeader.element = elements.convertControlToRTB(newPanel, newRichTextBox); // Update elementHeader
             };
             // Add RichTextBox to Parent Panel
-            newPanel.Controls.Add(newRichTextBox);
+            newPnlControlsToAdd.Add(newRichTextBox);
 
             // Resize Parent Panel to prevent RichTextBox from being cut off
             newPanel.Size = new Size(newRichTextBox.Width + 2, newRichTextBox.Height + 11);
@@ -758,6 +769,9 @@ namespace Digiffice
 
             // Prevent creating multiple textboxes on one click by disabling textbox creation until next click after focusing the new textbox
             DigifficeAllnote_ChangeEditingVariables(false, false, isInDrawingMode);
+
+            // Add controls to newPanel using addrange
+            newPanel.Controls.AddRange(newPnlControlsToAdd.ToArray());
 
             return newPanel;
         }
@@ -1044,6 +1058,10 @@ namespace Digiffice
             FileTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate File Tab Contents
+            foreach (Control ctrl in RibbonPanel.Controls)
+            {
+                ctrl.Dispose();
+            }
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteFileTab fileTabContents = new DigifficeAllnoteFileTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
@@ -1062,6 +1080,10 @@ namespace Digiffice
             HomeTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Home Tab Contents
+            foreach (Control ctrl in RibbonPanel.Controls)
+            {
+                ctrl.Dispose();
+            }
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteHomeTab homeTabContents = new DigifficeAllnoteHomeTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
@@ -1082,6 +1104,10 @@ namespace Digiffice
             InsertTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Insert Tab Contents
+            foreach (Control ctrl in RibbonPanel.Controls)
+            {
+                ctrl.Dispose();
+            }
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteInsertTab insertTabContents = new DigifficeAllnoteInsertTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
@@ -1099,6 +1125,10 @@ namespace Digiffice
             DrawTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Draw Tab Contents
+            foreach (Control ctrl in RibbonPanel.Controls)
+            {
+                ctrl.Dispose();
+            }
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteDrawTab drawTabContents = new DigifficeAllnoteDrawTab();
 #pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
@@ -1116,6 +1146,10 @@ namespace Digiffice
             HistoryTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate History Tab Contents
+            foreach (Control ctrl in RibbonPanel.Controls)
+            {
+                ctrl.Dispose();
+            }
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteHistoryTab historyTabContents = new DigifficeAllnoteHistoryTab();
             historyTabContents.InitialiseUI(RibbonPanel);
@@ -1131,6 +1165,10 @@ namespace Digiffice
             ReviewTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Review Tab Contents
+            foreach (Control ctrl in RibbonPanel.Controls)
+            {
+                ctrl.Dispose();
+            }
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteReviewTab reviewTabContents = new DigifficeAllnoteReviewTab();
             reviewTabContents.InitialiseUI(RibbonPanel);
@@ -1146,6 +1184,10 @@ namespace Digiffice
             ViewTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate View Tab Contents
+            foreach (Control ctrl in RibbonPanel.Controls)
+            {
+                ctrl.Dispose();
+            }
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteViewTab viewTabContents = new DigifficeAllnoteViewTab();
             viewTabContents.InitialiseUI(RibbonPanel);
@@ -1161,6 +1203,10 @@ namespace Digiffice
             HelpTab.BackgroundImage = Properties.Resources.Tab;
 
             // Instantiate Help Tab Contents
+            foreach (Control ctrl in RibbonPanel.Controls)
+            {
+                ctrl.Dispose();
+            }
             RibbonPanel.Controls.Clear();
             DigifficeAllnoteHelpTab helpTabContents = new DigifficeAllnoteHelpTab();
             helpTabContents.InitialiseUI(RibbonPanel);
@@ -1169,6 +1215,12 @@ namespace Digiffice
 
         private void DigifficeAllnote_ShowEditablePageBackground(DigifficeAllnoteEditorFile.Page pageToShow)
         {
+            // Control list for controls to add
+            List<Control> pageBGControlsToAdd = new List<Control>();
+
+            // Suspend layout to improve performance
+            util.RecursiveSuspendLayout(this);
+
             // Clear and Dispose of controls
             foreach (Control ctrl in nonPageBg.Controls)
             {
@@ -1267,7 +1319,7 @@ namespace Digiffice
 
             // Add InkCanvas to PageBG
             inkCanvasHost.Child = inkCanvas;
-            pagebg.Controls.Add(inkCanvasHost);
+            pageBGControlsToAdd.Add(inkCanvasHost);
             inkCanvasHost.SendToBack();
 
             // Set InkCanvas Editing Mode
@@ -1296,13 +1348,13 @@ namespace Digiffice
                         case DigifficeAllnoteElements.ElementTypes.RTB:
                             DigifficeAllnoteElements.RTBElement rtbElement = (DigifficeAllnoteElements.RTBElement)eHeader.element;
                             Panel rtbPnl = DigifficeAllnote_NonDefaultRTBPnl(pagebg, false, rtbElement.rtf, rtbElement.pnlSize, rtbElement.rtbSize, rtbElement.location, eHeader);
-                            pagebg.Controls.Add(rtbPnl);
+                            pageBGControlsToAdd.Add(rtbPnl);
                             break;
 
                         case DigifficeAllnoteElements.ElementTypes.DraggableSizablePictureBox:
                             DigifficeAllnoteElements.DraggableSizablePictureBoxElement dspElement = (DigifficeAllnoteElements.DraggableSizablePictureBoxElement)eHeader.element;
                             ElementHost dspElementHost = DigifficeAllnote_NonDefaultDraggableSizablePictureBox(pagebg, dspElement.fmt, dspElement.image, false, dspElement.location, eHeader);
-                            pagebg.Controls.Add(dspElementHost);
+                            pageBGControlsToAdd.Add(dspElementHost);
                             break;
                     }
                 }
@@ -1339,6 +1391,12 @@ namespace Digiffice
             };
 
             currentPage = pageToShow;
+
+            // Add controls to pagebg using addrange
+            pagebg.Controls.AddRange(pageBGControlsToAdd.ToArray());
+
+            // Resume layout as normal
+            util.RecursiveResumeLayout(this, false);
         }
 
         public void fontFamilyComboBox_SelectionChangeCommited(object sender, EventArgs e)
@@ -1423,6 +1481,9 @@ namespace Digiffice
 
         private void DigifficeAllnote_ShowPageTitleAndDatetime(DigifficeAllnoteEditorFile.Page page)
         {
+            // Controls to add
+            List<Control> pageBGControlsToAdd = new List<Control>();
+
             // Create Page Title and Created DateTime Controls
             TextBox pageTitle = new TextBox();
             pageTitle.Location = new Point(20, 20);
@@ -1460,20 +1521,25 @@ namespace Digiffice
 
             // Add controls to PageBg
             Panel pagebg = (Panel)SectionBG.Controls.Find("PageBG", true)[0];
-            pagebg.Controls.Add(pageTitle);
-            pagebg.Controls.Add(PageCreatedDateTime);
+            pageBGControlsToAdd.Add(pageTitle);
+            pageBGControlsToAdd.Add(PageCreatedDateTime);
+            pagebg.Controls.AddRange(pageBGControlsToAdd.ToArray());
         }
 
         private void DigifficeAllnote_ShowChaptersAndPagesInInspectors(DigifficeAllnoteEditorFile file, DigifficeAllnoteEditorFile.Chapter chapter)
         {
-
-
             DigifficeAllnote_ShowChaptersInInspector(file);
             DigifficeAllnote_ShowPagesInInspector(chapter);
         }
 
         private void DigifficeAllnote_ShowPagesInInspector(DigifficeAllnoteEditorFile.Chapter chapter)
         {
+            // Controls to add
+            List<Control> SectionBG_PagesControlsToAdd = new List<Control>();
+
+            // Suspend layout to improve performance
+            util.RecursiveSuspendLayout(SectionBG_Pages);
+
             // Get Border Cover
             Panel inspector_Pages_BorderCover = SectionBGPages_BorderCover;
 
@@ -1485,12 +1551,12 @@ namespace Digiffice
                 if (ctrl != inspector_Pages_BorderCover)
                 {
                     ctrl.Dispose();
+                    SectionBG_Pages.Controls.Remove(ctrl);
                 }
             }
-            SectionBG_Pages.Controls.Clear();
 
             // Add Border Cover
-            SectionBG_Pages.Controls.Add(inspector_Pages_BorderCover);
+            SectionBG_PagesControlsToAdd.Add(inspector_Pages_BorderCover);
 
             using (Font labelFont = new Font("Roboto", 12, FontStyle.Regular))
             {
@@ -1535,15 +1601,33 @@ namespace Digiffice
                         // Todo: Paint when selected but not clicked (eg. when chapter is selected, first page is automatically selected but not clicked so it doesn't get painted) (Also applies to chapter labels in chapter inspector)
                     };
 
-                    SectionBG_Pages.Controls.Add(inspector_PageLabel);
+                    SectionBG_PagesControlsToAdd.Add(inspector_PageLabel);
                     i++;
                 }
             }
+
+            // Add controls to SectionBG_Pages
+            SectionBG_Pages.Controls.AddRange(SectionBG_PagesControlsToAdd.ToArray());
+
+            // Resume layout as normal
+            util.RecursiveResumeLayout(SectionBG_Pages, false);
         }
 
         private void DigifficeAllnote_ShowChaptersInInspector(DigifficeAllnoteEditorFile file)
         {
+            // Controls to add
+            List<Control> SectionBG_ChaptersControlsToAdd = new List<Control>();
+
+            // Suspend layout to improve performance
+            util.RecursiveSuspendLayout(this);
+
+            // Clear controls
+            foreach (Control ctrl in SectionBG_Chapters.Controls)
+            {
+                ctrl.Dispose();
+            }
             SectionBG_Chapters.Controls.Clear();
+
             // Chapters from file
             for (int i = 0; i < file.chapters.Count;)
             {
@@ -1564,9 +1648,15 @@ namespace Digiffice
                 {
                     DigifficeAllnote_ShowChapter(chapter, file, true);
                 };
-                SectionBG_Chapters.Controls.Add(inspector_ChapterLabel);
+                SectionBG_ChaptersControlsToAdd.Add(inspector_ChapterLabel);
                 i++;
             }
+
+            // Add controls to SectionBG_Chapters
+            SectionBG_Chapters.Controls.AddRange(SectionBG_ChaptersControlsToAdd.ToArray());
+
+            // Resume layout as normal
+            util.RecursiveResumeLayout(this, false);
         }
 
         private DigifficeAllnoteEditorFile.Chapter? FindChapterByName(DigifficeAllnoteEditorFile file, string name)
@@ -1687,9 +1777,24 @@ namespace Digiffice
         private void DigifficeAllnote_CloseNotebook()
         {
             // Clear Editor
-            nonPageBg.Controls.Clear();
-            SectionBG_Chapters.Controls.Clear();
-            SectionBG_Pages.Controls.Clear();
+
+            foreach (Control ctrl in nonPageBg.Controls)
+            {
+                nonPageBg.Controls.Remove(ctrl);
+                ctrl.Dispose();
+            }
+
+            foreach (Control ctrl in SectionBG_Chapters.Controls)
+            {
+                SectionBG_Chapters.Controls.Remove(ctrl);
+                ctrl.Dispose();
+            }
+
+            foreach (Control ctrl in SectionBG_Pages.Controls)
+            {
+                SectionBG_Pages.Controls.Remove(ctrl);
+                ctrl.Dispose();
+            }
             // Clear Editor Variables
             editorNotebook = null;
             notebookAtLastSave = null;
