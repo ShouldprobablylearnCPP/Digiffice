@@ -29,27 +29,29 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsMenuForm));
-            SidePnl = new Panel();
+            userSettingsBtn = new Button();
             pfpPnl = new Panel();
             pfpFramePnl = new Panel();
             pfpImgPnl = new Panel();
             sidePnlBorder = new Panel();
-            button1 = new Button();
-            SidePnl.SuspendLayout();
+            SidePnl = new Panel();
+            themeSettingsBtn = new Button();
             pfpPnl.SuspendLayout();
             pfpFramePnl.SuspendLayout();
+            SidePnl.SuspendLayout();
             SuspendLayout();
             // 
-            // SidePnl
+            // userSettingsBtn
             // 
-            SidePnl.BackColor = SystemColors.ControlLightLight;
-            SidePnl.Controls.Add(button1);
-            SidePnl.Controls.Add(pfpPnl);
-            SidePnl.Dock = DockStyle.Left;
-            SidePnl.Location = new Point(0, 0);
-            SidePnl.Name = "SidePnl";
-            SidePnl.Size = new Size(120, 461);
-            SidePnl.TabIndex = 0;
+            userSettingsBtn.FlatAppearance.BorderSize = 0;
+            userSettingsBtn.FlatStyle = FlatStyle.Flat;
+            userSettingsBtn.Location = new Point(0, 119);
+            userSettingsBtn.Name = "userSettingsBtn";
+            userSettingsBtn.Size = new Size(120, 40);
+            userSettingsBtn.TabIndex = 1;
+            userSettingsBtn.TextAlign = ContentAlignment.MiddleRight;
+            userSettingsBtn.UseVisualStyleBackColor = true;
+            userSettingsBtn.Click += userSettingsBtn_Click;
             // 
             // pfpPnl
             // 
@@ -82,22 +84,37 @@
             // 
             // sidePnlBorder
             // 
+            sidePnlBorder.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             sidePnlBorder.BackColor = Color.Navy;
-            sidePnlBorder.Location = new Point(0, 0);
+            sidePnlBorder.Location = new Point(120, 0);
             sidePnlBorder.Name = "sidePnlBorder";
-            sidePnlBorder.Size = new Size(121, 461);
+            sidePnlBorder.Size = new Size(1, 461);
             sidePnlBorder.TabIndex = 1;
             // 
-            // button1
+            // SidePnl
             // 
-            button1.FlatAppearance.BorderSize = 0;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Location = new Point(0, 119);
-            button1.Name = "button1";
-            button1.Size = new Size(120, 40);
-            button1.TabIndex = 1;
-            button1.TextAlign = ContentAlignment.MiddleRight;
-            button1.UseVisualStyleBackColor = true;
+            SidePnl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            SidePnl.BackColor = SystemColors.ControlLightLight;
+            SidePnl.Controls.Add(themeSettingsBtn);
+            SidePnl.Controls.Add(userSettingsBtn);
+            SidePnl.Controls.Add(pfpPnl);
+            SidePnl.Controls.Add(sidePnlBorder);
+            SidePnl.Location = new Point(0, 0);
+            SidePnl.Name = "SidePnl";
+            SidePnl.Size = new Size(121, 461);
+            SidePnl.TabIndex = 0;
+            // 
+            // themeSettingsBtn
+            // 
+            themeSettingsBtn.FlatAppearance.BorderSize = 0;
+            themeSettingsBtn.FlatStyle = FlatStyle.Flat;
+            themeSettingsBtn.Location = new Point(0, 156);
+            themeSettingsBtn.Name = "themeSettingsBtn";
+            themeSettingsBtn.Size = new Size(120, 40);
+            themeSettingsBtn.TabIndex = 2;
+            themeSettingsBtn.TextAlign = ContentAlignment.MiddleRight;
+            themeSettingsBtn.UseVisualStyleBackColor = true;
+            themeSettingsBtn.Click += themeSettingsBtn_Click;
             // 
             // SettingsMenuForm
             // 
@@ -105,23 +122,22 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(684, 461);
             Controls.Add(SidePnl);
-            Controls.Add(sidePnlBorder);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "SettingsMenuForm";
             Text = "Settings";
-            SidePnl.ResumeLayout(false);
             pfpPnl.ResumeLayout(false);
             pfpFramePnl.ResumeLayout(false);
+            SidePnl.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
-
-        private Panel SidePnl;
         private Panel pfpPnl;
         private Panel sidePnlBorder;
         private Panel pfpFramePnl;
         private Panel pfpImgPnl;
-        private Button button1;
+        private Button userSettingsBtn;
+        private Panel SidePnl;
+        private Button themeSettingsBtn;
     }
 }
